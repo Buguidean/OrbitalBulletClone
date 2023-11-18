@@ -52,17 +52,17 @@ public class CircularMotion : MonoBehaviour
         // Check for input to accelerate or decelerate
         float horizontalInput = Input.GetAxis("Horizontal");
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            input = -1f;
+            input = 1f;
             if (orientation == 1)
                 transform.Rotate(0.0f, 180.0f, 0.0f);
             orientation = -1;
             transform.Rotate(0.0f, correction - 90.0f, 0.0f);
         }
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            input = 1f;
+            input = -1f;
             if (orientation == -1)
                 transform.Rotate(0.0f, 180.0f, 0.0f);
             orientation = 1;
