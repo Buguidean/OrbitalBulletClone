@@ -18,9 +18,13 @@ public class CircularMotion : MonoBehaviour
     private int orientation = 1;
     private float input = 0f;
 
+    private float x;
+    private float z;
+    private float y;
+
     void Friction(float input)
     {
-        if (input == 0f && currentSpeed >= 0.0f)
+        if (input == 0f && currentSpeed > 0.0f)
         {
             currentSpeed -= acceleration * Time.deltaTime;
         }
@@ -32,7 +36,11 @@ public class CircularMotion : MonoBehaviour
 
     private void Start()
     {
+        x = center.position.x + Mathf.Cos(0f) * radius;
+        z = center.position.z + Mathf.Sin(0f) * radius;
+        y = transform.position.y + speedY;
         characterController = GetComponent<CharacterController>();
+        transform.position.Set(28.59f, 7.46f, -9.21f);
     }
 
 
@@ -72,9 +80,12 @@ public class CircularMotion : MonoBehaviour
         angle %= (2 * Mathf.PI);
 
         // Calculate the new position based on the angle and radius
-        float x = center.position.x + Mathf.Cos(angle) * radius;
-        float z = center.position.z + Mathf.Sin(angle) * radius;
-        float y = transform.position.y + speedY;
+        if (currentSpeed != 0f || speedY != 0f)
+        {
+            x = center.position.x + Mathf.Cos(angle) * radius;
+            z = center.position.z + Mathf.Sin(angle) * radius;
+            y = transform.position.y + speedY;
+        }
 
         if ((speedY < 0) && characterController.isGrounded)
             speedY = 0.0f;
@@ -87,13 +98,13 @@ public class CircularMotion : MonoBehaviour
         Vector3 newPosition = new Vector3(x, y, z);
         Vector3 displace = newPosition - transform.position;
 
-        if (Mathf.Abs(displace.x) > 0.2f || Mathf.Abs(displace.z) > 0.2f || Mathf.Abs(displace.y) > 0.5f)
+        if (currentSpeed != 0f || speedY != 0f)
             characterController.Move(displace);
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if ((characterController.collisionFlags & CollisionFlags.Sides) != 0)
-            currentSpeed = 0.2f;
+            currentSpeed = 0f;
     }
 }
