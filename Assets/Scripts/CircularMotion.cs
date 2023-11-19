@@ -22,9 +22,14 @@ public class CircularMotion : MonoBehaviour
     private float z;
     private float y;
 
+    private bool doJump = false;
+    private bool colided = false;
+
+
+
     void Friction(float input)
     {
-        if (input == 0f && Mathf.Abs(currentSpeed) <= 0.1f)
+        if (input == 0f && Mathf.Abs(currentSpeed) <= 0.01f)
         {
             currentSpeed = 0f;
         }
@@ -38,6 +43,16 @@ public class CircularMotion : MonoBehaviour
         }
     }
 
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (colided)
+        {
+            currentSpeed = 0f;
+            colided = false;
+        }
+    }
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -47,32 +62,8 @@ public class CircularMotion : MonoBehaviour
         transform.position.Set(28.59f, 7.46f, -9.21f);
     }
 
-
-    void Update()
+    private void FixedUpdate()
     {
-        input = 0f;
-        float correction = Vector3.Angle((transform.position-center.position), transform.forward);
-
-        // Check for input to accelerate or decelerate
-        float horizontalInput = Input.GetAxis("Horizontal");
-
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            input = 1f;
-            if (orientation == 1)
-                transform.Rotate(0.0f, 180.0f, 0.0f);
-            orientation = -1;
-            transform.Rotate(0.0f, correction - 90.0f, 0.0f);
-        }
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            input = -1f;
-            if (orientation == -1)
-                transform.Rotate(0.0f, 180.0f, 0.0f);
-            orientation = 1;
-            transform.Rotate(0.0f, 90.0f - correction, 0.0f);
-        }
-
         // Adjust the current speed based on input and acceleration
         currentSpeed += input * acceleration * Time.deltaTime;
 
@@ -96,9 +87,10 @@ public class CircularMotion : MonoBehaviour
 
         speedY -= gravity * Time.deltaTime;
 
-        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
+        if (doJump)
         {
-            speedY = 0.15f;
+            speedY = 0.2f;
+            doJump = false;
         }
 
         Friction(input);
@@ -106,13 +98,39 @@ public class CircularMotion : MonoBehaviour
         Vector3 newPosition = new Vector3(x, y, z);
         Vector3 displace = newPosition - transform.position;
 
-        if (currentSpeed != 0f || speedY != 0f)
-            characterController.Move(displace);
+        characterController.Move(displace);
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
+    void Update()
     {
+        input = 0f;
+        float correction = Vector3.Angle((transform.position-center.position), transform.forward);
+
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            input = 1f;
+            if (orientation == 1)
+                transform.Rotate(0.0f, 180.0f, 0.0f);
+            orientation = -1;
+            transform.Rotate(0.0f, correction - 90.0f, 0.0f);
+        }
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            input = -1f;
+            if (orientation == -1)
+                transform.Rotate(0.0f, 180.0f, 0.0f);
+            orientation = 1;
+            transform.Rotate(0.0f, 90.0f - correction, 0.0f);
+        }
+
+        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
+        {
+            doJump = true;
+        }
+
         if ((characterController.collisionFlags & CollisionFlags.Sides) != 0)
-            currentSpeed = 0f;
+        {
+            colided = true;
+        }
     }
 }
