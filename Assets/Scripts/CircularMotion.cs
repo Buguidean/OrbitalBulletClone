@@ -8,12 +8,12 @@ public class CircularMotion : MonoBehaviour
     private CharacterController characterController;
 
     private float radius = 29f; // radius of the circle
-    private float acceleration = 8f; // acceleration factor
+    private float acceleration = 2f; // acceleration factor
     private float maxVelocity = 0.6f; // maximum rotation speed
 
     private float currentSpeed = 0f;
     private float angle = 0f;
-    private float gravity = 10.0f;
+    private float gravity = 0.5f;
     private float speedY = 0f;
     private int orientation = 1;
     private float input = 0f;
@@ -24,11 +24,15 @@ public class CircularMotion : MonoBehaviour
 
     void Friction(float input)
     {
-        if (input == 0f && currentSpeed > 0.0f)
+        if (input == 0f && Mathf.Abs(currentSpeed) <= 0.1f)
+        {
+            currentSpeed = 0f;
+        }
+        else if (input == 0f && currentSpeed > 0f)
         {
             currentSpeed -= acceleration * Time.deltaTime;
         }
-        else if (input == 0f && currentSpeed < 0.0f)
+        else if (input == 0f && currentSpeed < 0f)
         {
             currentSpeed += acceleration * Time.deltaTime;
         }
@@ -92,6 +96,10 @@ public class CircularMotion : MonoBehaviour
 
         speedY -= gravity * Time.deltaTime;
 
+        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
+        {
+            speedY = 0.15f;
+        }
 
         Friction(input);
 
