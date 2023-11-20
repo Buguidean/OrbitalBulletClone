@@ -69,6 +69,7 @@ public class CircularMotion : MonoBehaviour
 
         // Clamp the speed to stay within the specified range
         currentSpeed = Mathf.Clamp(currentSpeed, -maxVelocity, maxVelocity);
+        float prevAngle = angle;
 
         // Adjust the angle based on the current speed
         angle += currentSpeed * Time.deltaTime;
@@ -97,8 +98,14 @@ public class CircularMotion : MonoBehaviour
 
         Vector3 newPosition = new Vector3(x, y, z);
         Vector3 displace = newPosition - transform.position;
-
-        characterController.Move(displace);
+        Vector3 position = transform.position;
+        CollisionFlags collition = characterController.Move(displace);
+        if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+        {
+            transform.position = new Vector3(position.x,transform.position.y,position.z);
+            Physics.SyncTransforms();
+            angle = prevAngle;
+        }
     }
 
     void Update()
