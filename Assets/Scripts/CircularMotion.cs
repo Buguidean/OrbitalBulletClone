@@ -5,6 +5,7 @@ using UnityEngine;
 public class CircularMotion : MonoBehaviour
 {
     public Transform center; // the center point of the circle
+    public GameObject prefab;
     private CharacterController characterController;
 
     private float radius = 29f; // radius of the circle
@@ -23,7 +24,8 @@ public class CircularMotion : MonoBehaviour
     private float y;
 
     private bool doJump = false;
-    private bool colided = false;
+
+    private float timer = 0f;
 
 
 
@@ -40,16 +42,6 @@ public class CircularMotion : MonoBehaviour
         else if (input == 0f && currentSpeed < 0f)
         {
             currentSpeed += acceleration * Time.deltaTime;
-        }
-    }
-
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (colided)
-        {
-            currentSpeed = 0f;
-            colided = false;
         }
     }
 
@@ -105,7 +97,12 @@ public class CircularMotion : MonoBehaviour
             transform.position = new Vector3(position.x,transform.position.y,position.z);
             Physics.SyncTransforms();
             angle = prevAngle;
+            currentSpeed = 0f;
         }
+
+        timer -= Time.deltaTime;
+        if (timer < 0f)
+            timer = 0f;
     }
 
     void Update()
@@ -135,9 +132,11 @@ public class CircularMotion : MonoBehaviour
             doJump = true;
         }
 
-        if ((characterController.collisionFlags & CollisionFlags.Sides) != 0)
+        if (Input.GetKey(KeyCode.P) & timer == 0f)
         {
-            colided = true;
+            timer = 1f;
+            Vector3 pos = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+            Instantiate(prefab, pos, Quaternion.identity);
         }
     }
 }
