@@ -16,7 +16,7 @@ public class CircularMotion : MonoBehaviour
     private float angle = 0f;
     private float gravity = 0.5f;
     private float speedY = 0f;
-    private int orientation = 1;
+    private int orientation = -1;
     private float input = 0f;
 
     private float x;
@@ -105,6 +105,41 @@ public class CircularMotion : MonoBehaviour
             timer = 0f;
     }
 
+    private void createBullet()
+    {
+        // Initialize values
+        float bulletAngle = angle;
+        bool leftMove;
+        if (orientation == -1)
+        {
+            leftMove = false;
+            bulletAngle += 0.05f;
+        }
+        else
+        {
+            leftMove = true;
+            bulletAngle -= 0.05f;
+        }
+
+        //Compute position
+        float xPos = center.position.x + Mathf.Cos(bulletAngle) * radius;
+        float zPos = center.position.z + Mathf.Sin(bulletAngle) * radius;
+        Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
+
+        //compute orientation (will be needed)
+
+        //instantiate
+        GameObject obj = Instantiate(prefab, pos, Quaternion.identity);
+
+        //asign initiallization
+        obj.GetComponent<Bullet>().leftMove = leftMove;
+        obj.GetComponent<Bullet>().angle = bulletAngle;
+        
+        //Destroy the object in 5 s
+        Destroy(obj, 7);
+    }
+
+
     void Update()
     {
         input = 0f;
@@ -135,8 +170,8 @@ public class CircularMotion : MonoBehaviour
         if (Input.GetKey(KeyCode.P) & timer == 0f)
         {
             timer = 1f;
-            Vector3 pos = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-            Instantiate(prefab, pos, Quaternion.identity);
+            createBullet();
+           
         }
     }
 }
