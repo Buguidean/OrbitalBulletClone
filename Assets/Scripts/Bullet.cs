@@ -7,16 +7,19 @@ public class Bullet : MonoBehaviour
     public Transform center; // the center point of the circle
     public bool leftMove;
     public float angle;
+    public float radius; // radius of the circle
 
     private Rigidbody rbController;
 
-    private float radius = 29f; // radius of the circle
+    //movement
 
     private float currentSpeed; 
 
     private float x;
     private float z;
     private float y;
+
+    private float timer = 7f;
 
     private void Start()
     {
@@ -31,10 +34,23 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        Debug.Log("Triggered");
-        //Destroy(rbController);
-        //Destroy(this);
-
+        switch (col.tag)
+        {
+            case "Player":
+                Debug.Log("The bullet was distroyed because touched Player");
+                Destroy(gameObject);
+                break;
+            case "Enemy":
+                break;
+            case "Bullet":
+                Debug.Log("Bullet were touched");
+                //Destroy(gameObject);
+                break;
+            case "Untagged":
+                Debug.Log("The bullet was distroyed because touched the environment");
+                Destroy(gameObject);
+                break;
+        }
     }
 
     private void FixedUpdate()
@@ -50,5 +66,11 @@ public class Bullet : MonoBehaviour
         Vector3 newPosition = new Vector3(x, transform.position.y, z);
         Vector3 displace = newPosition - transform.position;
         rbController.Move(newPosition, Quaternion.identity);
+
+        timer -= Time.deltaTime;
+        if(timer <= 0f)
+        {
+            Destroy(gameObject);
+        }
     }
 }

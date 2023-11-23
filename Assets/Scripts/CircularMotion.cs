@@ -6,9 +6,12 @@ public class CircularMotion : MonoBehaviour
 {
     public Transform center; // the center point of the circle
     public GameObject prefab;
+
+    public float radius = 29f; // radius of the circle
+
     private CharacterController characterController;
 
-    private float radius = 29f; // radius of the circle
+    
     private float acceleration = 2f; // acceleration factor
     private float maxVelocity = 0.6f; // maximum rotation speed
 
@@ -134,9 +137,10 @@ public class CircularMotion : MonoBehaviour
         //asign initiallization
         obj.GetComponent<Bullet>().leftMove = leftMove;
         obj.GetComponent<Bullet>().angle = bulletAngle;
+        obj.GetComponent<Bullet>().radius = radius;
         
         //Destroy the object in 5 s
-        Destroy(obj, 7);
+        //Destroy(obj, 7);
     }
 
 
