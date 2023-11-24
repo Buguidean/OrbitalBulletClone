@@ -37,17 +37,19 @@ public class Bullet : MonoBehaviour
         switch (col.tag)
         {
             case "Player":
-                Debug.Log("The bullet was distroyed because touched Player");
+                Debug.Log("The bullet was destroyed because touched Player");
                 Destroy(gameObject);
                 break;
             case "Enemy":
+                Debug.Log("The bullet was destroyed because touched an Enemy");
+                Destroy(gameObject);
                 break;
             case "Bullet":
                 Debug.Log("Bullet were touched");
                 //Destroy(gameObject);
                 break;
             case "Untagged":
-                Debug.Log("The bullet was distroyed because touched the environment");
+                Debug.Log("The bullet was destroyed because touched the Environment");
                 Destroy(gameObject);
                 break;
         }

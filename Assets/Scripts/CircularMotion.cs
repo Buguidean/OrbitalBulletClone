@@ -26,7 +26,7 @@ public class CircularMotion : MonoBehaviour
     private float z;
     private float y;
 
-    private bool doJump = false;
+    public bool doJump = false;
 
     private float timer = 0f;
 
@@ -54,11 +54,11 @@ public class CircularMotion : MonoBehaviour
         z = center.position.z + Mathf.Sin(0f) * radius;
         y = transform.position.y + speedY;
         characterController = GetComponent<CharacterController>();
-        transform.position.Set(28.59f, 7.46f, -9.21f);
     }
 
     private void FixedUpdate()
     {
+        // Debug.Log(angle);
         // Adjust the current speed based on input and acceleration
         currentSpeed += input * acceleration * Time.deltaTime;
 
