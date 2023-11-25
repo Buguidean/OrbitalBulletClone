@@ -19,9 +19,13 @@ public class FollowPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        radius = Vector3.Normalize(player.position - center.position) * 8f;
-        float correction = Vector3.Angle(radius, transform.right);
-        transform.Rotate(0.0f, correction - 90.0f, 0.0f);
-        transform.position = new Vector3(player.position.x + radius.x, player.position.y + 2f, player.position.z + radius.z);
+        if(!player.Equals(null))
+        {
+            radius = Vector3.Normalize(player.position - center.position) * 8f;
+            float correction = Vector3.Angle(radius, transform.right);
+            transform.Rotate(0.0f, correction - 90.0f, 0.0f);
+            transform.position = new Vector3(player.position.x + radius.x, player.position.y + 2f, player.position.z + radius.z);
+        }
+        
     }
 }

@@ -11,7 +11,7 @@ public class BasicEnemyMovement : MonoBehaviour
 
     private CharacterController characterController;
 
-    private float acceleration = 2f; // acceleration factor
+    private float acceleration = 1.5f; // acceleration factor
     private float currentSpeed = 0.2f;
     private float angle = 0f;
     private float gravity = 0.5f;
@@ -21,6 +21,13 @@ public class BasicEnemyMovement : MonoBehaviour
     private float x;
     private float z;
     private float y;
+
+    //stats
+    private float health = 50f;
+
+    //statsControls
+    public bool isShoted = false;
+
 
     //private bool doJump = false;
 
@@ -36,8 +43,14 @@ public class BasicEnemyMovement : MonoBehaviour
             if (angle_hit <= 45f)
             {
                 other.GetComponent<CircularMotion>().doJump = true;
-                Destroy(gameObject);
+                health -= 25f;
+                Debug.Log("Enemy health: " + health.ToString());
             }
+            else
+            {
+                other.GetComponent<CircularMotion>().isHurted = true;
+            }
+            Debug.Log("Angle hit: " + angle_hit.ToString());
         }     
     }
 
@@ -67,13 +80,27 @@ public class BasicEnemyMovement : MonoBehaviour
         angle = -2.64f;
     }
 
+    private void controlDamage()
+    {
+        if (isShoted)
+        {
+            health -= 15f;
+            isShoted = false;
+            Debug.Log("Player health: " + health.ToString());
+        }
+
+        if (health <= 0f)
+            Destroy(gameObject);
+}
+
     private void FixedUpdate()
     {
+        controlDamage();
         // Adjust the current speed based on input and acceleration
         float prevAngle = angle;
 
         // Adjust the angle based on the current speed
-        angle += currentSpeed * Time.deltaTime;
+        angle += currentSpeed/2f * Time.deltaTime;
         angle %= (2 * Mathf.PI);
 
         // Calculate the new position based on the angle and radius
@@ -95,7 +122,7 @@ public class BasicEnemyMovement : MonoBehaviour
         Vector3 displace = newPosition - transform.position;
         Vector3 position = transform.position;
         CollisionFlags collition = characterController.Move(displace);
-        Debug.Log(collition);
+        //Debug.Log(collition);
         if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
         {
             transform.position = new Vector3(position.x, transform.position.y, position.z);

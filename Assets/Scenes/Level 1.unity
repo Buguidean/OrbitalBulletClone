@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43776467, g: 0.4856636, b: 0.5659397, a: 1}
+  m_IndirectSpecularColor: {r: 0.4377641, g: 0.48566276, b: 0.5659384, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -292,7 +292,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -303,7 +303,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 273142567}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2242,6 +2242,7 @@ MonoBehaviour:
   center: {fileID: 1071403576}
   player: {fileID: 1926001920}
   radius: 29
+  isShoted: 0
 --- !u!136 &1373331340
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3101,6 +3102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   center: {fileID: 1071403576}
   prefab: {fileID: 2348225818947282095, guid: 94c54cd79fcdff54994c1d2bbfa0eba9, type: 3}
+  isHurted: 0
+  isShoted: 0
   radius: 29
   doJump: 0
 --- !u!143 &1926001920

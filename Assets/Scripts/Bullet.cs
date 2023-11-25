@@ -32,16 +32,18 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider col)
+    void OnTriggerEnter(Collider obj)
     {
-        switch (col.tag)
+        switch (obj.tag)
         {
             case "Player":
-                Debug.Log("The bullet was destroyed because touched Player");
+                Debug.Log("The bullet impacted with player");
+                obj.GetComponent<CircularMotion>().isShoted = true;
                 Destroy(gameObject);
                 break;
             case "Enemy":
-                Debug.Log("The bullet was destroyed because touched an Enemy");
+                Debug.Log("The bullet impacted with an Enemy");
+                obj.GetComponent<BasicEnemyMovement>().isShoted = true;
                 Destroy(gameObject);
                 break;
             case "Bullet":

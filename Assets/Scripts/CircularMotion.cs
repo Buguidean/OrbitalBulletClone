@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CircularMotion : MonoBehaviour
 {
     public Transform center; // the center point of the circle
     public GameObject prefab;
+
+    //damage recived;
+    public bool isHurted;
+    public bool isShoted;
 
     public float radius = 29f; // radius of the circle
 
@@ -13,11 +18,11 @@ public class CircularMotion : MonoBehaviour
 
     
     private float acceleration = 2f; // acceleration factor
-    private float maxVelocity = 0.6f; // maximum rotation speed
+    private float maxVelocity = 0.5f; // maximum rotation speed
 
     private float currentSpeed = 0f;
     private float angle = 0f;
-    private float gravity = 0.5f;
+    private float gravity = 0.6f;
     private float speedY = 0f;
     private int orientation = -1;
     private float input = 0f;
@@ -30,6 +35,9 @@ public class CircularMotion : MonoBehaviour
 
     private float timer = 0f;
 
+
+    //Stats
+    private float health;
 
 
     void Friction(float input)
@@ -54,10 +62,37 @@ public class CircularMotion : MonoBehaviour
         z = center.position.z + Mathf.Sin(0f) * radius;
         y = transform.position.y + speedY;
         characterController = GetComponent<CharacterController>();
+        health = 100f;
+        isHurted = false;
+        isShoted = false;
+    }
+
+    private void controlDamageImpact()
+    {
+        if (isHurted)
+        {
+            health -= 25f;
+            isHurted = false;
+            Debug.Log("Player health: " + health.ToString());
+        }
+
+        if (isShoted)
+        {
+            health -= 15f;
+            isShoted = false;
+            Debug.Log("Player health: " + health.ToString());
+        }
+
+        if (health <= 0f) {
+            Destroy(gameObject);
+            SceneManager.LoadScene(2, LoadSceneMode.Single);
+        }
+            
     }
 
     private void FixedUpdate()
     {
+        controlDamageImpact();
         // Debug.Log(angle);
         // Adjust the current speed based on input and acceleration
         currentSpeed += input * acceleration * Time.deltaTime;
@@ -85,7 +120,7 @@ public class CircularMotion : MonoBehaviour
 
         if (doJump)
         {
-            speedY = 0.2f;
+            speedY = 0.25f;
             doJump = false;
         }
 
@@ -106,6 +141,8 @@ public class CircularMotion : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer < 0f)
             timer = 0f;
+
+        
     }
 
     private void createBullet()
@@ -138,9 +175,10 @@ public class CircularMotion : MonoBehaviour
         obj.GetComponent<Bullet>().leftMove = leftMove;
         obj.GetComponent<Bullet>().angle = bulletAngle;
         obj.GetComponent<Bullet>().radius = radius;
-        
+
         //Destroy the object in 5 s
         //Destroy(obj, 7);
+
     }
 
 
@@ -177,5 +215,6 @@ public class CircularMotion : MonoBehaviour
             createBullet();
            
         }
+        
     }
 }
