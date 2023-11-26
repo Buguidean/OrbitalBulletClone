@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class BasicEnemyMovement : MonoBehaviour
 {
+    
     public Transform center; // the center point of the circle
     public CharacterController player;
     public float radius = 29f; // radius of the circle
+
+    
+
 
     private CharacterController characterController;
 
@@ -24,6 +28,12 @@ public class BasicEnemyMovement : MonoBehaviour
 
     //stats
     private float health = 50f;
+
+    //Bar stats things
+    public GameObject prefab; // prefab obj
+    private GameObject canvasLifeBar; // adapted lifeBar with interactions
+    private UI_LifeBar scriptLifeBar;
+    private float maxHealth = 50f;
 
     //statsControls
     public bool isShoted = false;
@@ -44,6 +54,8 @@ public class BasicEnemyMovement : MonoBehaviour
             {
                 other.GetComponent<CircularMotion>().doJump = true;
                 health -= 25f;
+                if (!scriptLifeBar.Equals(null))
+                    scriptLifeBar.actualHealth = health;
                 Debug.Log("Enemy health: " + health.ToString());
             }
             else
@@ -70,6 +82,18 @@ public class BasicEnemyMovement : MonoBehaviour
         }
     }
 
+
+    private void lifeBarCreation()
+    {
+        Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        canvasLifeBar = Instantiate(prefab, pos, Quaternion.identity);
+        canvasLifeBar.transform.SetParent(gameObject.transform);
+        scriptLifeBar = canvasLifeBar.transform.GetChild(1).gameObject.GetComponent<UI_LifeBar>();
+
+        scriptLifeBar.maxHealth = maxHealth;
+        scriptLifeBar.actualHealth = health;
+    }
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -78,6 +102,8 @@ public class BasicEnemyMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         Physics.IgnoreCollision(characterController, player, true);
         angle = -2.64f;
+
+        lifeBarCreation();
     }
 
     private void controlDamage()
@@ -86,9 +112,11 @@ public class BasicEnemyMovement : MonoBehaviour
         {
             health -= 15f;
             isShoted = false;
+            if (!scriptLifeBar.Equals(null))
+                scriptLifeBar.actualHealth = health;
             Debug.Log("Player health: " + health.ToString());
         }
-
+        
         if (health <= 0f)
             Destroy(gameObject);
 }

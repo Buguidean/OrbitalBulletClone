@@ -5,19 +5,25 @@ using UnityEngine.UI;
 
 public class UI_LifeBar : MonoBehaviour
 {
-    public Image lifeBar;
-    public float ActualLife;
-    public float MaximumLife; 
+    public float actualHealth = 50f;
+    public float maxHealth = 50f;
+
+    //private Image background;
+    private Image lifeBar;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        //background = gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();
+        lifeBar = gameObject.GetComponent<Image>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        lifeBar.fillAmount = ActualLife / MaximumLife;
+        if (!lifeBar.Equals(null))
+        {
+            lifeBar.fillAmount = actualHealth / maxHealth;
+        }
     }
 }

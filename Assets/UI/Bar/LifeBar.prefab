@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 2542114560574743529}
   - component: {fileID: 7880119189335709174}
   - component: {fileID: 8393264275688001710}
+  - component: {fileID: 4730247948021268513}
   m_Layer: 5
   m_Name: LifeBar
   m_TagString: Untagged
@@ -150,6 +151,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4730247948021268513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8412444768023444607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc8fd1b36191feb43bd022a0e210f0d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actualHealth: 50
+  maxHealth: 50
 --- !u!1 &8593778082957205961
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,7 +178,7 @@ GameObject:
   - component: {fileID: 7706372338205211573}
   - component: {fileID: 72669423259196499}
   m_Layer: 5
-  m_Name: LifeVar
+  m_Name: LifeBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +250,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &72669423259196499
 MonoBehaviour:
   m_ObjectHideFlags: 0
