@@ -16,6 +16,8 @@ public class CircularMotion : MonoBehaviour
 
     private CharacterController characterController;
 
+    Animator animator;
+
     
     private float acceleration = 2f; // acceleration factor
     private float maxVelocity = 0.5f; // maximum rotation speed
@@ -42,9 +44,10 @@ public class CircularMotion : MonoBehaviour
 
     void Friction(float input)
     {
-        if (input == 0f && Mathf.Abs(currentSpeed) <= 0.01f)
+        if (input == 0f && Mathf.Abs(currentSpeed) <= 0.1f)
         {
-            currentSpeed = 0f;
+            currentSpeed = 0.000000000000000000000000000000000000f;
+            animator.SetBool("isMoving", false);
         }
         else if (input == 0f && currentSpeed > 0f)
         {
@@ -62,6 +65,7 @@ public class CircularMotion : MonoBehaviour
         z = center.position.z + Mathf.Sin(0f) * radius;
         y = transform.position.y + speedY;
         characterController = GetComponent<CharacterController>();
+        animator = gameObject.GetComponent<Animator>();
         health = 100f;
         isHurted = false;
         isShoted = false;
@@ -92,6 +96,11 @@ public class CircularMotion : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (currentSpeed != 0f)
+        {
+            animator.SetBool("isMoving", true);
+        }
+
         controlDamageImpact();
         // Debug.Log(angle);
         // Adjust the current speed based on input and acceleration
