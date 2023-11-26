@@ -9,6 +9,7 @@ public class BasicEnemyMovement : MonoBehaviour
     public Transform center; // the center point of the circle
     public CharacterController player;
     public float radius = 29f; // radius of the circle
+    public Transform camera;
 
     
 
@@ -31,6 +32,7 @@ public class BasicEnemyMovement : MonoBehaviour
 
     //Bar stats things
     public GameObject prefab; // prefab obj
+
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
     private UI_LifeBar scriptLifeBar;
     private float maxHealth = 50f;
@@ -85,13 +87,13 @@ public class BasicEnemyMovement : MonoBehaviour
 
     private void lifeBarCreation()
     {
-        Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        canvasLifeBar = Instantiate(prefab, pos, Quaternion.identity);
-        canvasLifeBar.transform.SetParent(gameObject.transform);
-        scriptLifeBar = canvasLifeBar.transform.GetChild(1).gameObject.GetComponent<UI_LifeBar>();
-
+        canvasLifeBar = Instantiate(prefab, transform.position, Quaternion.identity);
+        scriptLifeBar = canvasLifeBar.transform.GetComponent<UI_LifeBar>();
         scriptLifeBar.maxHealth = maxHealth;
+
         scriptLifeBar.actualHealth = health;
+        scriptLifeBar.camera = camera;
+        scriptLifeBar.orientation = orientation;
     }
 
     private void Start()
@@ -116,9 +118,12 @@ public class BasicEnemyMovement : MonoBehaviour
                 scriptLifeBar.actualHealth = health;
             Debug.Log("Player health: " + health.ToString());
         }
-        
+
         if (health <= 0f)
+        {
+            Destroy(canvasLifeBar);
             Destroy(gameObject);
+        }
 }
 
     private void FixedUpdate()
@@ -171,14 +176,21 @@ public class BasicEnemyMovement : MonoBehaviour
 
     void Update()
     {
-        float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
+        float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
         if (orientation == 1)
             transform.Rotate(0.0f, correction - 90.0f, 0.0f);
 
         else if (orientation == -1)
             transform.Rotate(0.0f, 90.0f - correction, 0.0f);
-            
+
+        /*if (!scriptLifeBar.Equals(null))
+        {*/
+        scriptLifeBar.posEnemy = transform.position;
+        scriptLifeBar.orientation = orientation;
+        scriptLifeBar.camera = camera;
+        //}      
+
     }
 }

@@ -2796,9 +2796,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 78a8b0e4cac04a0419c1f0c6e8307752, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1373331340}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 78a8b0e4cac04a0419c1f0c6e8307752, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1373331342}
   m_SourcePrefab: {fileID: 100100000, guid: 78a8b0e4cac04a0419c1f0c6e8307752, type: 3}
 --- !u!1 &1046405308
 GameObject:
@@ -3676,7 +3673,8 @@ MonoBehaviour:
   center: {fileID: 1071403576}
   player: {fileID: 1926001920}
   radius: 29
-  prefab: {fileID: 8593778082957205961, guid: 0e48ff531cc800e419e06ee0fe3710ba, type: 3}
+  camera: {fileID: 963194228}
+  prefab: {fileID: 6210763348083485345, guid: ec603fa8042d74a4b8e0936262edb9c4, type: 3}
   isShoted: 0
 --- !u!136 &1373331340
 CapsuleCollider:
@@ -3706,20 +3704,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 78a8b0e4cac04a0419c1f0c6e8307752, type: 3}
   m_PrefabInstance: {fileID: 1011720498}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1373331342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1373331334}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc8fd1b36191feb43bd022a0e210f0d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actualHealth: 0
-  maxHealth: 0
 --- !u!1 &1399633604
 GameObject:
   m_ObjectHideFlags: 0
