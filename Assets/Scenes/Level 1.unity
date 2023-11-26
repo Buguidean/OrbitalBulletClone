@@ -3676,7 +3676,7 @@ MonoBehaviour:
   center: {fileID: 1071403576}
   player: {fileID: 1926001920}
   radius: 29
-  lifeBar: {fileID: 8593778082957205961, guid: 0e48ff531cc800e419e06ee0fe3710ba, type: 3}
+  prefab: {fileID: 8593778082957205961, guid: 0e48ff531cc800e419e06ee0fe3710ba, type: 3}
   isShoted: 0
 --- !u!136 &1373331340
 CapsuleCollider:
@@ -3713,14 +3713,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373331334}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc8fd1b36191feb43bd022a0e210f0d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeBar: {fileID: 0}
-  ActualLife: 50
-  MaximumLife: 50
+  actualHealth: 0
+  maxHealth: 0
 --- !u!1 &1399633604
 GameObject:
   m_ObjectHideFlags: 0
