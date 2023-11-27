@@ -11,6 +11,7 @@ public class CircularMotion : MonoBehaviour
     //damage recived;
     public bool isHurted;
     public bool isShoted;
+    public bool teleport;
 
     public float radius = 29f; // radius of the circle
 
@@ -18,7 +19,7 @@ public class CircularMotion : MonoBehaviour
 
     Animator animator;
 
-    
+
     private float acceleration = 2f; // acceleration factor
     private float maxVelocity = 0.5f; // maximum rotation speed
 
@@ -87,19 +88,41 @@ public class CircularMotion : MonoBehaviour
             Debug.Log("Player health: " + health.ToString());
         }
 
-        if (health <= 0f) {
+        if (health <= 0f)
+        {
             Destroy(gameObject);
             SceneManager.LoadScene(2, LoadSceneMode.Single);
         }
-            
+
     }
 
     private void FixedUpdate()
     {
+
         if (currentSpeed != 0f)
         {
             animator.SetBool("isMoving", true);
         }
+
+        if (teleport && GetComponent<CharacterController>().isGrounded)
+        {
+            radius -= 0.25f;
+            speedY = 0.5f;
+        }
+
+        else if (teleport)
+        {
+            if (radius <= (29f / 2f))
+            {
+                teleport = false;
+                radius = (29f / 2f);
+            }
+            else
+            {
+                radius -= 0.25f;
+            }
+        }
+
 
         controlDamageImpact();
         // Debug.Log(angle);
@@ -141,7 +164,7 @@ public class CircularMotion : MonoBehaviour
         CollisionFlags collition = characterController.Move(displace);
         if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
         {
-            transform.position = new Vector3(position.x,transform.position.y,position.z);
+            transform.position = new Vector3(position.x, transform.position.y, position.z);
             Physics.SyncTransforms();
             angle = prevAngle;
             currentSpeed = 0f;
@@ -151,7 +174,7 @@ public class CircularMotion : MonoBehaviour
         if (timer < 0f)
             timer = 0f;
 
-        
+
     }
 
     private void createBullet()
@@ -194,7 +217,7 @@ public class CircularMotion : MonoBehaviour
     void Update()
     {
         input = 0f;
-        float correction = Vector3.Angle((transform.position-center.position), transform.forward);
+        float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
@@ -222,8 +245,8 @@ public class CircularMotion : MonoBehaviour
         {
             timer = 1f;
             createBullet();
-           
+
         }
-        
+
     }
 }
