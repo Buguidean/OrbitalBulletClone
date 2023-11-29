@@ -19,16 +19,16 @@ public class Bullet : MonoBehaviour
     private float z;
     private float y;
 
-    private float timer = 7f;
+    private float timer = 3.5f;
 
     private void Start()
     {
         rbController = GetComponent<Rigidbody>();
         if (leftMove) {
-            currentSpeed = -0.9f;
+            currentSpeed = -1.8f * 14.5f/radius;
         }
         else {
-            currentSpeed = 0.9f;
+            currentSpeed = 1.8f * 14.5f / radius;
         }
     }
 
@@ -72,7 +72,7 @@ public class Bullet : MonoBehaviour
         rbController.Move(newPosition, Quaternion.identity);
 
         timer -= Time.deltaTime;
-        if(timer <= 0f)
+        if (timer * 14.5f / radius <= 0f)
         {
             Destroy(gameObject);
         }

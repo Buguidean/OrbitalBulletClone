@@ -6,14 +6,21 @@ using UnityEngine.SceneManagement;
 public class CircularMotion : MonoBehaviour
 {
     public Transform center; // the center point of the circle
-    public GameObject prefab;
+    public GameObject bulledPrefab;
 
     //damage recived;
     public bool isHurted;
     public bool isShoted;
+    // orbit change 
     public bool teleport;
 
     public float radius = 29f; // radius of the circle
+
+    //has Weapon (0: any, 1: pistol, 2 rifle)
+    public int hasWeapon;
+    public GameObject weaponModel;
+
+    private GameObject weaponInstanciated = null;
 
     private CharacterController characterController;
 
@@ -174,10 +181,18 @@ public class CircularMotion : MonoBehaviour
         if (timer < 0f)
             timer = 0f;
 
+        if (weaponInstanciated != null)
+        {
+            Weapon script = weaponInstanciated.GetComponent<Weapon>();
+            script.angle = angle;
+            script.orientation = orientation;
+            script.radius = radius;
+        }
+
 
     }
 
-    private void createBullet()
+    /*private void createBullet()
     {
         // Initialize values
         float bulletAngle = angle;
@@ -201,7 +216,7 @@ public class CircularMotion : MonoBehaviour
         //compute orientation (will be needed)
 
         //instantiate
-        GameObject obj = Instantiate(prefab, pos, Quaternion.identity);
+        GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
 
         //asign initiallization
         obj.GetComponent<Bullet>().leftMove = leftMove;
@@ -210,6 +225,43 @@ public class CircularMotion : MonoBehaviour
 
         //Destroy the object in 5 s
         //Destroy(obj, 7);
+
+    }*/
+
+    void createWeapon()
+    {
+        float weaponAngle = angle;
+        bool leftMove;
+        if (orientation == -1)
+        {
+            leftMove = false;
+            weaponAngle += 0.04f * (29f/radius);
+        }
+        else
+        {
+            leftMove = true;
+            weaponAngle -= 0.04f * (29f/radius);
+        }
+
+        //Compute position
+        float xPos = center.position.x + Mathf.Cos(weaponAngle) * radius;
+        float zPos = center.position.z + Mathf.Sin(weaponAngle) * radius;
+        Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
+
+        weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
+        weaponInstanciated.transform.parent = gameObject.transform;
+        weaponInstanciated.transform.rotation = transform.rotation;
+        //weaponInstanciated.transform.Rotate(0.0f, 90.0f, 0.0f);
+
+        Weapon script = weaponInstanciated.GetComponent<Weapon>();
+
+        script.angle = weaponAngle;
+        script.orientation = orientation;
+        script.radius = radius;
+        script.bulledPrefab = bulledPrefab;
+        script.center = center;
+
+        script.ammo = 5;
 
     }
 
@@ -241,12 +293,26 @@ public class CircularMotion : MonoBehaviour
             doJump = true;
         }
 
-        if (Input.GetKey(KeyCode.P) & timer == 0f)
+        if (Input.GetKey(KeyCode.C) && hasWeapon == 0)
+        {
+            hasWeapon = 1;
+            createWeapon();
+        }
+
+        if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
+        {
+            hasWeapon = 0;
+            Destroy(weaponInstanciated);
+            weaponInstanciated = null;
+        }
+
+
+        /*if (Input.GetKey(KeyCode.P) & timer == 0f)
         {
             timer = 1f;
             createBullet();
 
-        }
+        }*/
 
     }
 }
