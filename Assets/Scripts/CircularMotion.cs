@@ -14,17 +14,23 @@ public class CircularMotion : MonoBehaviour
     // orbit change 
     public bool teleport;
 
-    public float radius = 29f; // radius of the circle
+    public float radius = 29f; // radius of the     
 
     //has Weapon (0: any, 1: pistol, 2 rifle)
     public int hasWeapon;
-    public GameObject weaponModel;
+    public GameObject pistol;
+    public GameObject rifle;
 
     private GameObject weaponInstanciated = null;
 
     private CharacterController characterController;
 
     Animator animator;
+
+    //teleport control
+    private float internalRadius = 14.5f;
+    private float externalRadius = 29.0f;
+    private bool isExtRad = true;
 
 
     private float acceleration = 2f; // acceleration factor
@@ -113,20 +119,39 @@ public class CircularMotion : MonoBehaviour
 
         if (teleport && GetComponent<CharacterController>().isGrounded)
         {
-            radius -= 0.25f;
+            if (isExtRad)
+                radius -= 0.25f;
+            else
+                radius += 0.25f;
+
             speedY = 0.5f;
         }
 
         else if (teleport)
         {
-            if (radius <= (29f / 2f))
+            if (isExtRad)
             {
-                teleport = false;
-                radius = (29f / 2f);
+                if (radius <= internalRadius)
+                {
+                    teleport = false;
+                    radius = internalRadius;
+                    isExtRad = false;
+                }
+                else
+                    radius -= 0.25f;
             }
+
             else
             {
-                radius -= 0.25f;
+                if (radius >= externalRadius)
+                {
+                    teleport = false;
+                    radius = externalRadius;
+                    isExtRad = true;
+                }
+                else
+                    radius += 0.25f;
+
             }
         }
 
@@ -247,7 +272,13 @@ public class CircularMotion : MonoBehaviour
         float xPos = center.position.x + Mathf.Cos(weaponAngle) * radius;
         float zPos = center.position.z + Mathf.Sin(weaponAngle) * radius;
         Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
-
+        GameObject weaponModel = pistol;
+        switch (hasWeapon)
+        {
+            case 2:
+                weaponModel = rifle;
+                break;
+        }
         weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
         weaponInstanciated.transform.parent = gameObject.transform;
         weaponInstanciated.transform.rotation = transform.rotation;
@@ -296,6 +327,12 @@ public class CircularMotion : MonoBehaviour
         if (Input.GetKey(KeyCode.C) && hasWeapon == 0)
         {
             hasWeapon = 1;
+            createWeapon();
+        }
+
+        if (Input.GetKey(KeyCode.V) && hasWeapon == 0)
+        {
+            hasWeapon = 2;
             createWeapon();
         }
 

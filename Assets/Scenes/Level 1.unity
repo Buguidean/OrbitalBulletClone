@@ -444,7 +444,8 @@ MonoBehaviour:
   teleport: 0
   radius: 29
   hasWeapon: 0
-  weaponModel: {fileID: 6340279968009241687, guid: 5324d442de0f5544b8d2c4ef70d76bb3, type: 3}
+  pistol: {fileID: 6340279968009241687, guid: 5324d442de0f5544b8d2c4ef70d76bb3, type: 3}
+  rifle: {fileID: 5632619115217424870, guid: e45aa7de26610cc45ab50eba7a40bc70, type: 3}
   doJump: 0
 --- !u!143 &236513513
 CharacterController:
@@ -1009,7 +1010,7 @@ Transform:
   m_GameObject: {fileID: 539257289}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.05, y: -0.21, z: -8.6}
+  m_LocalPosition: {x: -11.92, y: -0.72, z: -8.257}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4227,11 +4228,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 88b6d3af14ec69d419f33049df8c83b8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 60
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 88b6d3af14ec69d419f33049df8c83b8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 60
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 88b6d3af14ec69d419f33049df8c83b8, type: 3}
       propertyPath: m_LocalScale.z
