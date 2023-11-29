@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - Enemy
   - BillBoard
+  - Weapon
   layers:
   - Default
   - TransparentFX

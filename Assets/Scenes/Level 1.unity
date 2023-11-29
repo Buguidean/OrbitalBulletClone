@@ -443,9 +443,11 @@ MonoBehaviour:
   isShoted: 0
   teleport: 0
   radius: 29
-  hasWeapon: 0
-  pistol: {fileID: 6340279968009241687, guid: 5324d442de0f5544b8d2c4ef70d76bb3, type: 3}
-  rifle: {fileID: 5632619115217424870, guid: e45aa7de26610cc45ab50eba7a40bc70, type: 3}
+  pistol: {fileID: 5632619115217424870, guid: e45aa7de26610cc45ab50eba7a40bc70, type: 3}
+  rifle: {fileID: 6340279968009241687, guid: 5324d442de0f5544b8d2c4ef70d76bb3, type: 3}
+  collectAmmo: 0
+  takePistol: 0
+  takeRifle: 0
   doJump: 0
 --- !u!143 &236513513
 CharacterController:
@@ -2011,7 +2013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 78a8b0e4cac04a0419c1f0c6e8307752, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: -1.484
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 78a8b0e4cac04a0419c1f0c6e8307752, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3390,9 +3392,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 2.2
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!4 &1373331341 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 78a8b0e4cac04a0419c1f0c6e8307752, type: 3}

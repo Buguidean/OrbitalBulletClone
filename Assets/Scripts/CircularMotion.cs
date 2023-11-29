@@ -16,12 +16,16 @@ public class CircularMotion : MonoBehaviour
 
     public float radius = 29f; // radius of the     
 
-    //has Weapon (0: any, 1: pistol, 2 rifle)
-    public int hasWeapon;
     public GameObject pistol;
     public GameObject rifle;
+    public bool collectAmmo = false;
+    public bool takePistol = false;
+    public bool takeRifle = false;
 
     private GameObject weaponInstanciated = null;
+    private int initialAmmo = 5;
+    //has Weapon (0: any, 1: pistol, 2 rifle)
+    private int hasWeapon;
 
     private CharacterController characterController;
 
@@ -109,6 +113,37 @@ public class CircularMotion : MonoBehaviour
 
     }
 
+    private void collectedObjects()
+    {
+        if (collectAmmo)
+        {
+            if (hasWeapon > 0)
+                weaponInstanciated.GetComponent<Weapon>().ammo += 1;
+            else
+                initialAmmo++;
+
+            collectAmmo = false;
+        }
+        if (takeRifle & hasWeapon == 0)
+        {
+            hasWeapon = 2;
+            takeRifle = false;
+            createWeapon();
+        }
+        else
+            takeRifle = false;
+
+        if (takePistol & hasWeapon == 0)
+        {
+            hasWeapon = 1;
+            takePistol = false;
+            createWeapon();
+        }
+        else takePistol = false;
+        
+        
+    }
+
     private void FixedUpdate()
     {
 
@@ -157,6 +192,8 @@ public class CircularMotion : MonoBehaviour
 
 
         controlDamageImpact();
+
+        collectedObjects();
         // Debug.Log(angle);
         // Adjust the current speed based on input and acceleration
         currentSpeed += input * acceleration * Time.deltaTime;
@@ -217,42 +254,6 @@ public class CircularMotion : MonoBehaviour
 
     }
 
-    /*private void createBullet()
-    {
-        // Initialize values
-        float bulletAngle = angle;
-        bool leftMove;
-        if (orientation == -1)
-        {
-            leftMove = false;
-            bulletAngle += 0.05f;
-        }
-        else
-        {
-            leftMove = true;
-            bulletAngle -= 0.05f;
-        }
-
-        //Compute position
-        float xPos = center.position.x + Mathf.Cos(bulletAngle) * radius;
-        float zPos = center.position.z + Mathf.Sin(bulletAngle) * radius;
-        Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
-
-        //compute orientation (will be needed)
-
-        //instantiate
-        GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
-
-        //asign initiallization
-        obj.GetComponent<Bullet>().leftMove = leftMove;
-        obj.GetComponent<Bullet>().angle = bulletAngle;
-        obj.GetComponent<Bullet>().radius = radius;
-
-        //Destroy the object in 5 s
-        //Destroy(obj, 7);
-
-    }*/
-
     void createWeapon()
     {
         float weaponAngle = angle;
@@ -268,31 +269,35 @@ public class CircularMotion : MonoBehaviour
             weaponAngle -= 0.04f * (29f/radius);
         }
 
-        //Compute position
         float xPos = center.position.x + Mathf.Cos(weaponAngle) * radius;
         float zPos = center.position.z + Mathf.Sin(weaponAngle) * radius;
         Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
+        
         GameObject weaponModel = pistol;
         switch (hasWeapon)
         {
+            case 1:
+                pos += new Vector3(0f, 0.5f, 0f);
+                break;
             case 2:
                 weaponModel = rifle;
                 break;
         }
+        
         weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
         weaponInstanciated.transform.parent = gameObject.transform;
         weaponInstanciated.transform.rotation = transform.rotation;
-        //weaponInstanciated.transform.Rotate(0.0f, 90.0f, 0.0f);
+        if(hasWeapon == 1)
+            weaponInstanciated.transform.Rotate(0.0f, 90.0f, 0.0f);
 
         Weapon script = weaponInstanciated.GetComponent<Weapon>();
-
         script.angle = weaponAngle;
         script.orientation = orientation;
         script.radius = radius;
         script.bulledPrefab = bulledPrefab;
         script.center = center;
 
-        script.ammo = 5;
+        script.ammo = initialAmmo;
 
     }
 
@@ -341,15 +346,7 @@ public class CircularMotion : MonoBehaviour
             hasWeapon = 0;
             Destroy(weaponInstanciated);
             weaponInstanciated = null;
+            initialAmmo = 5;
         }
-
-
-        /*if (Input.GetKey(KeyCode.P) & timer == 0f)
-        {
-            timer = 1f;
-            createBullet();
-
-        }*/
-
     }
 }
