@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - BillBoard
   - Weapon
+  - ammoChest
+  - ammo
   layers:
   - Default
   - TransparentFX

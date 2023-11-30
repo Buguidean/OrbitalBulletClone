@@ -13,6 +13,7 @@ public class Weapon : MonoBehaviour
 
     //public GameObject model;
     public int ammo;
+    public float shotRate;
 
 
     private float timer = 0f;
@@ -64,7 +65,7 @@ public class Weapon : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.P) & timer == 0f & ammo > 0)
         {
-            timer = 1f;
+            timer = shotRate;
             ammo -= 1;
             createBullet();
             Debug.Log(ammo);
@@ -77,11 +78,7 @@ public class Weapon : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer < 0f)
             timer = 0f;
-
-        if (Input.GetKeyUp(KeyCode.S))
-        {
-            //Debug.Log("angle" + angle.ToString);
-        }
+        
     }
 
 

@@ -25,10 +25,10 @@ public class Bullet : MonoBehaviour
     {
         rbController = GetComponent<Rigidbody>();
         if (leftMove) {
-            currentSpeed = -1.8f * 14.5f/radius;
+            currentSpeed = -2f * 14.5f / radius;
         }
         else {
-            currentSpeed = 1.8f * 14.5f / radius;
+            currentSpeed = 2f * 14.5f / radius;
         }
     }
 
@@ -49,6 +49,11 @@ public class Bullet : MonoBehaviour
             case "Bullet":
                 Debug.Log("Bullet were touched");
                 //Destroy(gameObject);
+                break;
+            case "ammoChest":
+                Debug.Log("The bullet impacted with the ammo chest");
+                obj.GetComponent<ammoChest>().isShoted = true;
+                Destroy(gameObject);
                 break;
             case "Untagged":
                 Debug.Log("The bullet was destroyed because touched the Environment");
@@ -71,8 +76,9 @@ public class Bullet : MonoBehaviour
         Vector3 displace = newPosition - transform.position;
         rbController.Move(newPosition, Quaternion.identity);
 
-        timer -= Time.deltaTime;
-        if (timer * 14.5f / radius <= 0f)
+        timer -= Time.deltaTime * (14.5f/radius);
+
+        if (timer <= 0f)
         {
             Destroy(gameObject);
         }

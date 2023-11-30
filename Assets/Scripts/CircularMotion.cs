@@ -23,7 +23,8 @@ public class CircularMotion : MonoBehaviour
     public bool takeRifle = false;
 
     private GameObject weaponInstanciated = null;
-    private int initialAmmo = 5;
+    private int initialAmmoPistol = 10;
+    private int initialAmmoRifle = 30;
     //has Weapon (0: any, 1: pistol, 2 rifle)
     private int hasWeapon;
 
@@ -115,15 +116,26 @@ public class CircularMotion : MonoBehaviour
 
     private void collectedObjects()
     {
+
         if (collectAmmo)
         {
             if (hasWeapon > 0)
-                weaponInstanciated.GetComponent<Weapon>().ammo += 1;
-            else
-                initialAmmo++;
+            {
+                switch (hasWeapon)
+                {
+                    case 1://pistol
+                        weaponInstanciated.GetComponent<Weapon>().ammo += initialAmmoPistol;
+                        break;
+                    case 2: //Rifle
+                        weaponInstanciated.GetComponent<Weapon>().ammo = initialAmmoRifle;
+                        break;
+
+                }
+            }
 
             collectAmmo = false;
         }
+
         if (takeRifle & hasWeapon == 0)
         {
             hasWeapon = 2;
@@ -151,7 +163,7 @@ public class CircularMotion : MonoBehaviour
         {
             animator.SetBool("isMoving", true);
         }
-
+        
         if (teleport && GetComponent<CharacterController>().isGrounded)
         {
             if (isExtRad)
@@ -257,15 +269,13 @@ public class CircularMotion : MonoBehaviour
     void createWeapon()
     {
         float weaponAngle = angle;
-        bool leftMove;
+
         if (orientation == -1)
         {
-            leftMove = false;
             weaponAngle += 0.04f * (29f/radius);
         }
         else
         {
-            leftMove = true;
             weaponAngle -= 0.04f * (29f/radius);
         }
 
@@ -274,13 +284,19 @@ public class CircularMotion : MonoBehaviour
         Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
         
         GameObject weaponModel = pistol;
+        int initialAmmo = 0;
+        float shotRate = 1f;
         switch (hasWeapon)
         {
             case 1:
                 pos += new Vector3(0f, 0.5f, 0f);
+                initialAmmo = initialAmmoPistol;
+                shotRate = 1f;
                 break;
             case 2:
                 weaponModel = rifle;
+                initialAmmo = initialAmmoRifle;
+                shotRate = 0.6f;
                 break;
         }
         
@@ -298,6 +314,7 @@ public class CircularMotion : MonoBehaviour
         script.center = center;
 
         script.ammo = initialAmmo;
+        script.shotRate = shotRate;
 
     }
 
@@ -346,7 +363,6 @@ public class CircularMotion : MonoBehaviour
             hasWeapon = 0;
             Destroy(weaponInstanciated);
             weaponInstanciated = null;
-            initialAmmo = 5;
         }
     }
 }
