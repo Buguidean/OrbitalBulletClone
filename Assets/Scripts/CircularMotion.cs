@@ -25,7 +25,7 @@ public class CircularMotion : MonoBehaviour
     private GameObject weaponInstanciated = null;
     private int initialAmmoPistol = 10;
     private int initialAmmoRifle = 30;
-    //has Weapon (0: any, 1: pistol, 2 rifle)
+    //has Weapon (0: any, 1: pistol, 2 rifle, 3 both)
     private int hasWeapon;
 
     private CharacterController characterController;
@@ -36,6 +36,10 @@ public class CircularMotion : MonoBehaviour
     private float internalRadius = 14.5f;
     private float externalRadius = 29.0f;
     private bool isExtRad = true;
+
+    //dodge attributes
+    private bool dodging = false;
+    private bool invulnerable = false;
 
 
     private float acceleration = 2f; // acceleration factor
@@ -92,6 +96,8 @@ public class CircularMotion : MonoBehaviour
 
     private void controlDamageImpact()
     {
+        //Debug.Log(dodging);
+        //Debug.Log(invulnerable);
         if (isHurted)
         {
             health -= 25f;
@@ -105,6 +111,7 @@ public class CircularMotion : MonoBehaviour
             isShoted = false;
             Debug.Log("Player health: " + health.ToString());
         }
+    
 
         if (health <= 0f)
         {
@@ -202,8 +209,16 @@ public class CircularMotion : MonoBehaviour
             }
         }
 
-
-        controlDamageImpact();
+        // si la animación no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
+        if (!dodging & !invulnerable)
+        {
+            controlDamageImpact();
+        }
+        else
+        {
+            isShoted = false;
+            isHurted = false;
+        }
 
         collectedObjects();
         // Debug.Log(angle);
@@ -363,6 +378,28 @@ public class CircularMotion : MonoBehaviour
             hasWeapon = 0;
             Destroy(weaponInstanciated);
             weaponInstanciated = null;
+        }
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            dodging = true;
+            currentSpeed *= 1.4f;
+            //change animationa roll
+        }
+
+        //Key Cheats
+        if (Input.GetKey(KeyCode.M))
+        {
+            collectAmmo = true;
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            invulnerable = !invulnerable;
+
+            string s1 = "The player is ";
+            if (!invulnerable)
+                s1 += "not ";
+            Debug.Log(s1 + "invulnerable");
         }
     }
 }

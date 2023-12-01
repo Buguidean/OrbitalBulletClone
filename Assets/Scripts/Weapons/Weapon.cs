@@ -21,9 +21,9 @@ public class Weapon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
-    
+
     private void createBullet()
     {
         // Initialize values
@@ -32,12 +32,12 @@ public class Weapon : MonoBehaviour
         if (orientation == -1)
         {
             leftMove = false;
-            bulletAngle += 0.05f * 29f/radius;
+            bulletAngle += 0.05f * 29f / radius;
         }
         else
         {
             leftMove = true;
-            bulletAngle -= 0.05f * 29f/radius;
+            bulletAngle -= 0.05f * 29f / radius;
         }
 
         //Compute position
@@ -78,7 +78,7 @@ public class Weapon : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer < 0f)
             timer = 0f;
-        
+
     }
 
 
