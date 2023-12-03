@@ -438,13 +438,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {fileID: 1071403576}
-  bulledPrefab: {fileID: 2348225818947282095, guid: 94c54cd79fcdff54994c1d2bbfa0eba9, type: 3}
-  isHurted: 0
-  isShoted: 0
+  camera: {fileID: 963194228}
+  damageRecived: 0
   teleport: 0
   radius: 29
-  pistol: {fileID: 5632619115217424870, guid: e45aa7de26610cc45ab50eba7a40bc70, type: 3}
-  rifle: {fileID: 6340279968009241687, guid: 5324d442de0f5544b8d2c4ef70d76bb3, type: 3}
   collectAmmo: 0
   takePistol: 0
   takeRifle: 0
@@ -3371,7 +3368,7 @@ MonoBehaviour:
   radius: 29
   camera: {fileID: 963194228}
   prefab: {fileID: 6210763348083485345, guid: ec603fa8042d74a4b8e0936262edb9c4, type: 3}
-  isShoted: 0
+  damageRecived: 0
 --- !u!136 &1373331340
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3936,7 +3933,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isShoted: 0
-  ammoPrefab: {fileID: 7084794966140395859, guid: 593c3aa578740bf46ae7e11133248399, type: 3}
 --- !u!65 &1683802065
 BoxCollider:
   m_ObjectHideFlags: 0

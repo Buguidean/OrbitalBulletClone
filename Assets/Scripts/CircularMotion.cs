@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class CircularMotion : MonoBehaviour
 {
     public Transform center; // the center point of the circle
+    public Transform camera;
 
     //damage recived    
     public float damageRecived;
@@ -67,8 +68,36 @@ public class CircularMotion : MonoBehaviour
 
 
     //Stats
+    private float maxHealth;
     private float health;
 
+    //UI
+    GameObject LifeBar;
+
+    private void Start()
+    {
+        x = center.position.x + Mathf.Cos(0f) * radius;
+        z = center.position.z + Mathf.Sin(0f) * radius;
+        y = transform.position.y + speedY;
+        characterController = GetComponent<CharacterController>();
+        animator = gameObject.GetComponent<Animator>();
+        damageRecived = 0f;
+
+        maxHealth = 100f;
+        health = maxHealth;
+        createLifeBar();
+    }
+
+    private void createLifeBar()
+    {
+        GameObject lifeBar = Resources.Load("prefabs/UI/Player/LifeBar") as GameObject;
+        Vector3 pos = camera.position + new Vector3(-2f, 1.55f, 3f);
+        LifeBar = Instantiate(lifeBar, pos, Quaternion.identity);
+        LifeBar.transform.parent = camera.transform;
+        UI_LifeBar_Player script = LifeBar.GetComponent<UI_LifeBar_Player>();
+        script.maxHealth = maxHealth;
+        script.actualHealth = health;
+    }
 
     void Friction(float input)
     {
@@ -87,23 +116,13 @@ public class CircularMotion : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        x = center.position.x + Mathf.Cos(0f) * radius;
-        z = center.position.z + Mathf.Sin(0f) * radius;
-        y = transform.position.y + speedY;
-        characterController = GetComponent<CharacterController>();
-        animator = gameObject.GetComponent<Animator>();
-        health = 100f;
-        damageRecived = 0f;
-    }
-
     private void controlDamageImpact()
     {
         if (damageRecived != 0f)
         {
             health -= damageRecived;
             damageRecived = 0f;
+            LifeBar.GetComponent<UI_LifeBar_Player>().actualHealth = health;
             Debug.Log("Player health: " + health.ToString());
         }
 
