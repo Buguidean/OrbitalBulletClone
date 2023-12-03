@@ -347,7 +347,7 @@ public class CircularMotion : MonoBehaviour
         float zPos = center.position.z + Mathf.Sin(weaponAngle) * radius;
         Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
         
-        GameObject weaponModel = Resources.Load("prefabs/Weapon") as GameObject;
+        GameObject weaponModel = Resources.Load("prefabs/p") as GameObject;
         switch (hasWeapon)
         {
             case 1:
@@ -367,7 +367,7 @@ public class CircularMotion : MonoBehaviour
         {
             case 1:
             case 3:
-                weaponInstanciated.transform.Rotate(0.0f, 90.0f, 0.0f);
+                weaponInstanciated.transform.Rotate(0.0f, 180.0f, 0.0f);
                 Pistol script1 = weaponInstanciated.GetComponent<Pistol>();
                 script1.angle = weaponAngle;
                 script1.orientation = orientation;
