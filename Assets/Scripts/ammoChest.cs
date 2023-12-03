@@ -5,14 +5,13 @@ using UnityEngine;
 public class ammoChest : MonoBehaviour
 {
     public bool isShoted = false;
-    public GameObject ammoPrefab;
 
     private float health = 20f;
 
     void createAmmo()
     {
+        GameObject ammoPrefab = Resources.Load("prefabs/AmmoPrefab") as GameObject;
         GameObject obj = Instantiate(ammoPrefab, transform.position, Quaternion.identity);
-
     }
 
     // Update is called once per frame

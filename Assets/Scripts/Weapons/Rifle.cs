@@ -11,8 +11,6 @@ public class Rifle : MonoBehaviour
 
     public int ammo;
 
-    public GameObject bulledPrefab;
-
     private float shotRate = 0.6f;
     private float bulletDamage = 12f;
     private float bulletTime = 3.5f;
@@ -49,6 +47,7 @@ public class Rifle : MonoBehaviour
         Vector3 pos = new Vector3(xPos, transform.position.y + 0.5f, zPos);
 
         //instantiate
+        GameObject bulledPrefab = Resources.Load("prefabs/Sphere") as GameObject;
         GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
 
         //asign initiallization

@@ -11,8 +11,6 @@ public class Pistol : MonoBehaviour
 
     public int ammo;
 
-    public GameObject bulledPrefab;
-
     private float shotRate = 1f;
     private float bulletTime = 0.875f;
     private float bulletDamage = 20f;
@@ -43,6 +41,7 @@ public class Pistol : MonoBehaviour
         //compute orientation (will be needed)
 
         //instantiate
+        GameObject bulledPrefab = Resources.Load("prefabs/Sphere") as GameObject;
         GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
 
         //asign initiallization

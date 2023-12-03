@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class CircularMotion : MonoBehaviour
 {
     public Transform center; // the center point of the circle
-    public GameObject bulledPrefab;
 
     //damage recived    
     public float damageRecived;
@@ -16,8 +15,6 @@ public class CircularMotion : MonoBehaviour
     public float radius = 29f; // radius of the     
 
     //weapons
-    public GameObject pistol;
-    public GameObject rifle;
     public bool collectAmmo = false;
     public bool takePistol = false;
     public bool takeRifle = false;
@@ -331,7 +328,7 @@ public class CircularMotion : MonoBehaviour
         float zPos = center.position.z + Mathf.Sin(weaponAngle) * radius;
         Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
         
-        GameObject weaponModel = pistol;
+        GameObject weaponModel = Resources.Load("prefabs/Weapon") as GameObject;
         switch (hasWeapon)
         {
             case 1:
@@ -340,7 +337,7 @@ public class CircularMotion : MonoBehaviour
                 break;
             case 2:
             case 4:
-                weaponModel = rifle;
+                weaponModel = Resources.Load("prefabs/model") as GameObject;
                 break;
         }
         
@@ -356,7 +353,6 @@ public class CircularMotion : MonoBehaviour
                 script1.angle = weaponAngle;
                 script1.orientation = orientation;
                 script1.radius = radius;
-                script1.bulledPrefab = bulledPrefab;
                 script1.center = center;
                 script1.ammo = pistolAmmo;
                 break;
@@ -366,7 +362,6 @@ public class CircularMotion : MonoBehaviour
                 script2.angle = weaponAngle;
                 script2.orientation = orientation;
                 script2.radius = radius;
-                script2.bulledPrefab = bulledPrefab;
                 script2.center = center;
                 script2.ammo = rifleAmmo;
                 break;
