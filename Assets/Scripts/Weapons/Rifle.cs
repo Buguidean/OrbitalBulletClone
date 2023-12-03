@@ -2,21 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Rifle : MonoBehaviour
 {
     public float angle;
     public int orientation;
     public float radius;
     public Transform center;
 
+    public int ammo;
+
     public GameObject bulledPrefab;
 
-    //public GameObject model;
-    public int ammo;
-    public float shotRate;
-
+    private float shotRate = 0.6f;
+    private float bulletDamage = 12f;
+    private float bulletTime = 3.5f;
 
     private float timer = 0f;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -45,8 +48,6 @@ public class Weapon : MonoBehaviour
         float zPos = center.position.z + Mathf.Sin(bulletAngle) * 29f;
         Vector3 pos = new Vector3(xPos, transform.position.y + 0.5f, zPos);
 
-        //compute orientation (will be needed)
-
         //instantiate
         GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
 
@@ -54,10 +55,8 @@ public class Weapon : MonoBehaviour
         obj.GetComponent<Bullet>().leftMove = leftMove;
         obj.GetComponent<Bullet>().angle = bulletAngle;
         obj.GetComponent<Bullet>().radius = radius;
-
-        //Destroy the object in 5 s
-        //Destroy(obj, 7);
-
+        obj.GetComponent<Bullet>().damage = bulletDamage;
+        obj.GetComponent<Bullet>().timer = bulletTime;
     }
 
     // Update is called once per frame
@@ -69,6 +68,7 @@ public class Weapon : MonoBehaviour
             ammo -= 1;
             createBullet();
             Debug.Log(ammo);
+
         }
         else if (ammo == 0 & Input.GetKey(KeyCode.P))
         {

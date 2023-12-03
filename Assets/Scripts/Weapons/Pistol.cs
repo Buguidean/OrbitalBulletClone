@@ -2,27 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Pistol : MonoBehaviour
 {
     public float angle;
     public int orientation;
     public float radius;
     public Transform center;
 
+    public int ammo;
+
     public GameObject bulledPrefab;
 
-    //public GameObject model;
-    public int ammo;
-    public float shotRate;
-
+    private float shotRate = 1f;
+    private float bulletTime = 0.875f;
+    private float bulletDamage = 20f;
 
     private float timer = 0f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     private void createBullet()
     {
@@ -54,9 +49,9 @@ public class Weapon : MonoBehaviour
         obj.GetComponent<Bullet>().leftMove = leftMove;
         obj.GetComponent<Bullet>().angle = bulletAngle;
         obj.GetComponent<Bullet>().radius = radius;
+        obj.GetComponent<Bullet>().damage = bulletDamage;
+        obj.GetComponent<Bullet>().timer = bulletTime;
 
-        //Destroy the object in 5 s
-        //Destroy(obj, 7);
 
     }
 
@@ -69,6 +64,7 @@ public class Weapon : MonoBehaviour
             ammo -= 1;
             createBullet();
             Debug.Log(ammo);
+
         }
         else if (ammo == 0 & Input.GetKey(KeyCode.P))
         {
@@ -79,6 +75,5 @@ public class Weapon : MonoBehaviour
             timer = 0f;
 
     }
-
 
 }

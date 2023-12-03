@@ -9,6 +9,9 @@ public class Bullet : MonoBehaviour
     public float angle;
     public float radius; // radius of the circle
 
+    public float timer;
+    public float damage;
+
     private Rigidbody rbController;
 
     //movement
@@ -17,9 +20,7 @@ public class Bullet : MonoBehaviour
 
     private float x;
     private float z;
-    private float y;
-
-    private float timer = 3.5f;
+    private float y;    
 
     private void Start()
     {
@@ -38,17 +39,16 @@ public class Bullet : MonoBehaviour
         {
             case "Player":
                 Debug.Log("The bullet impacted with player");
-                obj.GetComponent<CircularMotion>().isShoted = true;
+                obj.GetComponent<CircularMotion>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "Enemy":
                 Debug.Log("The bullet impacted with an Enemy");
-                obj.GetComponent<BasicEnemyMovement>().isShoted = true;
+                obj.GetComponent<BasicEnemyMovement>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "Bullet":
                 Debug.Log("Bullet were touched");
-                //Destroy(gameObject);
                 break;
             case "ammoChest":
                 Debug.Log("The bullet impacted with the ammo chest");

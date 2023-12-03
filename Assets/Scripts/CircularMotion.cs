@@ -8,25 +8,32 @@ public class CircularMotion : MonoBehaviour
     public Transform center; // the center point of the circle
     public GameObject bulledPrefab;
 
-    //damage recived;
-    public bool isHurted;
-    public bool isShoted;
+    //damage recived    
+    public float damageRecived;
     // orbit change 
     public bool teleport;
 
     public float radius = 29f; // radius of the     
 
+    //weapons
     public GameObject pistol;
     public GameObject rifle;
     public bool collectAmmo = false;
     public bool takePistol = false;
     public bool takeRifle = false;
+    
 
     private GameObject weaponInstanciated = null;
-    private int initialAmmoPistol = 10;
-    private int initialAmmoRifle = 30;
-    //has Weapon (0: any, 1: pistol, 2 rifle, 3 both)
+   
+
+    //has Weapon (0: any, 1: pistol, 2 rifle, 3 both (pistol active), 4 both (rifle active))
     private int hasWeapon;
+
+    private int maxAmmoPistol = 10;
+    private int maxAmmoRifle = 30;
+
+    private int pistolAmmo = 10;
+    private int rifleAmmo = 30;
 
     private CharacterController characterController;
 
@@ -41,7 +48,7 @@ public class CircularMotion : MonoBehaviour
     private bool dodging = false;
     private bool invulnerable = false;
 
-
+    //Movement
     private float acceleration = 2f; // acceleration factor
     private float maxVelocity = 0.5f; // maximum rotation speed
 
@@ -59,6 +66,7 @@ public class CircularMotion : MonoBehaviour
     public bool doJump = false;
 
     private float timer = 0f;
+    //private float shotTimer = 0f; 
 
 
     //Stats
@@ -90,28 +98,17 @@ public class CircularMotion : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         animator = gameObject.GetComponent<Animator>();
         health = 100f;
-        isHurted = false;
-        isShoted = false;
+        damageRecived = 0f;
     }
 
     private void controlDamageImpact()
     {
-        //Debug.Log(dodging);
-        //Debug.Log(invulnerable);
-        if (isHurted)
+        if (damageRecived != 0f)
         {
-            health -= 25f;
-            isHurted = false;
+            health -= damageRecived;
+            damageRecived = 0f;
             Debug.Log("Player health: " + health.ToString());
         }
-
-        if (isShoted)
-        {
-            health -= 15f;
-            isShoted = false;
-            Debug.Log("Player health: " + health.ToString());
-        }
-    
 
         if (health <= 0f)
         {
@@ -124,17 +121,23 @@ public class CircularMotion : MonoBehaviour
     private void collectedObjects()
     {
 
-        if (collectAmmo)
+        if (collectAmmo) // cambiar con la gestion de municion
         {
             if (hasWeapon > 0)
             {
                 switch (hasWeapon)
                 {
-                    case 1://pistol
-                        weaponInstanciated.GetComponent<Weapon>().ammo += initialAmmoPistol;
+                    //pistol
+                    case 1:
+                    case 3:
+                        pistolAmmo = maxAmmoPistol;
+                        weaponInstanciated.GetComponent<Pistol>().ammo = maxAmmoPistol;
                         break;
-                    case 2: //Rifle
-                        weaponInstanciated.GetComponent<Weapon>().ammo = initialAmmoRifle;
+                    //Rifle
+                    case 2: 
+                    case 4:
+                        rifleAmmo = maxAmmoRifle;
+                        weaponInstanciated.GetComponent<Rifle>().ammo = maxAmmoRifle;
                         break;
 
                 }
@@ -142,24 +145,42 @@ public class CircularMotion : MonoBehaviour
 
             collectAmmo = false;
         }
-
-        if (takeRifle & hasWeapon == 0)
+        // Cambar segun el hasWeapon
+        if (takeRifle)
         {
-            hasWeapon = 2;
+            switch (hasWeapon)
+            {
+                case 0:
+                    hasWeapon = 2;
+                    createWeapon();
+                    break;
+                case 1:
+                    hasWeapon = 4;
+                    Destroy(weaponInstanciated);
+                    weaponInstanciated = null;
+                    createWeapon();
+                    break;
+            }
             takeRifle = false;
-            createWeapon();
         }
-        else
-            takeRifle = false;
 
-        if (takePistol & hasWeapon == 0)
+        if (takePistol)
         {
-            hasWeapon = 1;
+            switch (hasWeapon)
+            {
+                case 0:
+                    hasWeapon = 1;
+                    createWeapon();
+                    break;
+                case 2:
+                    hasWeapon = 3;
+                    Destroy(weaponInstanciated);
+                    weaponInstanciated = null;
+                    createWeapon();
+                    break;
+            }
             takePistol = false;
-            createWeapon();
         }
-        else takePistol = false;
-        
         
     }
 
@@ -216,12 +237,11 @@ public class CircularMotion : MonoBehaviour
         }
         else
         {
-            isShoted = false;
-            isHurted = false;
+            damageRecived = 0f;
         }
 
         collectedObjects();
-        // Debug.Log(angle);
+
         // Adjust the current speed based on input and acceleration
         currentSpeed += input * acceleration * Time.deltaTime;
 
@@ -270,12 +290,25 @@ public class CircularMotion : MonoBehaviour
         if (timer < 0f)
             timer = 0f;
 
+        //update attributes for bullet
         if (weaponInstanciated != null)
         {
-            Weapon script = weaponInstanciated.GetComponent<Weapon>();
-            script.angle = angle;
-            script.orientation = orientation;
-            script.radius = radius;
+            switch (hasWeapon) {
+                case 1:
+                case 3:
+                    Pistol script1 = weaponInstanciated.GetComponent<Pistol>();
+                    script1.angle = angle;
+                    script1.orientation = orientation;
+                    script1.radius = radius;
+                    break;
+                case 2:
+                case 4:
+                    Rifle script2 = weaponInstanciated.GetComponent<Rifle>();
+                    script2.angle = angle;
+                    script2.orientation = orientation;
+                    script2.radius = radius;
+                    break;
+            }
         }
 
 
@@ -299,40 +332,47 @@ public class CircularMotion : MonoBehaviour
         Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
         
         GameObject weaponModel = pistol;
-        int initialAmmo = 0;
-        float shotRate = 1f;
         switch (hasWeapon)
         {
             case 1:
+            case 3:
                 pos += new Vector3(0f, 0.5f, 0f);
-                initialAmmo = initialAmmoPistol;
-                shotRate = 1f;
                 break;
             case 2:
+            case 4:
                 weaponModel = rifle;
-                initialAmmo = initialAmmoRifle;
-                shotRate = 0.6f;
                 break;
         }
         
         weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
         weaponInstanciated.transform.parent = gameObject.transform;
         weaponInstanciated.transform.rotation = transform.rotation;
-        if(hasWeapon == 1)
-            weaponInstanciated.transform.Rotate(0.0f, 90.0f, 0.0f);
-
-        Weapon script = weaponInstanciated.GetComponent<Weapon>();
-        script.angle = weaponAngle;
-        script.orientation = orientation;
-        script.radius = radius;
-        script.bulledPrefab = bulledPrefab;
-        script.center = center;
-
-        script.ammo = initialAmmo;
-        script.shotRate = shotRate;
+        switch (hasWeapon)
+        {
+            case 1:
+            case 3:
+                weaponInstanciated.transform.Rotate(0.0f, 90.0f, 0.0f);
+                Pistol script1 = weaponInstanciated.GetComponent<Pistol>();
+                script1.angle = weaponAngle;
+                script1.orientation = orientation;
+                script1.radius = radius;
+                script1.bulledPrefab = bulledPrefab;
+                script1.center = center;
+                script1.ammo = pistolAmmo;
+                break;
+            case 2:
+            case 4:
+                Rifle script2 = weaponInstanciated.GetComponent<Rifle>();
+                script2.angle = weaponAngle;
+                script2.orientation = orientation;
+                script2.radius = radius;
+                script2.bulledPrefab = bulledPrefab;
+                script2.center = center;
+                script2.ammo = rifleAmmo;
+                break;
+        }
 
     }
-
 
     void Update()
     {
@@ -364,6 +404,7 @@ public class CircularMotion : MonoBehaviour
         if (Input.GetKey(KeyCode.C) && hasWeapon == 0)
         {
             hasWeapon = 1;
+            pistolAmmo = maxAmmoPistol;
             createWeapon();
         }
 
@@ -373,12 +414,12 @@ public class CircularMotion : MonoBehaviour
             createWeapon();
         }
 
-        if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
+        /*if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
         {
             hasWeapon = 0;
             Destroy(weaponInstanciated);
             weaponInstanciated = null;
-        }
+        }*/
 
         if (Input.GetKey(KeyCode.E))
         {
@@ -392,6 +433,7 @@ public class CircularMotion : MonoBehaviour
         {
             collectAmmo = true;
         }
+
         if (Input.GetKeyDown(KeyCode.G))
         {
             invulnerable = !invulnerable;
@@ -401,5 +443,53 @@ public class CircularMotion : MonoBehaviour
                 s1 += "not ";
             Debug.Log(s1 + "invulnerable");
         }
+        //
+
+        if (Input.GetKey(KeyCode.P) & timer == 0f)
+        {
+            switch (hasWeapon)
+            {
+                case 1:
+                case 3:
+                    if (pistolAmmo > 0)
+                    {
+                        timer = 1f;
+                        pistolAmmo -= 1;
+                    }
+                    break;
+                case 2:
+                case 4:
+                    if (pistolAmmo > 0)
+                    {
+                        timer = 0.6f;
+                        rifleAmmo -= 1;
+                    }
+                    break;
+            }
+
+        }
+        timer -= Time.deltaTime;
+        if (timer < 0f)
+            timer = 0f;
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if(hasWeapon == 3)
+            {
+                hasWeapon = 4;
+                Destroy(weaponInstanciated);
+                weaponInstanciated = null;
+                createWeapon();
+            }
+            else if(hasWeapon == 4)
+            {
+                hasWeapon = 3;
+                Destroy(weaponInstanciated);
+            weaponInstanciated = null;
+                createWeapon();
+            }
+        }
     }
+    
+
 }

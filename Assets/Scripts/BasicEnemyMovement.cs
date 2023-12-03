@@ -11,9 +11,6 @@ public class BasicEnemyMovement : MonoBehaviour
     public float radius = 29f; // radius of the circle
     public Transform camera;
 
-    
-
-
     private CharacterController characterController;
 
     private float acceleration = 1.5f; // acceleration factor
@@ -29,6 +26,7 @@ public class BasicEnemyMovement : MonoBehaviour
 
     //stats
     private float health = 50f;
+    private float damage = 25f;
 
     //Bar stats things
     public GameObject prefab; // prefab obj
@@ -38,12 +36,25 @@ public class BasicEnemyMovement : MonoBehaviour
     private float maxHealth = 50f;
 
     //statsControls
-    public bool isShoted = false;
+    public float damageRecived;
 
 
     //private bool doJump = false;
 
     //private float timer = 0f;
+
+    private void Start()
+    {
+        x = center.position.x + Mathf.Cos(0f) * radius;
+        z = center.position.z + Mathf.Sin(0f) * radius;
+        y = transform.position.y + speedY;
+        characterController = GetComponent<CharacterController>();
+        Physics.IgnoreCollision(characterController, player, true);
+        angle = -2.64f;
+
+        lifeBarCreation();
+        damageRecived = 0f;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -62,7 +73,7 @@ public class BasicEnemyMovement : MonoBehaviour
             }
             else
             {
-                other.GetComponent<CircularMotion>().isHurted = true;
+                other.GetComponent<CircularMotion>().damageRecived = damage;
             }
             Debug.Log("Angle hit: " + angle_hit.ToString());
         }     
@@ -96,27 +107,15 @@ public class BasicEnemyMovement : MonoBehaviour
         scriptLifeBar.orientation = orientation;
     }
 
-    private void Start()
-    {
-        x = center.position.x + Mathf.Cos(0f) * radius;
-        z = center.position.z + Mathf.Sin(0f) * radius;
-        y = transform.position.y + speedY;
-        characterController = GetComponent<CharacterController>();
-        Physics.IgnoreCollision(characterController, player, true);
-        angle = -2.64f;
-
-        lifeBarCreation();
-    }
-
     private void controlDamage()
     {
-        if (isShoted)
+        if (damageRecived != 0f)
         {
-            health -= 15f;
-            isShoted = false;
+            health -= damageRecived;
+            damageRecived = 0;
             if (!scriptLifeBar.Equals(null))
                 scriptLifeBar.actualHealth = health;
-            Debug.Log("Player health: " + health.ToString());
+            Debug.Log("Enemy health: " + health.ToString());
         }
 
         if (health <= 0f)
@@ -149,13 +148,11 @@ public class BasicEnemyMovement : MonoBehaviour
 
         speedY -= gravity * Time.deltaTime;
 
-        // Friction(input);
-
         Vector3 newPosition = new Vector3(x, y, z);
         Vector3 displace = newPosition - transform.position;
         Vector3 position = transform.position;
         CollisionFlags collition = characterController.Move(displace);
-        //Debug.Log(collition);
+
         if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
         {
             transform.position = new Vector3(position.x, transform.position.y, position.z);
