@@ -19,7 +19,8 @@ public class CircularMotion : MonoBehaviour
     public bool collectAmmo = false;
     public bool takePistol = false;
     public bool takeRifle = false;
-    
+
+    public bool jumpTransition = false;
 
     private GameObject weaponInstanciated = null;
    
@@ -47,6 +48,8 @@ public class CircularMotion : MonoBehaviour
     private bool invulnerable = false;
 
     //Movement
+    private bool constrained = false;
+
     private float acceleration = 2f; // acceleration factor
     private float maxVelocity = 0.5f; // maximum rotation speed
 
@@ -246,6 +249,20 @@ public class CircularMotion : MonoBehaviour
             }
         }
 
+        //Jump to the upper level
+        if (jumpTransition && GetComponent<CharacterController>().isGrounded)
+        {
+            speedY = 0.8f;
+            currentSpeed = 0f;
+            jumpTransition = false;
+            constrained = true;
+        }
+
+        if (constrained && speedY < 0f)
+        {
+            constrained = false;
+        }
+
         // si la animación no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
         if (!dodging & !invulnerable)
         {
@@ -390,120 +407,122 @@ public class CircularMotion : MonoBehaviour
 
     void Update()
     {
+        
         input = 0f;
         float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        if (!constrained)
         {
-            input = 1f;
-            if (orientation == 1)
-                transform.Rotate(0.0f, 180.0f, 0.0f);
-            orientation = -1;
-            transform.Rotate(0.0f, correction - 90.0f, 0.0f);
-        }
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            input = -1f;
-            if (orientation == -1)
-                transform.Rotate(0.0f, 180.0f, 0.0f);
-            orientation = 1;
-            transform.Rotate(0.0f, 90.0f - correction, 0.0f);
-        }
-
-        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
-        {
-            doJump = true;
-        }
-
-        if (Input.GetKey(KeyCode.C) && hasWeapon == 0)
-        {
-            hasWeapon = 1;
-            pistolAmmo = maxAmmoPistol;
-            createWeapon();
-        }
-
-        if (Input.GetKey(KeyCode.V) && hasWeapon == 0)
-        {
-            hasWeapon = 2;
-            createWeapon();
-        }
-
-        /*if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
-        {
-            hasWeapon = 0;
-            Destroy(weaponInstanciated);
-            weaponInstanciated = null;
-        }*/
-
-        if (Input.GetKey(KeyCode.E))
-        {
-            dodging = true;
-            currentSpeed *= 1.4f;
-            //change animationa roll
-        }
-
-        //Key Cheats
-        if (Input.GetKey(KeyCode.M))
-        {
-            collectAmmo = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            invulnerable = !invulnerable;
-
-            string s1 = "The player is ";
-            if (!invulnerable)
-                s1 += "not ";
-            Debug.Log(s1 + "invulnerable");
-        }
-        //
-
-        if (Input.GetKey(KeyCode.P) & timer == 0f)
-        {
-            switch (hasWeapon)
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
-                case 1:
-                case 3:
-                    if (pistolAmmo > 0)
-                    {
-                        timer = 1f;
-                        pistolAmmo -= 1;
-                    }
-                    break;
-                case 2:
-                case 4:
-                    if (pistolAmmo > 0)
-                    {
-                        timer = 0.6f;
-                        rifleAmmo -= 1;
-                    }
-                    break;
+                input = 1f;
+                if (orientation == 1)
+                    transform.Rotate(0.0f, 180.0f, 0.0f);
+                orientation = -1;
+                transform.Rotate(0.0f, correction - 90.0f, 0.0f);
+            }
+            else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                input = -1f;
+                if (orientation == -1)
+                    transform.Rotate(0.0f, 180.0f, 0.0f);
+                orientation = 1;
+                transform.Rotate(0.0f, 90.0f - correction, 0.0f);
             }
 
-        }
-        timer -= Time.deltaTime;
-        if (timer < 0f)
-            timer = 0f;
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            if(hasWeapon == 3)
+            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
             {
-                hasWeapon = 4;
+                doJump = true;
+            }
+
+            if (Input.GetKey(KeyCode.C) && hasWeapon == 0)
+            {
+                hasWeapon = 1;
+                pistolAmmo = maxAmmoPistol;
+                createWeapon();
+            }
+
+            if (Input.GetKey(KeyCode.V) && hasWeapon == 0)
+            {
+                hasWeapon = 2;
+                createWeapon();
+            }
+
+            /*if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
+            {
+                hasWeapon = 0;
                 Destroy(weaponInstanciated);
                 weaponInstanciated = null;
-                createWeapon();
-            }
-            else if(hasWeapon == 4)
+            }*/
+
+            if (Input.GetKey(KeyCode.E))
             {
-                hasWeapon = 3;
-                Destroy(weaponInstanciated);
-            weaponInstanciated = null;
-                createWeapon();
+                dodging = true;
+                currentSpeed *= 1.4f;
+                //change animationa roll
+            }
+
+            //Key Cheats
+            if (Input.GetKey(KeyCode.M))
+            {
+                collectAmmo = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                invulnerable = !invulnerable;
+
+                string s1 = "The player is ";
+                if (!invulnerable)
+                    s1 += "not ";
+                Debug.Log(s1 + "invulnerable");
+            }
+            //
+
+            if (Input.GetKey(KeyCode.P) & timer == 0f)
+            {
+                switch (hasWeapon)
+                {
+                    case 1:
+                    case 3:
+                        if (pistolAmmo > 0)
+                        {
+                            timer = 1f;
+                            pistolAmmo -= 1;
+                        }
+                        break;
+                    case 2:
+                    case 4:
+                        if (pistolAmmo > 0)
+                        {
+                            timer = 0.6f;
+                            rifleAmmo -= 1;
+                        }
+                        break;
+                }
+
+            }
+            timer -= Time.deltaTime;
+            if (timer < 0f)
+                timer = 0f;
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                if (hasWeapon == 3)
+                {
+                    hasWeapon = 4;
+                    Destroy(weaponInstanciated);
+                    weaponInstanciated = null;
+                    createWeapon();
+                }
+                else if (hasWeapon == 4)
+                {
+                    hasWeapon = 3;
+                    Destroy(weaponInstanciated);
+                    weaponInstanciated = null;
+                    createWeapon();
+                }
             }
         }
     }
-    
-
 }
