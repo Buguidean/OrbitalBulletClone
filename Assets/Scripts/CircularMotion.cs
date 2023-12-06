@@ -164,6 +164,7 @@ public class CircularMotion : MonoBehaviour
 
             collectAmmo = false;
         }
+
         // Cambar segun el hasWeapon
         if (takeRifle)
         {
@@ -264,6 +265,7 @@ public class CircularMotion : MonoBehaviour
         }
 
         // si la animación no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
+        
         if (!dodging & !invulnerable)
         {
             controlDamageImpact();
@@ -369,7 +371,7 @@ public class CircularMotion : MonoBehaviour
         {
             case 1:
             case 3:
-                pos += new Vector3(0f, 0.5f, 0f);
+                pos -= new Vector3(0f, 0.5f, 0f);
                 break;
             case 2:
             case 4:
@@ -455,11 +457,11 @@ public class CircularMotion : MonoBehaviour
                 weaponInstanciated = null;
             }*/
 
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKeyUp(KeyCode.E))
             {
                 dodging = true;
                 currentSpeed *= 1.4f;
-                //change animationa roll
+                //change animation a roll
             }
 
             //Key Cheats
