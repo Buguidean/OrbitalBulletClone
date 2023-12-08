@@ -12,7 +12,7 @@ public class ChangeScene : MonoBehaviour
     {
         playGame.GetComponent<Button>().onClick.AddListener(() => changeScene(1));
         instructions.onClick.AddListener(() => changeScene(1));
-        credits.onClick.AddListener(() => changeScene(1));
+        credits.onClick.AddListener(() => changeScene(3));
         exit.onClick.AddListener(() => changeScene(-1));
     }
     
@@ -21,6 +21,6 @@ public class ChangeScene : MonoBehaviour
         if(scene == -1)
             Application.Quit();
         else
-            SceneManager.LoadScene(1, LoadSceneMode.Single);
+            SceneManager.LoadScene(scene, LoadSceneMode.Single);
     }
 }
