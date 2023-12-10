@@ -27,13 +27,19 @@ public class BasicEnemyMovement : MonoBehaviour
     //stats
     private float health = 50f;
     private float damage = 25f;
+    private float shield = 30f;
 
     //Bar stats things
     public GameObject prefab; // prefab obj
 
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
+    private GameObject canvasShieldBar;
+
     private UI_LifeBar scriptLifeBar;
+    private UI_LifeBar scriptShieldBar;
+
     private float maxHealth = 50f;
+    private float maxShield = 30f;
 
     //statsControls
     public float damageRecived;
@@ -53,6 +59,7 @@ public class BasicEnemyMovement : MonoBehaviour
         angle = -2.64f;
 
         lifeBarCreation();
+        shieldBarCreation();
         damageRecived = 0f;
     }
 
@@ -67,8 +74,14 @@ public class BasicEnemyMovement : MonoBehaviour
             {
                 other.GetComponent<CircularMotion>().doJump = true;
                 health -= 25f;
-                if (!scriptLifeBar.Equals(null))
+                if (!scriptShieldBar.Equals(null))
+                {
+                    scriptShieldBar.actualHealth = shield;
+                }
+                else if (!scriptLifeBar.Equals(null))
                     scriptLifeBar.actualHealth = health;
+
+                Debug.Log("Enemy shield: " + shield.ToString());
                 Debug.Log("Enemy health: " + health.ToString());
             }
             else
@@ -107,15 +120,46 @@ public class BasicEnemyMovement : MonoBehaviour
         scriptLifeBar.orientation = orientation;
     }
 
+    private void shieldBarCreation()
+    {
+        GameObject shieldBar = Resources.Load("prefabs/UI/Enemy/ShieldBar") as GameObject;
+        Vector3 pos = transform.position + new Vector3(0f, 2f, 0f);
+        canvasShieldBar = Instantiate(shieldBar,pos, Quaternion.identity);
+        scriptShieldBar = canvasShieldBar.transform.GetComponent<UI_LifeBar>();
+        scriptShieldBar.maxHealth = maxShield;
+        scriptShieldBar.actualHealth = shield;
+        scriptShieldBar.camera = camera;
+        scriptShieldBar.orientation = orientation;
+    }
+
     private void controlDamage()
     {
         if (damageRecived != 0f)
         {
-            health -= damageRecived;
+            if (shield > 0f)
+            {
+                shield -= damageRecived;
+                if (!scriptShieldBar.Equals(null))
+                    scriptShieldBar.actualHealth = shield;
+            }
+            else
+            {
+                health -= damageRecived;
+                if (!scriptLifeBar.Equals(null))
+                    scriptLifeBar.actualHealth = health;
+            }
             damageRecived = 0;
-            if (!scriptLifeBar.Equals(null))
-                scriptLifeBar.actualHealth = health;
+           
             Debug.Log("Enemy health: " + health.ToString());
+            Debug.Log("Enemy Shield: " + shield.ToString());
+        }
+
+        if (!scriptShieldBar.Equals(null) & shield <= 0f)
+        {
+            Destroy(canvasShieldBar);
+            canvasShieldBar = null;
+            health += shield;
+            shield = 0f;
         }
 
         if (health <= 0f)
@@ -187,6 +231,13 @@ public class BasicEnemyMovement : MonoBehaviour
         scriptLifeBar.posEnemy = transform.position;
         scriptLifeBar.orientation = orientation;
         scriptLifeBar.camera = camera;
+
+        if (!scriptShieldBar.Equals(null))
+        {
+            scriptShieldBar.posEnemy = transform.position;
+            scriptShieldBar.orientation = orientation;
+            scriptShieldBar.camera = camera;
+        }
         //}      
 
     }
