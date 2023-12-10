@@ -437,17 +437,14 @@ public class CircularMotion : MonoBehaviour
                 doJump = true;
             }
 
-            if (Input.GetKey(KeyCode.C) && hasWeapon == 0)
+            if (Input.GetKey(KeyCode.C))
             {
-                hasWeapon = 1;
-                pistolAmmo = maxAmmoPistol;
-                createWeapon();
+                takePistol = true;
             }
 
-            if (Input.GetKey(KeyCode.V) && hasWeapon == 0)
+            if (Input.GetKey(KeyCode.V))
             {
-                hasWeapon = 2;
-                createWeapon();
+                takeRifle = true;
             }
 
             /*if (Input.GetKey(KeyCode.T) && hasWeapon != 0)

@@ -11,6 +11,7 @@ TagManager:
   - Weapon
   - ammoChest
   - ammo
+  - WeaponChest
   layers:
   - Default
   - TransparentFX

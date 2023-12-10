@@ -27,7 +27,7 @@ public class BasicEnemyMovement : MonoBehaviour
     //stats
     private float health = 50f;
     private float damage = 25f;
-    private float shield = 30f;
+    private float shield = 25f;
 
     //Bar stats things
     public GameObject prefab; // prefab obj
@@ -39,7 +39,7 @@ public class BasicEnemyMovement : MonoBehaviour
     private UI_LifeBar scriptShieldBar;
 
     private float maxHealth = 50f;
-    private float maxShield = 30f;
+    private float maxShield = 25f;
 
     //statsControls
     public float damageRecived;
@@ -73,16 +73,8 @@ public class BasicEnemyMovement : MonoBehaviour
             if (angle_hit <= 45f)
             {
                 other.GetComponent<CircularMotion>().doJump = true;
-                health -= 25f;
-                if (!scriptShieldBar.Equals(null))
-                {
-                    scriptShieldBar.actualHealth = shield;
-                }
-                else if (!scriptLifeBar.Equals(null))
-                    scriptLifeBar.actualHealth = health;
 
-                Debug.Log("Enemy shield: " + shield.ToString());
-                Debug.Log("Enemy health: " + health.ToString());
+                damageRecived = 25f;
             }
             else
             {
@@ -159,6 +151,7 @@ public class BasicEnemyMovement : MonoBehaviour
             Destroy(canvasShieldBar);
             canvasShieldBar = null;
             health += shield;
+            scriptLifeBar.actualHealth = health;
             shield = 0f;
         }
 
@@ -210,9 +203,23 @@ public class BasicEnemyMovement : MonoBehaviour
             else if (orientation == -1)
                 transform.Rotate(0.0f, 180.0f, 0.0f);
         }
+        /*if (!scriptLifeBar.Equals(null))
+        {*/
+        scriptLifeBar.posEnemy = transform.position;
+        scriptLifeBar.orientation = orientation;
+        scriptLifeBar.camera = camera;
+        //}   
+
+        if (!scriptShieldBar.Equals(null))
+        {
+            scriptShieldBar.posEnemy = transform.position;
+            scriptShieldBar.orientation = orientation;
+            scriptShieldBar.camera = camera;
+        }
+       
     }
 
-    
+
 
 
     void Update()
@@ -226,19 +233,7 @@ public class BasicEnemyMovement : MonoBehaviour
         else if (orientation == -1)
             transform.Rotate(0.0f, 90.0f - correction, 0.0f);
 
-        /*if (!scriptLifeBar.Equals(null))
-        {*/
-        scriptLifeBar.posEnemy = transform.position;
-        scriptLifeBar.orientation = orientation;
-        scriptLifeBar.camera = camera;
-
-        if (!scriptShieldBar.Equals(null))
-        {
-            scriptShieldBar.posEnemy = transform.position;
-            scriptShieldBar.orientation = orientation;
-            scriptShieldBar.camera = camera;
-        }
-        //}      
+           
 
     }
 }
