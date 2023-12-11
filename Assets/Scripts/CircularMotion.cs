@@ -53,7 +53,7 @@ public class CircularMotion : MonoBehaviour
     private float acceleration = 2f; // acceleration factor
     private float maxVelocity = 0.5f; // maximum rotation speed
 
-    private float currentSpeed = 0f;
+    public float currentSpeed = 0f;
     private float angle = 0f;
     private float gravity = 0.6f;
     private float speedY = 0f;

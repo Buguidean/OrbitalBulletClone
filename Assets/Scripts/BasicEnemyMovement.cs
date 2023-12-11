@@ -8,17 +8,21 @@ public class BasicEnemyMovement : MonoBehaviour
     
     public Transform center; // the center point of the circle
     public CharacterController player;
+    public Transform playerTransform;
     public float radius = 29f; // radius of the circle
     public Transform camera;
 
     private CharacterController characterController;
+    private CircularMotion playerScript;
+    Animator animator;
 
     private float acceleration = 1.5f; // acceleration factor
     private float currentSpeed = 0.2f;
     private float angle = 0f;
     private float gravity = 0.5f;
     private float speedY = 0f;
-    private int orientation = 1;
+    private int orientation = -1;
+    private Vector3 dist_player;
 
     private float x;
     private float z;
@@ -55,9 +59,10 @@ public class BasicEnemyMovement : MonoBehaviour
         z = center.position.z + Mathf.Sin(0f) * radius;
         y = transform.position.y + speedY;
         characterController = GetComponent<CharacterController>();
+        animator = gameObject.GetComponent<Animator>();
         Physics.IgnoreCollision(characterController, player, true);
         angle = -2.64f;
-
+        //player = playerObject.GetComponent<characterController>();
         lifeBarCreation();
         shieldBarCreation();
         damageRecived = 0f;
@@ -79,6 +84,8 @@ public class BasicEnemyMovement : MonoBehaviour
             else
             {
                 other.GetComponent<CircularMotion>().damageRecived = damage;
+                other.GetComponent<CircularMotion>().currentSpeed = -other.GetComponent<CircularMotion>().currentSpeed;
+                //currentSpeed = -currentSpeed;
             }
             Debug.Log("Angle hit: " + angle_hit.ToString());
         }     
@@ -89,6 +96,7 @@ public class BasicEnemyMovement : MonoBehaviour
         if (input == 0f && Mathf.Abs(currentSpeed) <= 0.01f)
         {
             currentSpeed = 0f;
+            animator.SetBool("isMoving", false);
         }
         else if (input == 0f && currentSpeed > 0f)
         {
@@ -164,6 +172,22 @@ public class BasicEnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (currentSpeed != 0f)
+        {
+            animator.SetBool("isMoving", true);
+        }
+
+        dist_player = transform.position - playerTransform.position;
+
+        if (dist_player.magnitude < 10f && characterController.isGrounded)
+        {
+            animator.SetBool("isAttack", true);
+        }
+        else
+        {
+            animator.SetBool("isAttack", false);
+        }
+           
         controlDamage();
         // Adjust the current speed based on input and acceleration
         float prevAngle = angle;
@@ -195,13 +219,16 @@ public class BasicEnemyMovement : MonoBehaviour
             transform.position = new Vector3(position.x, transform.position.y, position.z);
             Physics.SyncTransforms();
             angle = prevAngle;
-            currentSpeed = -currentSpeed;
-            orientation = -orientation;
 
-            if (orientation == 1)
-                transform.Rotate(0.0f, 180.0f, 0.0f);
-            else if (orientation == -1)
-                transform.Rotate(0.0f, 180.0f, 0.0f);
+            if (this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Atack")
+            {
+                currentSpeed = -currentSpeed;
+                orientation = -orientation;
+                if (orientation == 1)
+                    transform.Rotate(0.0f, 180.0f, 0.0f);
+                else if (orientation == -1)
+                    transform.Rotate(0.0f, 180.0f, 0.0f);
+            }
         }
         /*if (!scriptLifeBar.Equals(null))
         {*/
