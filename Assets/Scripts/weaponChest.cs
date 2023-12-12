@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class weaponChest : MonoBehaviour
+public class WeaponChest : MonoBehaviour
 {
-    // Update is called once per frame
-    void FixedUpdate()
+    void OnTriggerEnter(Collider obj)
     {
-      
+        if(obj.tag == "Player")
+        {
+            Debug.Log("El player colisiona con el cofre de armas");
+        }
     }
+        
 }

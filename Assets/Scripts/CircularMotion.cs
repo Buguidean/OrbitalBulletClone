@@ -22,6 +22,8 @@ public class CircularMotion : MonoBehaviour
 
     public bool jumpTransition = false;
 
+    public bool openedWC = false;
+
     private GameObject weaponInstanciated = null;
    
 
@@ -409,7 +411,12 @@ public class CircularMotion : MonoBehaviour
 
     void Update()
     {
-        
+        //Debug
+        if (Input.GetKey(KeyCode.Z))
+        {
+            Debug.Log(angle);
+        }
+
         input = 0f;
         float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
