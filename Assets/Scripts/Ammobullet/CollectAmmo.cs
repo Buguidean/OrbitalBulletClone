@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CollectAmmo : MonoBehaviour
 {
+    public Transform camera;
     void OnTriggerEnter(Collider obj)
     {
         switch (obj.tag)
@@ -15,15 +16,10 @@ public class CollectAmmo : MonoBehaviour
                 break;
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        transform.rotation = camera.rotation;
     }
 }

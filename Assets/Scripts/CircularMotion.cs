@@ -79,6 +79,9 @@ public class CircularMotion : MonoBehaviour
     //UI
     GameObject LifeBar;
 
+    //Mano del player
+    private Transform playerHand;
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -91,6 +94,12 @@ public class CircularMotion : MonoBehaviour
         maxHealth = 100f;
         health = maxHealth;
         createLifeBar();
+        getHand();
+    }
+
+    private void getHand()
+    {
+        playerHand = gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0);
     }
 
     private void createLifeBar()
@@ -380,9 +389,11 @@ public class CircularMotion : MonoBehaviour
                 weaponModel = Resources.Load("prefabs/model") as GameObject;
                 break;
         }
-        
+
+        Vector3 zeros = new Vector3(0.2f, 0.5f, 0.1f);
+
         weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
-        weaponInstanciated.transform.parent = gameObject.transform;
+        weaponInstanciated.transform.parent = gameObject.transform;//playerHand;
         weaponInstanciated.transform.rotation = transform.rotation;
         switch (hasWeapon)
         {
