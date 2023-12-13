@@ -7,7 +7,7 @@ public class ammoChest : MonoBehaviour
     public bool isShoted = false;
     public Transform camera;
 
-    private float health = 20f;
+    private float health = 30f;
     private Animator animator;
 
     private void Start()
@@ -27,6 +27,8 @@ public class ammoChest : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Finish"))
+            animator.SetBool("Hit", false);
         //transform.rotation = camera.rotation;
         if (isShoted)
         {
