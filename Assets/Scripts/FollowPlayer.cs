@@ -13,7 +13,7 @@ public class FollowPlayer : MonoBehaviour
     private Vector2 result;
    
     private float offset_y = 2.55f;
-    private float offset_dist = 11.8f;
+    private float offset_dist = 16.7f;
 
     void Start()
     {

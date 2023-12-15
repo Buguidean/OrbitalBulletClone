@@ -25,7 +25,7 @@ public class CircularMotion : MonoBehaviour
     public bool openedWC = false;
 
     private GameObject weaponInstanciated = null;
-   
+
 
     //has Weapon (0: any, 1: pistol, 2 rifle, 3 both (pistol active), 4 both (rifle active))
     private int hasWeapon;
@@ -67,6 +67,7 @@ public class CircularMotion : MonoBehaviour
     private float y;
 
     public bool doJump = false;
+    public bool doJumpHigh = false;
 
     private float timer = 0f;
     //private float shotTimer = 0f; 
@@ -113,7 +114,7 @@ public class CircularMotion : MonoBehaviour
         script.actualHealth = health;
     }
 
-    void Friction(float input)
+    private void Friction(float input)
     {
         if (input == 0f && Mathf.Abs(currentSpeed) <= 0.1f)
         {
@@ -137,7 +138,7 @@ public class CircularMotion : MonoBehaviour
             health -= damageRecived;
             damageRecived = 0f;
             LifeBar.GetComponent<UI_LifeBar_Player>().actualHealth = health;
-            Debug.Log("Player health: " + health.ToString());
+            //Debug.Log("Player health: " + health.ToString());
         }
 
         if (health <= 0f)
@@ -164,7 +165,7 @@ public class CircularMotion : MonoBehaviour
                         weaponInstanciated.GetComponent<Pistol>().ammo = maxAmmoPistol;
                         break;
                     //Rifle
-                    case 2: 
+                    case 2:
                     case 4:
                         rifleAmmo = maxAmmoRifle;
                         weaponInstanciated.GetComponent<Rifle>().ammo = maxAmmoRifle;
@@ -212,7 +213,7 @@ public class CircularMotion : MonoBehaviour
             }
             takePistol = false;
         }
-        
+
     }
 
     private void FixedUpdate()
@@ -222,7 +223,7 @@ public class CircularMotion : MonoBehaviour
         {
             animator.SetBool("isMoving", true);
         }
-        
+
         if (teleport && GetComponent<CharacterController>().isGrounded)
         {
             if (isExtRad)
@@ -276,7 +277,7 @@ public class CircularMotion : MonoBehaviour
         }
 
         // si la animación no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
-        
+
         if (!dodging & !invulnerable)
         {
             controlDamageImpact();
@@ -318,6 +319,12 @@ public class CircularMotion : MonoBehaviour
             doJump = false;
         }
 
+        if (doJumpHigh)
+        {
+            speedY = 0.30f;
+            doJumpHigh = false;
+        }
+
         Friction(input);
 
         Vector3 newPosition = new Vector3(x, y, z);
@@ -327,7 +334,7 @@ public class CircularMotion : MonoBehaviour
         if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
         {
             transform.position = new Vector3(position.x, transform.position.y, position.z);
-            Physics.SyncTransforms();
+            //Physics.SyncTransforms();
             angle = prevAngle;
             currentSpeed = 0f;
         }
@@ -339,7 +346,8 @@ public class CircularMotion : MonoBehaviour
         //update attributes for bullet
         if (weaponInstanciated != null)
         {
-            switch (hasWeapon) {
+            switch (hasWeapon)
+            {
                 case 1:
                 case 3:
                     Pistol script1 = weaponInstanciated.GetComponent<Pistol>();
@@ -366,17 +374,17 @@ public class CircularMotion : MonoBehaviour
 
         if (orientation == -1)
         {
-            weaponAngle += 0.04f * (29f/radius);
+            weaponAngle += 0.04f * (29f / radius);
         }
         else
         {
-            weaponAngle -= 0.04f * (29f/radius);
+            weaponAngle -= 0.04f * (29f / radius);
         }
 
         float xPos = center.position.x + Mathf.Cos(weaponAngle) * radius;
         float zPos = center.position.z + Mathf.Sin(weaponAngle) * radius;
         Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
-        
+
         GameObject weaponModel = Resources.Load("prefabs/p") as GameObject;
         switch (hasWeapon)
         {

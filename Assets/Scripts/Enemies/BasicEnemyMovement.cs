@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BasicEnemyMovement : MonoBehaviour
 {
-    
+
     public Transform center; // the center point of the circle
     public CharacterController player;
     public Transform playerTransform;
@@ -13,10 +13,11 @@ public class BasicEnemyMovement : MonoBehaviour
     public Transform camera;
 
     private CharacterController characterController;
+    private BoxCollider boxCol;
     private CircularMotion playerScript;
     Animator animator;
 
-    private float acceleration = 1.5f; // acceleration factor
+    private float acceleration = 1f; // acceleration factor
     private float currentSpeed = 0.2f;
     private float angle = 0f;
     private float gravity = 0.5f;
@@ -52,6 +53,7 @@ public class BasicEnemyMovement : MonoBehaviour
     //private bool doJump = false;
 
     //private float timer = 0f;
+    private float coolDown = 0f;
 
     private void Start()
     {
@@ -59,6 +61,7 @@ public class BasicEnemyMovement : MonoBehaviour
         z = center.position.z + Mathf.Sin(0f) * radius;
         y = transform.position.y + speedY;
         characterController = GetComponent<CharacterController>();
+        boxCol = GetComponent<BoxCollider>();
         animator = gameObject.GetComponent<Animator>();
         Physics.IgnoreCollision(characterController, player, true);
         angle = -2.64f;
@@ -72,12 +75,15 @@ public class BasicEnemyMovement : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Vector3 vector = Vector3.Normalize(player.transform.position - characterController.transform.position);
-            float angle_hit = Vector3.Angle(Vector3.up, vector);
+            Vector2 aux_e = new Vector2(boxCol.transform.position.y, boxCol.transform.position.z);
+            Vector2 aux_p = new Vector2(player.transform.position.y, boxCol.transform.position.z - 1f);
+            Vector2 result = aux_p - aux_e;
+            result.Normalize();
+            float angle_hit = Vector2.Angle(Vector2.up, result);
 
-            if (angle_hit <= 45f)
+            if (angle_hit >= 135.5203f)
             {
-                other.GetComponent<CircularMotion>().doJump = true;
+                other.GetComponent<CircularMotion>().doJumpHigh = true;
 
                 damageRecived = 25f;
             }
@@ -87,22 +93,24 @@ public class BasicEnemyMovement : MonoBehaviour
                 other.GetComponent<CircularMotion>().currentSpeed = -other.GetComponent<CircularMotion>().currentSpeed;
                 //currentSpeed = -currentSpeed;
             }
-            Debug.Log("Angle hit: " + angle_hit.ToString());
-        }     
+            //Debug.Log("Angle hit: " + angle_hit.ToString());
+        }
     }
 
-    void Friction(float input)
+    void Friction()
     {
-        if (input == 0f && Mathf.Abs(currentSpeed) <= 0.01f)
+        if (Mathf.Abs(currentSpeed) <= 0.19f && Mathf.Abs(currentSpeed) >= 0.17f)
         {
-            currentSpeed = 0f;
-            animator.SetBool("isMoving", false);
+            if (currentSpeed < 0f)
+                currentSpeed = -0.2f;
+            else
+                currentSpeed = 0.2f;
         }
-        else if (input == 0f && currentSpeed > 0f)
+        else if (currentSpeed > 0.2f)
         {
             currentSpeed -= acceleration * Time.deltaTime;
         }
-        else if (input == 0f && currentSpeed < 0f)
+        else if (currentSpeed < 0.2f)
         {
             currentSpeed += acceleration * Time.deltaTime;
         }
@@ -124,7 +132,7 @@ public class BasicEnemyMovement : MonoBehaviour
     {
         GameObject shieldBar = Resources.Load("prefabs/UI/Enemy/ShieldBar") as GameObject;
         Vector3 pos = transform.position + new Vector3(0f, 2f, 0f);
-        canvasShieldBar = Instantiate(shieldBar,pos, Quaternion.identity);
+        canvasShieldBar = Instantiate(shieldBar, pos, Quaternion.identity);
         scriptShieldBar = canvasShieldBar.transform.GetComponent<UI_LifeBar>();
         scriptShieldBar.maxHealth = maxShield;
         scriptShieldBar.actualHealth = shield;
@@ -149,9 +157,9 @@ public class BasicEnemyMovement : MonoBehaviour
                     scriptLifeBar.actualHealth = health;
             }
             damageRecived = 0;
-           
-            Debug.Log("Enemy health: " + health.ToString());
-            Debug.Log("Enemy Shield: " + shield.ToString());
+
+            //Debug.Log("Enemy health: " + health.ToString());
+            //Debug.Log("Enemy Shield: " + shield.ToString());
         }
 
         if (!scriptShieldBar.Equals(null) & shield <= 0f)
@@ -168,7 +176,7 @@ public class BasicEnemyMovement : MonoBehaviour
             Destroy(canvasLifeBar);
             Destroy(gameObject);
         }
-}
+    }
 
     private void FixedUpdate()
     {
@@ -179,21 +187,41 @@ public class BasicEnemyMovement : MonoBehaviour
 
         dist_player = transform.position - playerTransform.position;
 
-        if (dist_player.magnitude < 10f && characterController.isGrounded)
+        if (dist_player.magnitude < 10f && characterController.isGrounded && coolDown == 0f)
         {
+            Vector3 aux = Vector3.Normalize(dist_player);
+            float dir_of_attack = Vector3.Angle(aux, transform.forward);
+            Debug.Log(dir_of_attack);
+            coolDown = 2f;
+            speedY = 0.25f;
+
+            if (dir_of_attack > 60f) {
+                orientation = -orientation;
+                if (currentSpeed < 0f)
+                    currentSpeed = 1.2f;
+                else
+                    currentSpeed = -1.2f;
+            }
+            else {
+                if (currentSpeed < 0f)
+                    currentSpeed -= 1f;
+                else
+                    currentSpeed += 1f;
+            }
+
             animator.SetBool("isAttack", true);
         }
         else
         {
             animator.SetBool("isAttack", false);
         }
-           
+
         controlDamage();
         // Adjust the current speed based on input and acceleration
         float prevAngle = angle;
 
         // Adjust the angle based on the current speed
-        angle += currentSpeed/2f * Time.deltaTime;
+        angle += currentSpeed / 2f * Time.deltaTime;
         angle %= (2 * Mathf.PI);
 
         // Calculate the new position based on the angle and radius
@@ -209,6 +237,8 @@ public class BasicEnemyMovement : MonoBehaviour
 
         speedY -= gravity * Time.deltaTime;
 
+        Friction();
+
         Vector3 newPosition = new Vector3(x, y, z);
         Vector3 displace = newPosition - transform.position;
         Vector3 position = transform.position;
@@ -217,17 +247,13 @@ public class BasicEnemyMovement : MonoBehaviour
         if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
         {
             transform.position = new Vector3(position.x, transform.position.y, position.z);
-            Physics.SyncTransforms();
+            //Physics.SyncTransforms();
             angle = prevAngle;
 
             if (this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Atack")
             {
                 currentSpeed = -currentSpeed;
                 orientation = -orientation;
-                if (orientation == 1)
-                    transform.Rotate(0.0f, 180.0f, 0.0f);
-                else if (orientation == -1)
-                    transform.Rotate(0.0f, 180.0f, 0.0f);
             }
         }
         /*if (!scriptLifeBar.Equals(null))
@@ -243,11 +269,11 @@ public class BasicEnemyMovement : MonoBehaviour
             scriptShieldBar.orientation = orientation;
             scriptShieldBar.camera = camera;
         }
-       
+
+        coolDown -= Time.deltaTime;
+        if (coolDown < 0f)
+            coolDown = 0f;
     }
-
-
-
 
     void Update()
     {
@@ -259,8 +285,6 @@ public class BasicEnemyMovement : MonoBehaviour
 
         else if (orientation == -1)
             transform.Rotate(0.0f, 90.0f - correction, 0.0f);
-
-           
 
     }
 }
