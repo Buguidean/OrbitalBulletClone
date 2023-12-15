@@ -13,7 +13,6 @@ public class BasicEnemyMovement : MonoBehaviour
     public Transform camera;
 
     private CharacterController characterController;
-    private BoxCollider boxCol;
     private CircularMotion playerScript;
     Animator animator;
 
@@ -60,7 +59,6 @@ public class BasicEnemyMovement : MonoBehaviour
         z = center.position.z + Mathf.Sin(0f) * radius;
         y = transform.position.y + speedY;
         characterController = GetComponent<CharacterController>();
-        boxCol = GetComponent<BoxCollider>();
         animator = gameObject.GetComponent<Animator>();
         Physics.IgnoreCollision(characterController, player, true);
         angle = -2.64f;
@@ -74,15 +72,12 @@ public class BasicEnemyMovement : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Vector2 aux_e = new Vector2(boxCol.transform.position.y, boxCol.transform.position.z);
-            Vector2 aux_p = new Vector2(player.transform.position.y, boxCol.transform.position.z - 1f);
-            Vector2 result = aux_p - aux_e;
-            result.Normalize();
-            float angle_hit = Vector2.Angle(Vector2.up, result);
+            Vector3 vector = Vector3.Normalize(player.transform.position - characterController.transform.position);
+            float angle_hit = Vector3.Angle(Vector3.up, vector);
 
-            if (angle_hit >= 135.5203f)
+            if (angle_hit <= 45f)
             {
-                other.GetComponent<CircularMotion>().doJumpHigh = true;
+                other.GetComponent<CircularMotion>().doJump = true;
 
                 damageRecived = 25f;
             }
@@ -155,8 +150,8 @@ public class BasicEnemyMovement : MonoBehaviour
             }
             damageRecived = 0;
            
-            //Debug.Log("Enemy health: " + health.ToString());
-            //Debug.Log("Enemy Shield: " + shield.ToString());
+            Debug.Log("Enemy health: " + health.ToString());
+            Debug.Log("Enemy Shield: " + shield.ToString());
         }
 
         if (!scriptShieldBar.Equals(null) & shield <= 0f)

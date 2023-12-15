@@ -67,7 +67,6 @@ public class CircularMotion : MonoBehaviour
     private float y;
 
     public bool doJump = false;
-    public bool doJumpHigh = false;
 
     private float timer = 0f;
     //private float shotTimer = 0f; 
@@ -85,7 +84,6 @@ public class CircularMotion : MonoBehaviour
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
         x = center.position.x + Mathf.Cos(0f) * radius;
         z = center.position.z + Mathf.Sin(0f) * radius;
         y = transform.position.y + speedY;
@@ -115,7 +113,7 @@ public class CircularMotion : MonoBehaviour
         script.actualHealth = health;
     }
 
-    private void Friction(float input)
+    void Friction(float input)
     {
         if (input == 0f && Mathf.Abs(currentSpeed) <= 0.1f)
         {
@@ -139,7 +137,7 @@ public class CircularMotion : MonoBehaviour
             health -= damageRecived;
             damageRecived = 0f;
             LifeBar.GetComponent<UI_LifeBar_Player>().actualHealth = health;
-            //Debug.Log("Player health: " + health.ToString());
+            Debug.Log("Player health: " + health.ToString());
         }
 
         if (health <= 0f)
@@ -318,12 +316,6 @@ public class CircularMotion : MonoBehaviour
         {
             speedY = 0.25f;
             doJump = false;
-        }
-
-        if (doJumpHigh)
-        {
-            speedY = 0.30f;
-            doJumpHigh = false;
         }
 
         Friction(input);
