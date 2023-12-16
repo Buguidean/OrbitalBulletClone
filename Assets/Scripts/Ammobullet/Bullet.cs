@@ -42,9 +42,14 @@ public class Bullet : MonoBehaviour
                 obj.GetComponent<CircularMotion>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
-            case "Enemy":
-                Debug.Log("The bullet impacted with an Enemy");
+            case "Spider":
+                Debug.Log("The bullet impacted with the spider");
                 obj.GetComponent<BasicEnemyMovement>().damageRecived = damage;
+                Destroy(gameObject);
+                break;
+            case "FlyingMob":
+                Debug.Log("The bullet impacted with the mob");
+                obj.GetComponent<FlyingEnemy>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "Bullet":

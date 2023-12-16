@@ -12,6 +12,8 @@ TagManager:
   - ammoChest
   - ammo
   - WeaponChest
+  - Spider
+  - FlyingMob
   layers:
   - Default
   - TransparentFX
