@@ -12,6 +12,8 @@ public class FlyingEnemy : MonoBehaviour
     public float radius = 29f; // radius of the circle
     public Transform camera;
 
+    public float damageRecived;
+
     private CharacterController characterController;
     private BoxCollider boxCol;
     private CircularMotion playerScript;
@@ -46,14 +48,15 @@ public class FlyingEnemy : MonoBehaviour
     private float maxHealth = 50f;
     private float maxShield = 25f;
 
-    //statsControls
-    public float damageRecived;
 
 
-    //private bool doJump = false;
 
-    //private float timer = 0f;
-    private float coolDown = 0f;
+    //attack
+    private GameObject instanciatedBulled = null;
+
+    //private bool doJump = false
+    
+    //private float coolDown = 0f;
 
     private void Start()
     {
@@ -69,6 +72,7 @@ public class FlyingEnemy : MonoBehaviour
         lifeBarCreation();
         shieldBarCreation();
         damageRecived = 0f;
+        instanciatedBulled = null;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -178,39 +182,25 @@ public class FlyingEnemy : MonoBehaviour
         }
     }
 
+    private void prepareAttack()
+    {
+        dist_player = playerTransform.position - transform.position;
+        if (dist_player.magnitude < 10f)
+        {
+            GameObject bulledPrefab = Resources.Load("prefabs/BulledMob") as GameObject;
+            Vector3 pos = gameObject.transform.position + new Vector3(0f, 1f, 0f);
+            instanciatedBulled = Instantiate(bulledPrefab, pos, Quaternion.identity);
+            instanciatedBulled.transform.parent = gameObject.transform;
+            MobBulled script = instanciatedBulled.GetComponent<MobBulled>();
+            script.player = playerTransform;
+        }
+    }
+
     private void FixedUpdate()
     {
-        dist_player = transform.position - playerTransform.position;
-
-        //atack
-        /*if (dist_player.magnitude < 10f && characterController.isGrounded && coolDown == 0f)
-        {
-            Vector3 aux = Vector3.Normalize(dist_player);
-            float dir_of_attack = Vector3.Angle(aux, transform.forward);
-            Debug.Log(dir_of_attack);
-            coolDown = 2f;
-            speedY = 0.25f;
-
-            if (dir_of_attack > 60f) {
-                orientation = -orientation;
-                if (currentSpeed < 0f)
-                    currentSpeed = 1.2f;
-                else
-                    currentSpeed = -1.2f;
-            }
-            else {
-                if (currentSpeed < 0f)
-                    currentSpeed -= 1f;
-                else
-                    currentSpeed += 1f;
-            }
-
-            animator.SetBool("isAttack", true);
-        }
-        else
-        {
-            animator.SetBool("isAttack", false);
-        }*/
+        if (instanciatedBulled == null)
+            prepareAttack();
+        
 
         controlDamage();
         // Adjust the current speed based on input and acceleration
@@ -263,14 +253,8 @@ public class FlyingEnemy : MonoBehaviour
             scriptShieldBar.camera = camera;
         }
 
-        coolDown -= Time.deltaTime;
-        if (coolDown < 0f)
-            coolDown = 0f;
-
         gameObject.transform.rotation = camera.rotation;
         gameObject.transform.rotation *= Quaternion.Euler(0, 90, 0);
         
     }
-    
-
 }

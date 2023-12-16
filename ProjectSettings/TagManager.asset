@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Stage
   - Bullet
-  - Enemy
   - BillBoard
   - Weapon
   - ammoChest
@@ -14,6 +13,7 @@ TagManager:
   - WeaponChest
   - Spider
   - FlyingMob
+  - Environment
   layers:
   - Default
   - TransparentFX
