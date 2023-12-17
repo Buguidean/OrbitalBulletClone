@@ -5,6 +5,7 @@ using UnityEngine;
 public class MobBulled : MonoBehaviour
 { 
     public Transform player;
+    public Transform center;
 
     private Vector3 displacement;
     private Vector3 goal;
@@ -42,6 +43,19 @@ public class MobBulled : MonoBehaviour
         }
     }
 
+    private void outCylinder()
+    {
+        float xDist = Mathf.Abs(gameObject.transform.position.x - center.position.x);
+        float zDist = Mathf.Abs(gameObject.transform.position.z - center.position.z);
+
+        if (xDist > 30f | zDist > 30f)
+        {
+            Debug.Log("BulledMob out od cylinder");
+            Destroy(gameObject);
+        }
+
+    }
+
     private void move()
     {
         Vector3 initialPos = gameObject.transform.position; 
@@ -70,6 +84,8 @@ public class MobBulled : MonoBehaviour
         }
 
         move();
+
+        outCylinder();
 
         timer -= Time.deltaTime;
         if (timer < 0f)

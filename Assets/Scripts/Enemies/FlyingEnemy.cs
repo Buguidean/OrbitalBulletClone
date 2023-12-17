@@ -193,6 +193,7 @@ public class FlyingEnemy : MonoBehaviour
             instanciatedBulled.transform.parent = gameObject.transform;
             MobBulled script = instanciatedBulled.GetComponent<MobBulled>();
             script.player = playerTransform;
+            script.center = center;
         }
     }
 
