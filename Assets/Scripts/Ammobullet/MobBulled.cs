@@ -110,13 +110,15 @@ public class MobBulled : MonoBehaviour
             Vector3 dist_player = player.position - transform.position;
             float maxDist = Mathf.Abs(Mathf.Max(dist_player.x, dist_player.y));
             Debug.Log("MaxDist: " + maxDist.ToString("0.000"));
-            Debug.Log("displacement Y: " + displacement.y.ToString("0.000"));
+            //Debug.Log("displacement Y: " + displacement.y.ToString("0.000"));
 
-            speedY = Mathf.Abs(maxDist)/80f;
-            gravity = Mathf.Abs(displacement.y)*0.6f;
+            if (maxDist > 9.2f)
+                maxDist = 9.2f;
+            speedY = Mathf.Abs(maxDist)/92f;
+            gravity = Mathf.Abs(displacement.y)*0.65f;
 
-            Debug.Log("SpeedY: " + speedY.ToString("0.000"));
-            Debug.Log("Gravity: " + gravity.ToString("0.000" ));
+            //Debug.Log("SpeedY: " + speedY.ToString("0.000"));
+            //Debug.Log("Gravity: " + gravity.ToString("0.000" ));
             
 
 
