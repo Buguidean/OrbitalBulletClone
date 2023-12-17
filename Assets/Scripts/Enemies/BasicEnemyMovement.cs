@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class BasicEnemyMovement : MonoBehaviour
 {
-
     public Transform center; // the center point of the circle
     public CharacterController player;
     public Transform playerTransform;

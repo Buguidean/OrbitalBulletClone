@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class CircularMotion : MonoBehaviour
 {
     public Transform center; // the center point of the circle
-    public Transform camera;
+    public new Transform camera;
 
     //damage recived    
     public float damageRecived;
@@ -25,7 +25,6 @@ public class CircularMotion : MonoBehaviour
     public bool openedWC = false;
 
     private GameObject weaponInstanciated = null;
-
 
     //has Weapon (0: any, 1: pistol, 2 rifle, 3 both (pistol active), 4 both (rifle active))
     private int hasWeapon;
@@ -108,7 +107,7 @@ public class CircularMotion : MonoBehaviour
         GameObject lifeBar = Resources.Load("prefabs/UI/Player/LifeBar") as GameObject;
         Vector3 pos = camera.position + new Vector3(-2f, 1.55f, 3f);
         LifeBar = Instantiate(lifeBar, pos, Quaternion.identity);
-        LifeBar.transform.parent = camera.transform;
+        LifeBar.transform.SetParent(camera.transform);
         UI_LifeBar_Player script = LifeBar.GetComponent<UI_LifeBar_Player>();
         script.maxHealth = maxHealth;
         script.actualHealth = health;

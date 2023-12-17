@@ -8,7 +8,7 @@ public class UI_LifeBar : MonoBehaviour
     //public GameObject canvasLifeBar;
     public float actualHealth;
     public float maxHealth;
-    public Transform camera;
+    public new Transform camera;
     public Vector3 posEnemy;
     public float orientation;
 

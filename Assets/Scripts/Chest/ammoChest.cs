@@ -5,7 +5,7 @@ using UnityEngine;
 public class ammoChest : MonoBehaviour
 {
     public bool isShoted = false;
-    public Transform camera;
+    public new Transform camera;
 
     private float health = 30f;
     private Animator animator;

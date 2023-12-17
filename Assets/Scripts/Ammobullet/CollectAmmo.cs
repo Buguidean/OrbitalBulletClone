@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CollectAmmo : MonoBehaviour
 {
-    public Transform camera;
+    public new Transform camera;
     void OnTriggerEnter(Collider obj)
     {
         switch (obj.tag)
