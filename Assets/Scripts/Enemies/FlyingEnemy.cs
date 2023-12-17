@@ -10,7 +10,7 @@ public class FlyingEnemy : MonoBehaviour
     public CharacterController player;
     public Transform playerTransform;
     public float radius = 29f; // radius of the circle
-    public Transform camera;
+    public new Transform camera;
 
     public float damageRecived;
 
@@ -22,7 +22,7 @@ public class FlyingEnemy : MonoBehaviour
     private float acceleration = 1f; // acceleration factor
     private float currentSpeed = 0.2f;
     private float angle = 0f;
-    private float gravity = 0.5f;
+    //private float gravity = 0.5f;
     private float speedY = 0f;
     private int orientation = -1;
     private Vector3 dist_player;
@@ -56,7 +56,7 @@ public class FlyingEnemy : MonoBehaviour
 
     //private bool doJump = false
     
-    //private float coolDown = 0f;
+    private float coolDown = 0f;
 
     private void Start()
     {
@@ -185,7 +185,7 @@ public class FlyingEnemy : MonoBehaviour
     private void prepareAttack()
     {
         dist_player = playerTransform.position - transform.position;
-        if (dist_player.magnitude < 10f)
+        if (dist_player.magnitude < 10f & coolDown == 0f)
         {
             GameObject bulledPrefab = Resources.Load("prefabs/BulledMob") as GameObject;
             Vector3 pos = gameObject.transform.position + new Vector3(0f, 1f, 0f);
@@ -194,6 +194,7 @@ public class FlyingEnemy : MonoBehaviour
             MobBulled script = instanciatedBulled.GetComponent<MobBulled>();
             script.player = playerTransform;
             script.center = center;
+            coolDown = 2f;
         }
     }
 
@@ -201,8 +202,10 @@ public class FlyingEnemy : MonoBehaviour
     {
         if (instanciatedBulled == null)
             prepareAttack();
-        
 
+        coolDown -= Time.deltaTime;
+        if (coolDown < 0f)
+            coolDown = 0f;
         controlDamage();
         // Adjust the current speed based on input and acceleration
         float prevAngle = angle;

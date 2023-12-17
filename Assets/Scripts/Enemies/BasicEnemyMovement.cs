@@ -10,7 +10,7 @@ public class BasicEnemyMovement : MonoBehaviour
     public CharacterController player;
     public Transform playerTransform;
     public float radius = 29f; // radius of the circle
-    public Transform camera;
+    public new Transform camera;
 
     private CharacterController characterController;
     private BoxCollider boxCol;
@@ -54,6 +54,7 @@ public class BasicEnemyMovement : MonoBehaviour
 
     //private float timer = 0f;
     private float coolDown = 0f;
+    private float initialCoolDown = 4f;
 
     private void Start()
     {
@@ -192,7 +193,7 @@ public class BasicEnemyMovement : MonoBehaviour
             Vector3 aux = Vector3.Normalize(dist_player);
             float dir_of_attack = Vector3.Angle(aux, transform.forward);
             Debug.Log(dir_of_attack);
-            coolDown = 2f;
+            coolDown = initialCoolDown;
             speedY = 0.25f;
 
             if (dir_of_attack > 60f) {
