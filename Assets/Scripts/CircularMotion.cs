@@ -37,6 +37,8 @@ public class CircularMotion : MonoBehaviour
 
     private CharacterController characterController;
 
+    private bool pistolUI = false;
+    private GameObject instanciatedPistolUI = null;
     Animator animator;
 
     //teleport control
@@ -122,11 +124,18 @@ public class CircularMotion : MonoBehaviour
         }
         else if (input == 0f && currentSpeed > 0f)
         {
-            currentSpeed -= acceleration * Time.deltaTime;
+            if (currentSpeed > 0.5f)
+                currentSpeed -= acceleration * 2f * Time.deltaTime;
+            else
+                currentSpeed -= acceleration * Time.deltaTime;
+
         }
         else if (input == 0f && currentSpeed < 0f)
         {
-            currentSpeed += acceleration * Time.deltaTime;
+            if (currentSpeed < 0.5f)
+                currentSpeed += acceleration * 2f * Time.deltaTime;
+            else
+                currentSpeed += acceleration * Time.deltaTime;
         }
     }
 
@@ -197,6 +206,15 @@ public class CircularMotion : MonoBehaviour
 
         if (takePistol)
         {
+            if (!pistolUI)
+            {
+                pistolUI = true;
+                GameObject pUI = Resources.Load("prefabs/UI/Player/PistolUI") as GameObject;
+                Vector3 pos = camera.position + new Vector3(-2f, 1.55f, 3f);
+                instanciatedPistolUI = Instantiate(pUI, pos, Quaternion.identity);
+                instanciatedPistolUI.transform.SetParent(camera.transform);
+
+            }
             switch (hasWeapon)
             {
                 case 0:
@@ -217,11 +235,19 @@ public class CircularMotion : MonoBehaviour
 
     private void FixedUpdate()
     {
+        float correction = Vector3.Angle((transform.position - center.position), transform.forward);
+
+        if (orientation == -1)
+            transform.Rotate(0.0f, correction - 90.0f, 0.0f);
+        else
+            transform.Rotate(0.0f, 90.0f - correction, 0.0f);
+
 
         if (currentSpeed != 0f)
         {
             animator.SetBool("isMoving", true);
         }
+
 
         if (teleport && GetComponent<CharacterController>().isGrounded)
         {
@@ -436,7 +462,6 @@ public class CircularMotion : MonoBehaviour
         }
 
         input = 0f;
-        float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
         if (!constrained)
         {
@@ -446,7 +471,6 @@ public class CircularMotion : MonoBehaviour
                 if (orientation == 1)
                     transform.Rotate(0.0f, 180.0f, 0.0f);
                 orientation = -1;
-                transform.Rotate(0.0f, correction - 90.0f, 0.0f);
             }
             else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
@@ -454,7 +478,6 @@ public class CircularMotion : MonoBehaviour
                 if (orientation == -1)
                     transform.Rotate(0.0f, 180.0f, 0.0f);
                 orientation = 1;
-                transform.Rotate(0.0f, 90.0f - correction, 0.0f);
             }
 
             if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
@@ -479,10 +502,14 @@ public class CircularMotion : MonoBehaviour
                 weaponInstanciated = null;
             }*/
 
-            if (Input.GetKeyUp(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
             {
+                maxVelocity = 1.5f;
                 dodging = true;
-                currentSpeed *= 1.4f;
+                if (orientation == -1)
+                    currentSpeed += 1f;
+                else
+                    currentSpeed -= 1f;
                 //change animation a roll
             }
 
