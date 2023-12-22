@@ -61,6 +61,10 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
                 break;
             case "Untagged":
+                Debug.Log("The bullet was destroyed because touched Untagged object");
+                Destroy(gameObject);
+                break;
+            case "Environment":
                 Debug.Log("The bullet was destroyed because touched the Environment");
                 Destroy(gameObject);
                 break;

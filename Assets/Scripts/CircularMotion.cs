@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class CircularMotion : MonoBehaviour
 {
@@ -36,16 +38,6 @@ public class CircularMotion : MonoBehaviour
     private int rifleAmmo = 30;
 
     private CharacterController characterController;
-
-    private bool pistolUI = false;
-    private GameObject instanciatedPistolUI = null;
-    private GameObject selectedUI = null;
-    //private TextMeshPro pistolAmmoUI;
-
-    bool rifleUI = false;
-    private GameObject instanciatedRifleUI = null;
-    private GameObject backUI = null;
-    //private TextMeshPro rifleAmmoUI;
 
     Animator animator;
 
@@ -87,7 +79,16 @@ public class CircularMotion : MonoBehaviour
     private float health;
 
     //UI
-    GameObject LifeBar;
+    private GameObject LifeBar;
+
+    private bool isPistolUI = false;
+    private bool isRifleUI = false;
+    private GameObject pistolUI;
+    private GameObject rifleUI;
+    private GameObject pistolAmmoUI;
+    private GameObject rifleAmmoUI;
+    private GameObject backRifleUI;
+    private GameObject backPistolUI;
 
     //Mano del player
     private Transform playerHand;
@@ -105,6 +106,24 @@ public class CircularMotion : MonoBehaviour
         health = maxHealth;
         createLifeBar();
         getHand();
+        getUI();
+    }
+
+    private void getUI()
+    {
+        pistolUI = camera.GetChild(0).GetChild(0).gameObject;
+        rifleUI = camera.GetChild(0).GetChild(1).gameObject;
+        pistolAmmoUI = pistolUI.transform.GetChild(0).gameObject;
+        rifleAmmoUI = rifleUI.transform.GetChild(0).gameObject;
+        backPistolUI = pistolUI.transform.GetChild(1).gameObject;
+        backRifleUI = rifleUI.transform.GetChild(1).gameObject;
+        
+        pistolUI.SetActive(false);
+        rifleUI.SetActive(false);
+
+        pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
+        rifleAmmoUI.GetComponent<TMP_Text>().text = rifleAmmo.ToString();
+
     }
 
     private void getHand()
@@ -179,12 +198,14 @@ public class CircularMotion : MonoBehaviour
                     case 3:
                         pistolAmmo = maxAmmoPistol;
                         weaponInstanciated.GetComponent<Pistol>().ammo = maxAmmoPistol;
+                        pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
                         break;
                     //Rifle
                     case 2:
                     case 4:
                         rifleAmmo = maxAmmoRifle;
                         weaponInstanciated.GetComponent<Rifle>().ammo = maxAmmoRifle;
+                        rifleAmmoUI.GetComponent<TMP_Text>().text = rifleAmmo.ToString();
                         break;
 
                 }
@@ -196,30 +217,12 @@ public class CircularMotion : MonoBehaviour
         // Cambar segun el hasWeapon
         if (takeRifle)
         {
-            if (!rifleUI)
+            if (!isRifleUI)
             {
-                rifleUI = true;
-                GameObject rUI = Resources.Load("prefabs/UI/Player/WeaponUI/RifleUI") as GameObject;
-                Vector3 pos = camera.position + new Vector3(-8.00f, 3f, -5f);
-                instanciatedRifleUI = Instantiate(rUI, pos, Quaternion.identity);
-                instanciatedRifleUI.transform.SetParent(camera.transform);
-                instanciatedRifleUI.transform.Rotate(0, -90, 0);
-
-                Vector3 backPos = selectedUI.transform.position;
-                Destroy(selectedUI);
-                selectedUI = null;
-                GameObject back = Resources.Load("prefabs/UI/Player/WeaponUI/Background") as GameObject;
-                backUI = Instantiate(back, backPos, Quaternion.identity);
-                backUI.transform.SetParent(instanciatedPistolUI.transform);
-                backUI.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
-                backUI.transform.Rotate(0, -90, 0);
-
-                GameObject selUI = Resources.Load("prefabs/UI/Player/WeaponUI/Selected") as GameObject;
-                selectedUI = Instantiate(selUI, pos, Quaternion.identity);
-                selectedUI.transform.position += new Vector3(-0.1f, 0.035f, -0.06f);
-                selectedUI.transform.Rotate(0, -90, 0);
-                selectedUI.transform.SetParent(instanciatedRifleUI.transform);
-                selectedUI.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
+                isRifleUI = true;
+                rifleUI.SetActive(true);
+                Image img = backPistolUI.GetComponent<Image>();
+                img.material = Resources.Load("Materials/Black") as Material;
             }
             switch (hasWeapon)
             {
@@ -239,39 +242,10 @@ public class CircularMotion : MonoBehaviour
 
         if (takePistol)
         {
-            if (!pistolUI)
+            if (!isPistolUI)
             {
-                pistolUI = true;
-                GameObject pUI = Resources.Load("prefabs/UI/Player/WeaponUI/PistolUI") as GameObject;
-                Vector3 pos = camera.position + new Vector3(-8.00f, 3f, -7f);
-                instanciatedPistolUI = Instantiate(pUI, pos, Quaternion.identity);
-                instanciatedPistolUI.transform.SetParent(camera.transform);
-                instanciatedPistolUI.transform.Rotate(0, -90, 0);
-
-                //pos += new Vector3(-0.05f, 0.03f, 0.1f);
-                /*GameObject backUI = Resources.Load("prefabs/UI/Player/WeaponUI/Background") as GameObject;
-                backUI = Instantiate(backUI, pos, Quaternion.identity);
-                backUI.transform.SetParent(instanciatedPistolUI.transform);
-                backUI.transform.localScale = new Vector3(1f, 1f, 1f);
-                backUI.transform.Rotate(0, -90, 0);
-                //backUI.transform.position = new Vector3(-0.05f, 0.03f, 0.1f);*/
-
-                //pos += new Vector3(-0.05f, 0.03f, 0.1f);
-                GameObject selUI = Resources.Load("prefabs/UI/Player/WeaponUI/Selected") as GameObject;
-                selectedUI = Instantiate(selUI, pos, Quaternion.identity);
-                selectedUI.transform.position += new Vector3(-0.1f, 0.035f, -0.08f);
-                selectedUI.transform.Rotate(0, -90, 0);
-                selectedUI.transform.SetParent(instanciatedPistolUI.transform);
-                selectedUI.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
-                
-
-
-
-
-
-
-                //instanciatedPistolUI.transform.position = new Vector3(-2f, 1.55f, 3f);
-
+                isPistolUI = true;
+                pistolUI.SetActive(true); 
             }
             switch (hasWeapon)
             {
@@ -453,26 +427,17 @@ public class CircularMotion : MonoBehaviour
 
     void swapUISelected()
     {
-        selectedUI.transform.SetParent(camera.transform);
-        backUI.transform.SetParent(camera.transform);
-
-        Vector3 backPos = selectedUI.transform.position;
-        Vector3 selectedPos = backUI.transform.position;
-
-        Vector3 Pos1 = backPos - selectedPos;
-        Vector3 Pos2 = selectedPos - backPos;
-
-        selectedUI.transform.position += Pos2;
-        backUI.transform.position += Pos1;
+        Material selected = Resources.Load("Materials/WhiteSelected") as Material;
+        Material black = Resources.Load("Materials/Black") as Material;
         if (hasWeapon == 4)
         {
-            selectedUI.transform.SetParent(instanciatedRifleUI.transform);
-            backUI.transform.SetParent(instanciatedPistolUI.transform);
+            backRifleUI.GetComponent<Image>().material = selected;
+            backPistolUI.GetComponent<Image>().material = black;
         }
         else
         {
-            selectedUI.transform.SetParent(instanciatedPistolUI.transform);
-            backUI.transform.SetParent(instanciatedRifleUI.transform);
+            backRifleUI.GetComponent<Image>().material = black;
+            backPistolUI.GetComponent<Image>().material = selected;
         }
     }
 
@@ -621,16 +586,18 @@ public class CircularMotion : MonoBehaviour
                     case 3:
                         if (pistolAmmo > 0)
                         {
-                            timer = 1f;
+                            timer = 2f;
                             pistolAmmo -= 1;
+                            pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
                         }
                         break;
                     case 2:
                     case 4:
-                        if (pistolAmmo > 0)
+                        if (rifleAmmo > 0)
                         {
-                            timer = 0.6f;
+                            timer = 1.2f;
                             rifleAmmo -= 1;
+                            rifleAmmoUI.GetComponent<TMP_Text>().text = rifleAmmo.ToString();
                         }
                         break;
                 }
