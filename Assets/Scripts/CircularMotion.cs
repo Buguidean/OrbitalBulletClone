@@ -39,6 +39,14 @@ public class CircularMotion : MonoBehaviour
 
     private bool pistolUI = false;
     private GameObject instanciatedPistolUI = null;
+    private GameObject selectedUI = null;
+    //private TextMeshPro pistolAmmoUI;
+
+    bool rifleUI = false;
+    private GameObject instanciatedRifleUI = null;
+    private GameObject backUI = null;
+    //private TextMeshPro rifleAmmoUI;
+
     Animator animator;
 
     //teleport control
@@ -188,6 +196,31 @@ public class CircularMotion : MonoBehaviour
         // Cambar segun el hasWeapon
         if (takeRifle)
         {
+            if (!rifleUI)
+            {
+                rifleUI = true;
+                GameObject rUI = Resources.Load("prefabs/UI/Player/WeaponUI/RifleUI") as GameObject;
+                Vector3 pos = camera.position + new Vector3(-8.00f, 3f, -5f);
+                instanciatedRifleUI = Instantiate(rUI, pos, Quaternion.identity);
+                instanciatedRifleUI.transform.SetParent(camera.transform);
+                instanciatedRifleUI.transform.Rotate(0, -90, 0);
+
+                Vector3 backPos = selectedUI.transform.position;
+                Destroy(selectedUI);
+                selectedUI = null;
+                GameObject back = Resources.Load("prefabs/UI/Player/WeaponUI/Background") as GameObject;
+                backUI = Instantiate(back, backPos, Quaternion.identity);
+                backUI.transform.SetParent(instanciatedPistolUI.transform);
+                backUI.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
+                backUI.transform.Rotate(0, -90, 0);
+
+                GameObject selUI = Resources.Load("prefabs/UI/Player/WeaponUI/Selected") as GameObject;
+                selectedUI = Instantiate(selUI, pos, Quaternion.identity);
+                selectedUI.transform.position += new Vector3(-0.1f, 0.035f, -0.06f);
+                selectedUI.transform.Rotate(0, -90, 0);
+                selectedUI.transform.SetParent(instanciatedRifleUI.transform);
+                selectedUI.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
+            }
             switch (hasWeapon)
             {
                 case 0:
@@ -209,10 +242,35 @@ public class CircularMotion : MonoBehaviour
             if (!pistolUI)
             {
                 pistolUI = true;
-                GameObject pUI = Resources.Load("prefabs/UI/Player/PistolUI") as GameObject;
-                Vector3 pos = camera.position + new Vector3(-2f, 1.55f, 3f);
+                GameObject pUI = Resources.Load("prefabs/UI/Player/WeaponUI/PistolUI") as GameObject;
+                Vector3 pos = camera.position + new Vector3(-8.00f, 3f, -7f);
                 instanciatedPistolUI = Instantiate(pUI, pos, Quaternion.identity);
                 instanciatedPistolUI.transform.SetParent(camera.transform);
+                instanciatedPistolUI.transform.Rotate(0, -90, 0);
+
+                //pos += new Vector3(-0.05f, 0.03f, 0.1f);
+                /*GameObject backUI = Resources.Load("prefabs/UI/Player/WeaponUI/Background") as GameObject;
+                backUI = Instantiate(backUI, pos, Quaternion.identity);
+                backUI.transform.SetParent(instanciatedPistolUI.transform);
+                backUI.transform.localScale = new Vector3(1f, 1f, 1f);
+                backUI.transform.Rotate(0, -90, 0);
+                //backUI.transform.position = new Vector3(-0.05f, 0.03f, 0.1f);*/
+
+                //pos += new Vector3(-0.05f, 0.03f, 0.1f);
+                GameObject selUI = Resources.Load("prefabs/UI/Player/WeaponUI/Selected") as GameObject;
+                selectedUI = Instantiate(selUI, pos, Quaternion.identity);
+                selectedUI.transform.position += new Vector3(-0.1f, 0.035f, -0.08f);
+                selectedUI.transform.Rotate(0, -90, 0);
+                selectedUI.transform.SetParent(instanciatedPistolUI.transform);
+                selectedUI.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
+                
+
+
+
+
+
+
+                //instanciatedPistolUI.transform.position = new Vector3(-2f, 1.55f, 3f);
 
             }
             switch (hasWeapon)
@@ -393,6 +451,31 @@ public class CircularMotion : MonoBehaviour
 
     }
 
+    void swapUISelected()
+    {
+        selectedUI.transform.SetParent(camera.transform);
+        backUI.transform.SetParent(camera.transform);
+
+        Vector3 backPos = selectedUI.transform.position;
+        Vector3 selectedPos = backUI.transform.position;
+
+        Vector3 Pos1 = backPos - selectedPos;
+        Vector3 Pos2 = selectedPos - backPos;
+
+        selectedUI.transform.position += Pos2;
+        backUI.transform.position += Pos1;
+        if (hasWeapon == 4)
+        {
+            selectedUI.transform.SetParent(instanciatedRifleUI.transform);
+            backUI.transform.SetParent(instanciatedPistolUI.transform);
+        }
+        else
+        {
+            selectedUI.transform.SetParent(instanciatedPistolUI.transform);
+            backUI.transform.SetParent(instanciatedRifleUI.transform);
+        }
+    }
+
     void createWeapon()
     {
         float weaponAngle = angle;
@@ -564,6 +647,7 @@ public class CircularMotion : MonoBehaviour
                     hasWeapon = 4;
                     Destroy(weaponInstanciated);
                     weaponInstanciated = null;
+                    swapUISelected();
                     createWeapon();
                 }
                 else if (hasWeapon == 4)
@@ -571,6 +655,7 @@ public class CircularMotion : MonoBehaviour
                     hasWeapon = 3;
                     Destroy(weaponInstanciated);
                     weaponInstanciated = null;
+                    swapUISelected();
                     createWeapon();
                 }
             }

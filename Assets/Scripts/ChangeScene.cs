@@ -10,7 +10,7 @@ public class ChangeScene : MonoBehaviour
 
     private void Start()
     {
-        Screen.SetResolution(640, 480, FullScreenMode.ExclusiveFullScreen, new RefreshRate() { numerator = 60, denominator = 1 });
+        Screen.SetResolution(1280, 720, FullScreenMode.ExclusiveFullScreen, new RefreshRate() { numerator = 60, denominator = 1 });
         playGame.GetComponent<Button>().onClick.AddListener(() => changeScene(1));
         instructions.onClick.AddListener(() => changeScene(1));
         credits.onClick.AddListener(() => changeScene(3));
