@@ -93,6 +93,9 @@ public class CircularMotion : MonoBehaviour
     //Mano del player
     private Transform playerHand;
 
+    //Sounds
+    private PlayerSounds soundScript;
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -107,6 +110,7 @@ public class CircularMotion : MonoBehaviour
         createLifeBar();
         getHand();
         getUI();
+        soundScript = gameObject.GetComponent<PlayerSounds>();
     }
 
     private void getUI()
@@ -528,9 +532,10 @@ public class CircularMotion : MonoBehaviour
                 orientation = 1;
             }
 
-            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
+            if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
             {
                 doJump = true;
+                soundScript.jumpSound = true;
             }
 
             if (Input.GetKey(KeyCode.C))

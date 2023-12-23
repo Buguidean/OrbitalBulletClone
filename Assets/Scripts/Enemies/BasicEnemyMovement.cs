@@ -84,7 +84,7 @@ public class BasicEnemyMovement : MonoBehaviour
             if (angle_hit >= 135.5203f)
             {
                 other.GetComponent<CircularMotion>().doJumpHigh = true;
-
+                other.GetComponent<PlayerSounds>().stompSound = true;
                 damageRecived = 25f;
             }
             else
