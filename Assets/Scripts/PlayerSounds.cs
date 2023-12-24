@@ -6,6 +6,12 @@ public class PlayerSounds: MonoBehaviour
 {
     public bool jumpSound = false;
     public bool stompSound = false;
+    public bool pistolSound = false;
+    public bool rifleSound = false;
+    public bool collectAmmoSound = false;
+    public bool noAmmoSound = false;
+    public bool teleport = false;
+
     // Start is called before the first frame update
     [SerializeField]
     private AudioClip[] audios;
@@ -30,7 +36,31 @@ public class PlayerSounds: MonoBehaviour
             controlAudio.PlayOneShot(audios[1], 1);
             stompSound = false;
         }
-
+        if (pistolSound)
+        {
+            controlAudio.PlayOneShot(audios[2], 1);
+            pistolSound = false;
+        }
+        if (rifleSound)
+        {
+            controlAudio.PlayOneShot(audios[3], 1);
+            rifleSound = false;
+        }
+        if (collectAmmoSound)
+        {
+            controlAudio.PlayOneShot(audios[4], 1);
+            collectAmmoSound = false;
+        }
+        if (noAmmoSound)
+        {
+            controlAudio.PlayOneShot(audios[5], 1);
+            noAmmoSound = false;
+        }
+        if (teleport)
+        {
+            controlAudio.PlayOneShot(audios[6], 1);
+            teleport = false;
+        }
     }
 
 }

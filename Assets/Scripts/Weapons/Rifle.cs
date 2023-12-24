@@ -8,6 +8,7 @@ public class Rifle : MonoBehaviour
     public int orientation;
     public float radius;
     public Transform center;
+    public PlayerSounds soundScript;
 
     public int ammo;
 
@@ -17,13 +18,6 @@ public class Rifle : MonoBehaviour
 
     private float timer = 0f;
 
-    
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     private void createBullet()
     {
@@ -33,18 +27,18 @@ public class Rifle : MonoBehaviour
         if (orientation == -1)
         {
             leftMove = false;
-            bulletAngle += 0.05f * 29f / radius;
+            bulletAngle += 0.07f * 29f / radius;
         }
         else
         {
             leftMove = true;
-            bulletAngle -= 0.05f * 29f / radius;
+            bulletAngle -= 0.07f * 29f / radius;
         }
 
         //Compute position
         float xPos = center.position.x + Mathf.Cos(bulletAngle) * 29f;
         float zPos = center.position.z + Mathf.Sin(bulletAngle) * 29f;
-        Vector3 pos = new Vector3(xPos, transform.position.y + 0.5f, zPos);
+        Vector3 pos = new Vector3(xPos, transform.position.y + 1.25f, zPos);
 
         //instantiate
         GameObject bulledPrefab = Resources.Load("prefabs/Sphere") as GameObject;
@@ -66,17 +60,18 @@ public class Rifle : MonoBehaviour
             timer = shotRate;
             ammo -= 1;
             createBullet();
+            soundScript.rifleSound = true;
             Debug.Log(ammo);
 
         }
-        else if (ammo == 0 & Input.GetKey(KeyCode.P))
+        else if (ammo == 0 & Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("No hay municion");
+            soundScript.noAmmoSound = true;
         }
         timer -= Time.deltaTime;
         if (timer < 0f)
             timer = 0f;
-
     }
 
 

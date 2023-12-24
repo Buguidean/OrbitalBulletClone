@@ -214,7 +214,7 @@ public class CircularMotion : MonoBehaviour
 
                 }
             }
-
+            soundScript.collectAmmoSound = true;
             collectAmmo = false;
         }
 
@@ -291,8 +291,9 @@ public class CircularMotion : MonoBehaviour
                 radius -= 0.25f;
             else
                 radius += 0.25f;
-
+            soundScript.teleport = true;
             speedY = 0.5f;
+
         }
 
         else if (teleport)
@@ -449,20 +450,23 @@ public class CircularMotion : MonoBehaviour
     {
         float weaponAngle = angle;
 
+        float addAngle = 0.04f;
+        if (hasWeapon == 1 | hasWeapon == 3)
+            addAngle = 0.05f;
         if (orientation == -1)
         {
-            weaponAngle += 0.04f * (29f / radius);
+            weaponAngle += addAngle * (29f / radius);
         }
         else
         {
-            weaponAngle -= 0.04f * (29f / radius);
+            weaponAngle -= addAngle * (29f / radius);
         }
 
         float xPos = center.position.x + Mathf.Cos(weaponAngle) * radius;
         float zPos = center.position.z + Mathf.Sin(weaponAngle) * radius;
-        Vector3 pos = new Vector3(xPos, transform.position.y + 1f, zPos);
+        Vector3 pos = new Vector3(xPos, transform.position.y + 0.5f, zPos);
 
-        GameObject weaponModel = Resources.Load("prefabs/p") as GameObject;
+        GameObject weaponModel = Resources.Load("prefabs/pistolDef") as GameObject;
         switch (hasWeapon)
         {
             case 1:
@@ -471,26 +475,25 @@ public class CircularMotion : MonoBehaviour
                 break;
             case 2:
             case 4:
-                weaponModel = Resources.Load("prefabs/model") as GameObject;
+                weaponModel = Resources.Load("prefabs/rifleDef") as GameObject;
                 break;
         }
 
-        Vector3 zeros = new Vector3(0.2f, 0.5f, 0.1f);
-
         weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
-        weaponInstanciated.transform.parent = gameObject.transform;//playerHand;
+        weaponInstanciated.transform.parent = playerHand;//gameObject.transform;
         weaponInstanciated.transform.rotation = transform.rotation;
+        weaponInstanciated.transform.Rotate(0.0f, 180.0f, 0.0f);
         switch (hasWeapon)
         {
             case 1:
             case 3:
-                weaponInstanciated.transform.Rotate(0.0f, 180.0f, 0.0f);
                 Pistol script1 = weaponInstanciated.GetComponent<Pistol>();
                 script1.angle = weaponAngle;
                 script1.orientation = orientation;
                 script1.radius = radius;
                 script1.center = center;
                 script1.ammo = pistolAmmo;
+                script1.soundScript = gameObject.GetComponent<PlayerSounds>();
                 break;
             case 2:
             case 4:
@@ -500,6 +503,7 @@ public class CircularMotion : MonoBehaviour
                 script2.radius = radius;
                 script2.center = center;
                 script2.ammo = rifleAmmo;
+                script2.soundScript = gameObject.GetComponent<PlayerSounds>();
                 break;
         }
 
@@ -567,9 +571,10 @@ public class CircularMotion : MonoBehaviour
             }
 
             //Key Cheats
-            if (Input.GetKey(KeyCode.M))
+            if (Input.GetKeyDown(KeyCode.M))
             {
                 collectAmmo = true;
+                soundScript.collectAmmoSound = true;
             }
 
             if (Input.GetKeyDown(KeyCode.G))

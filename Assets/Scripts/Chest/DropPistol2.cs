@@ -21,10 +21,11 @@ public class DropPistol2 : MonoBehaviour
     {
         Vector3 pistolPos = transform.position;
 
-        GameObject pistolPrefab = Resources.Load("prefabs/dropPistol") as GameObject;
+        GameObject pistolPrefab = Resources.Load("prefabs/pistolDef") as GameObject;
         pistol = Instantiate(pistolPrefab, pistolPos, Quaternion.identity);
 
         pistol.transform.rotation = playerTransform.rotation;
+        pistol.GetComponent<Pistol>().enabled = false;
     }
 
     private void OnTriggerStay(Collider obj)

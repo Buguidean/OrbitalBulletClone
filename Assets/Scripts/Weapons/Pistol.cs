@@ -8,6 +8,7 @@ public class Pistol : MonoBehaviour
     public int orientation;
     public float radius;
     public Transform center;
+    public PlayerSounds soundScript;
 
     public int ammo;
 
@@ -25,18 +26,18 @@ public class Pistol : MonoBehaviour
         if (orientation == -1)
         {
             leftMove = false;
-            bulletAngle += 0.05f * 29f / radius;
+            bulletAngle += 0.06f * 29f / radius;
         }
         else
         {
             leftMove = true;
-            bulletAngle -= 0.05f * 29f / radius;
+            bulletAngle -= 0.06f * 29f / radius;
         }
 
         //Compute position
         float xPos = center.position.x + Mathf.Cos(bulletAngle) * 29f;
         float zPos = center.position.z + Mathf.Sin(bulletAngle) * 29f;
-        Vector3 pos = new Vector3(xPos, transform.position.y + 1.1f, zPos);
+        Vector3 pos = new Vector3(xPos, transform.position.y + 1.65f, zPos);
 
         //compute orientation (will be needed)
 
@@ -50,8 +51,6 @@ public class Pistol : MonoBehaviour
         obj.GetComponent<Bullet>().radius = radius;
         obj.GetComponent<Bullet>().damage = bulletDamage;
         obj.GetComponent<Bullet>().timer = bulletTime;
-
-
     }
 
     // Update is called once per frame
@@ -61,13 +60,15 @@ public class Pistol : MonoBehaviour
         {
             timer = shotRate;
             ammo -= 1;
+            soundScript.pistolSound = true;
             createBullet();
             Debug.Log(ammo);
 
         }
-        else if (ammo == 0 & Input.GetKey(KeyCode.P))
+        else if (ammo == 0 & Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("No hay municion");
+            soundScript.noAmmoSound = true;
         }
         timer -= Time.deltaTime;
         if (timer < 0f)
