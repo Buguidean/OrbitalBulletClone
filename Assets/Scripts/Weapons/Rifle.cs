@@ -9,14 +9,13 @@ public class Rifle : MonoBehaviour
     public float radius;
     public Transform center;
     public PlayerSounds soundScript;
+    public float timer;
 
     public int ammo;
 
     private float shotRate = 0.6f;
     private float bulletDamage = 12f;
     private float bulletTime = 3.5f;
-
-    private float timer = 0f;
 
 
     private void createBullet()

@@ -11,6 +11,8 @@ public class PlayerSounds: MonoBehaviour
     public bool collectAmmoSound = false;
     public bool noAmmoSound = false;
     public bool teleport = false;
+    public bool transitionSound = false;
+    public bool changeWeaponSound = false;
 
     // Start is called before the first frame update
     [SerializeField]
@@ -60,6 +62,16 @@ public class PlayerSounds: MonoBehaviour
         {
             controlAudio.PlayOneShot(audios[6], 1);
             teleport = false;
+        }
+        if (transitionSound)
+        {
+            controlAudio.PlayOneShot(audios[7], 1);
+            transitionSound = false;
+        }
+        if(changeWeaponSound)
+        {
+            controlAudio.PlayOneShot(audios[8], 1);
+            changeWeaponSound = false;
         }
     }
 

@@ -9,14 +9,13 @@ public class Pistol : MonoBehaviour
     public float radius;
     public Transform center;
     public PlayerSounds soundScript;
+    public float timer;
 
     public int ammo;
 
     private float shotRate = 1f;
     private float bulletTime = 0.875f;
     private float bulletDamage = 20f;
-
-    private float timer = 0f;
 
     private void createBullet()
     {
@@ -70,6 +69,7 @@ public class Pistol : MonoBehaviour
             Debug.Log("No hay municion");
             soundScript.noAmmoSound = true;
         }
+
         timer -= Time.deltaTime;
         if (timer < 0f)
             timer = 0f;

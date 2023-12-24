@@ -480,7 +480,7 @@ public class CircularMotion : MonoBehaviour
         }
 
         weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
-        weaponInstanciated.transform.parent = playerHand;//gameObject.transform;
+        weaponInstanciated.transform.parent = gameObject.transform; //playerHand;
         weaponInstanciated.transform.rotation = transform.rotation;
         weaponInstanciated.transform.Rotate(0.0f, 180.0f, 0.0f);
         switch (hasWeapon)
@@ -493,6 +493,7 @@ public class CircularMotion : MonoBehaviour
                 script1.radius = radius;
                 script1.center = center;
                 script1.ammo = pistolAmmo;
+                script1.timer = timer;
                 script1.soundScript = gameObject.GetComponent<PlayerSounds>();
                 break;
             case 2:
@@ -503,6 +504,7 @@ public class CircularMotion : MonoBehaviour
                 script2.radius = radius;
                 script2.center = center;
                 script2.ammo = rifleAmmo;
+                script2.timer = timer;
                 script2.soundScript = gameObject.GetComponent<PlayerSounds>();
                 break;
         }
@@ -619,6 +621,7 @@ public class CircularMotion : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.S))
             {
+                soundScript.changeWeaponSound = true;
                 if (hasWeapon == 3)
                 {
                     hasWeapon = 4;

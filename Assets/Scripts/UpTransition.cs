@@ -10,6 +10,7 @@ public class UpTransition : MonoBehaviour
         {
             case "Player":
                 obj.GetComponent<CircularMotion>().jumpTransition = true;
+                obj.GetComponent<PlayerSounds>().transitionSound = true;
                 break;
         }
     }

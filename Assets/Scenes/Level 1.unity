@@ -960,6 +960,7 @@ MonoBehaviour:
   collectAmmoSound: 0
   noAmmoSound: 0
   teleport: 0
+  transitionSound: 0
   audios:
   - {fileID: 8300000, guid: 5721a696aab5fed438ae98e4115406b1, type: 3}
   - {fileID: 8300000, guid: 13895e6346916f74ea6727460f761ccc, type: 3}
@@ -967,7 +968,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a72e5507f0cb26842a2007ec781ab4d1, type: 3}
   - {fileID: 8300000, guid: db910f63a1300bf4193d7dba27a4c2e4, type: 3}
   - {fileID: 8300000, guid: 6963d4b62fa64b74b8e521faaf8e85a5, type: 3}
-  - {fileID: 8300000, guid: 2a01d7e8f73acdb44876fe060a82ae9d, type: 3}
+  - {fileID: 8300000, guid: 946176c2d3c8e674293e178142c634d5, type: 3}
+  - {fileID: 8300000, guid: 9e070f87c12a4c447b708775d4152d81, type: 3}
 --- !u!1 &273142567
 GameObject:
   m_ObjectHideFlags: 0

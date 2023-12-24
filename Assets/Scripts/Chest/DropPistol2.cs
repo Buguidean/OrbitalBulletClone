@@ -22,7 +22,7 @@ public class DropPistol2 : MonoBehaviour
         Vector3 pistolPos = transform.position;
 
         GameObject pistolPrefab = Resources.Load("prefabs/pistolDef") as GameObject;
-        pistol = Instantiate(pistolPrefab, pistolPos, Quaternion.identity);
+        pistol = Instantiate(pistolPrefab, pistolPos + new Vector3(0f,-1f,0f), Quaternion.identity);
 
         pistol.transform.rotation = playerTransform.rotation;
         pistol.GetComponent<Pistol>().enabled = false;
@@ -55,7 +55,6 @@ public class DropPistol2 : MonoBehaviour
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Openning"))
         {
-            
             pistol.transform.Translate(new Vector3(0f,velocity, 0f) * Time.deltaTime);
         }
 
