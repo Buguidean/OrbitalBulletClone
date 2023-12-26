@@ -1899,7 +1899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -271.99994, y: 101.3}
+  m_AnchoredPosition: {x: -288.66684, y: 158.48267}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &626587963
@@ -4169,8 +4169,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {fileID: 1071403576}
-  player: {fileID: 236513513}
-  playerTransform: {fileID: 236513514}
+  player: {fileID: 1773467641}
+  playerTransform: {fileID: 1239227266}
   radius: 29
   camera: {fileID: 963194228}
   damageRecived: 0
@@ -5098,8 +5098,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {fileID: 1071403576}
-  player: {fileID: 236513513}
-  playerTransform: {fileID: 236513514}
+  player: {fileID: 1773467641}
+  playerTransform: {fileID: 1239227266}
   radius: 29
   camera: {fileID: 963194228}
   damageRecived: 0
@@ -5444,6 +5444,11 @@ Transform:
 --- !u!1 &1773467634 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7318158194023459078, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+  m_PrefabInstance: {fileID: 2054909134684270151}
+  m_PrefabAsset: {fileID: 0}
+--- !u!143 &1773467641 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 1804918120831634809, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
   m_PrefabInstance: {fileID: 2054909134684270151}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1793243792
@@ -6434,7 +6439,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -190.4, y: 101.3}
+  m_AnchoredPosition: {x: -207.06683, y: 158.48267}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2147396658
@@ -6612,6 +6617,10 @@ PrefabInstance:
     - target: {fileID: 2660015857331420427, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: m_Name
       value: leftHand
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737064702722727507, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7318158194023459078, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: m_Name

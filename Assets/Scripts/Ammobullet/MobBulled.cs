@@ -109,7 +109,7 @@ public class MobBulled : MonoBehaviour
             goal = middlePlayer;
             Vector3 dist_player = player.position - transform.position;
             float maxDist = Mathf.Abs(Mathf.Max(dist_player.x, dist_player.y));
-            Debug.Log("MaxDist: " + maxDist.ToString("0.000"));
+            //Debug.Log("MaxDist: " + maxDist.ToString("0.000"));
             //Debug.Log("displacement Y: " + displacement.y.ToString("0.000"));
 
             if (maxDist > 9.2f)

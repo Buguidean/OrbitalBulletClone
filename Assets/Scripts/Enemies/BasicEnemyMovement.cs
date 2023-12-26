@@ -191,7 +191,7 @@ public class BasicEnemyMovement : MonoBehaviour
         {
             Vector3 aux = Vector3.Normalize(dist_player);
             float dir_of_attack = Vector3.Angle(aux, transform.forward);
-            Debug.Log(dir_of_attack);
+            //Debug.Log(dir_of_attack);
             coolDown = initialCoolDown;
             speedY = 0.25f;
 

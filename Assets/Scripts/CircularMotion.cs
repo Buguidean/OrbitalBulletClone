@@ -136,7 +136,6 @@ public class CircularMotion : MonoBehaviour
 
     private void getHand()
     {
-        Debug.Log(gameObject.transform.GetChild(36).name);
         playerHand = gameObject.transform.GetChild(36);//gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0);
         playerHandMovement = gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2);//.GetChild(0).GetChild(0).GetChild(0).GetChild(0);
         //Debug.Log("El nom es:" + playerHandMovement.name);
@@ -278,6 +277,15 @@ public class CircularMotion : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //Debug.Log(this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+        if (GetComponent<CharacterController>().isGrounded)//this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "jump" | 
+        {
+            if (animator.GetBool("isJumping"))
+            {
+                animator.SetBool("isJumping", false);
+            }
+        }
+
         float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
         if (orientation == 1)
@@ -386,6 +394,7 @@ public class CircularMotion : MonoBehaviour
         {
             speedY = 0.25f;
             doJump = false;
+            animator.SetBool("isJumping", true);
         }
 
         if (doJumpHigh)
@@ -579,7 +588,9 @@ public class CircularMotion : MonoBehaviour
 
             if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
             {
+                //Debug.Log("isJumping: ", animator.GetBool("isJumping").ToString);
                 doJump = true;
+                animator.SetBool("isJumping", true);
                 soundScript.jumpSound = true;
             }
 
@@ -640,6 +651,7 @@ public class CircularMotion : MonoBehaviour
                             timer = 2f;
                             pistolAmmo -= 1;
                             pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
+                            animator.SetBool("isShoting", true);
                         }
                         break;
                     case 2:
@@ -653,6 +665,10 @@ public class CircularMotion : MonoBehaviour
                         break;
                 }
 
+            }
+            if(timer < 0.4f)
+            {
+                animator.SetBool("isShoting", false);
             }
             timer -= Time.deltaTime;
             if (timer < 0f)
