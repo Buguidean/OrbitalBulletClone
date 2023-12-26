@@ -60,7 +60,7 @@ public class CircularMotion : MonoBehaviour
     private float angle = 0f;
     private float gravity = 0.6f;
     private float speedY = 0f;
-    private int orientation = -1;
+    private int orientation = 1;
     private float input = 0f;
 
     private float x;
@@ -92,6 +92,7 @@ public class CircularMotion : MonoBehaviour
 
     //Mano del player
     private Transform playerHand;
+    private Transform playerHandMovement;
 
     //Sounds
     private PlayerSounds soundScript;
@@ -110,7 +111,10 @@ public class CircularMotion : MonoBehaviour
         createLifeBar();
         getHand();
         getUI();
+        transform.rotation *= Quaternion.Euler(0,180,0);
         soundScript = gameObject.GetComponent<PlayerSounds>();
+        hasWeapon = 1;
+        createPistolHand();
     }
 
     private void getUI()
@@ -132,7 +136,10 @@ public class CircularMotion : MonoBehaviour
 
     private void getHand()
     {
-        playerHand = gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0);
+        Debug.Log(gameObject.transform.GetChild(36).name);
+        playerHand = gameObject.transform.GetChild(36);//gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0);
+        playerHandMovement = gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2);//.GetChild(0).GetChild(0).GetChild(0).GetChild(0);
+        //Debug.Log("El nom es:" + playerHandMovement.name);
     }
 
     private void createLifeBar()
@@ -273,7 +280,7 @@ public class CircularMotion : MonoBehaviour
     {
         float correction = Vector3.Angle((transform.position - center.position), transform.forward);
 
-        if (orientation == -1)
+        if (orientation == 1)
             transform.Rotate(0.0f, correction - 90.0f, 0.0f);
         else
             transform.Rotate(0.0f, 90.0f - correction, 0.0f);
@@ -480,7 +487,7 @@ public class CircularMotion : MonoBehaviour
         }
 
         weaponInstanciated = Instantiate(weaponModel, pos, Quaternion.identity);
-        weaponInstanciated.transform.parent = gameObject.transform; //playerHand;
+        weaponInstanciated.transform.parent = playerHand;//gameObject.transform; //
         weaponInstanciated.transform.rotation = transform.rotation;
         weaponInstanciated.transform.Rotate(0.0f, 180.0f, 0.0f);
         switch (hasWeapon)
@@ -508,6 +515,38 @@ public class CircularMotion : MonoBehaviour
                 script2.soundScript = gameObject.GetComponent<PlayerSounds>();
                 break;
         }
+
+    }
+
+    private void createPistolHand()
+    {
+        float weaponAngle = angle;
+
+        float addAngle = 0.04f;
+        if (hasWeapon == 1 | hasWeapon == 3)
+            addAngle = 0.05f;
+        if (orientation == 1)
+        {
+            weaponAngle += addAngle * (29f / radius);
+        }
+        else
+        {
+            weaponAngle -= addAngle * (29f / radius);
+        }
+        float xPos = playerHand.transform.position.x - Mathf.Cos(weaponAngle) * 14.5f/radius;
+        float zPos = playerHand.transform.position.z - Mathf.Cos(weaponAngle) * 14.5f / radius; //+ Mathf.Sin(weaponAngle) * radius;
+        float yPos = playerHand.transform.position.y + 0.1f;
+        weaponInstanciated = Instantiate(Resources.Load("prefabs/pistolDef") as GameObject, new Vector3(xPos,yPos,zPos), Quaternion.identity);
+        weaponInstanciated.transform.SetParent(playerHandMovement);
+
+        Pistol script1 = weaponInstanciated.GetComponent<Pistol>();
+        script1.angle = weaponAngle;
+        script1.orientation = orientation;
+        script1.radius = radius;
+        script1.center = center;
+        script1.ammo = pistolAmmo;
+        script1.timer = timer;
+        script1.soundScript = gameObject.GetComponent<PlayerSounds>();
 
     }
 

@@ -42,11 +42,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f07d69fc0ce95c345b4db26ce5487502, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f07d69fc0ce95c345b4db26ce5487502, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f07d69fc0ce95c345b4db26ce5487502, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -94,4 +94,5 @@ MonoBehaviour:
   radius: 0
   center: {fileID: 0}
   soundScript: {fileID: 0}
+  timer: 0
   ammo: 0

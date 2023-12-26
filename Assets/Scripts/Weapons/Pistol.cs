@@ -69,7 +69,6 @@ public class Pistol : MonoBehaviour
             Debug.Log("No hay municion");
             soundScript.noAmmoSound = true;
         }
-
         timer -= Time.deltaTime;
         if (timer < 0f)
             timer = 0f;
