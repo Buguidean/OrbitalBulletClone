@@ -27,6 +27,7 @@ public class CircularMotion : MonoBehaviour
     public bool openedWC = false;
 
     private GameObject weaponInstanciated = null;
+    private GameObject rifleInstanciated = null;
 
     //has Weapon (0: any, 1: pistol, 2 rifle, 3 both (pistol active), 4 both (rifle active))
     private int hasWeapon;
@@ -81,7 +82,7 @@ public class CircularMotion : MonoBehaviour
     //UI
     private GameObject LifeBar;
 
-    private bool isPistolUI = false;
+   //private bool isPistolUI = false;
     private bool isRifleUI = false;
     private GameObject pistolUI;
     private GameObject rifleUI;
@@ -93,6 +94,8 @@ public class CircularMotion : MonoBehaviour
     //Mano del player
     private Transform playerHand;
     private Transform playerHandMovement;
+    private Transform playerHandMovement2;
+    private Transform playerHandRight;
 
     //Sounds
     private PlayerSounds soundScript;
@@ -114,7 +117,11 @@ public class CircularMotion : MonoBehaviour
         transform.rotation *= Quaternion.Euler(0,180,0);
         soundScript = gameObject.GetComponent<PlayerSounds>();
         hasWeapon = 1;
-        createPistolHand();
+        pistolUI.SetActive(true);
+        createWeapon2();
+        createRifleHand();
+        rifleInstanciated.SetActive(false);
+
     }
 
     private void getUI()
@@ -138,6 +145,8 @@ public class CircularMotion : MonoBehaviour
     {
         playerHand = gameObject.transform.GetChild(36);//gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0);
         playerHandMovement = gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2);//.GetChild(0).GetChild(0).GetChild(0).GetChild(0);
+        playerHandMovement2 = gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0);
+        playerHandRight = gameObject.transform.GetChild(40);
         //Debug.Log("El nom es:" + playerHandMovement.name);
     }
 
@@ -238,13 +247,16 @@ public class CircularMotion : MonoBehaviour
             {
                 case 0:
                     hasWeapon = 2;
-                    createWeapon();
+                    createWeapon2();
                     break;
                 case 1:
                     hasWeapon = 4;
-                    Destroy(weaponInstanciated);
-                    weaponInstanciated = null;
-                    createWeapon();
+                    if (weaponInstanciated != null)
+                    {
+                        Destroy(weaponInstanciated);
+                        weaponInstanciated = null;
+                    }
+                    createWeapon2();
                     break;
             }
             takeRifle = false;
@@ -252,22 +264,17 @@ public class CircularMotion : MonoBehaviour
 
         if (takePistol)
         {
-            if (!isPistolUI)
-            {
-                isPistolUI = true;
-                pistolUI.SetActive(true); 
-            }
             switch (hasWeapon)
             {
                 case 0:
                     hasWeapon = 1;
-                    createWeapon();
+                    createWeapon2();
                     break;
                 case 2:
                     hasWeapon = 3;
                     Destroy(weaponInstanciated);
                     weaponInstanciated = null;
-                    createWeapon();
+                    createWeapon2();
                     break;
             }
             takePistol = false;
@@ -527,6 +534,32 @@ public class CircularMotion : MonoBehaviour
 
     }
 
+    private void createWeapon2()
+    {
+        if(hasWeapon == 1 | hasWeapon == 3)
+            animator.SetBool("hasRifle", false);
+        else if(hasWeapon == 2 | hasWeapon == 4)
+            animator.SetBool("hasRifle", true);
+
+        if (weaponInstanciated != null)
+        {
+            Destroy(weaponInstanciated);
+            weaponInstanciated = null;
+        }
+        Debug.Log("hasWeapon: " + hasWeapon.ToString());
+        switch (hasWeapon)
+        {
+            case 1:
+            case 3:
+                createPistolHand();
+                break;
+            case 2:
+            case 4:
+                createRifleHand();
+                break;
+        }
+    }
+
     private void createPistolHand()
     {
         float weaponAngle = angle;
@@ -557,6 +590,39 @@ public class CircularMotion : MonoBehaviour
         script1.timer = timer;
         script1.soundScript = gameObject.GetComponent<PlayerSounds>();
 
+    }
+
+    private void createRifleHand()
+    {
+        float weaponAngle = angle;
+
+        float addAngle = 0.04f;
+        if (orientation == 1)
+        {
+            weaponAngle += addAngle * (29f / radius);
+        }
+        else
+        {
+            weaponAngle -= addAngle * (29f / radius);
+        }
+        float xPos = playerHandRight.transform.position.x + (Mathf.Cos(weaponAngle) * 14.5f / radius) * 1f;
+        float zPos = playerHandRight.transform.position.z + (Mathf.Cos(weaponAngle) * 14.5f / radius) * 0.25f;
+        float yPos = playerHandRight.transform.position.y + 0.3f;
+        //weaponInstanciated = Instantiate(Resources.Load("prefabs/rifleDef") as GameObject, new Vector3(xPos, yPos, zPos), Quaternion.identity);
+        //weaponInstanciated.transform.SetParent(playerHandMovement2);
+        rifleInstanciated = Instantiate(Resources.Load("prefabs/rifleDef") as GameObject, new Vector3(xPos, yPos, zPos), Quaternion.identity);
+        rifleInstanciated.transform.SetParent(playerHandMovement2);
+        Rifle script2 = rifleInstanciated.GetComponent<Rifle>();
+        Debug.Log("Entra aquí");
+        Debug.Log("La orientació es: " + orientation.ToString());
+        script2.angle = weaponAngle;
+        script2.orientation = orientation;
+        script2.radius = radius;
+        script2.center = center;
+        script2.ammo = rifleAmmo;
+        script2.timer = timer;
+        rifleInstanciated.transform.rotation = gameObject.transform.rotation;
+        script2.soundScript = gameObject.GetComponent<PlayerSounds>();
     }
 
     void Update()
@@ -599,7 +665,7 @@ public class CircularMotion : MonoBehaviour
                 takePistol = true;
             }
 
-            if (Input.GetKey(KeyCode.V))
+            if (Input.GetKeyDown(KeyCode.V))
             {
                 takeRifle = true;
             }
@@ -652,6 +718,7 @@ public class CircularMotion : MonoBehaviour
                             pistolAmmo -= 1;
                             pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
                             animator.SetBool("isShoting", true);
+                            //weaponInstanciated.transform.SetParent(playerHandMovement2);
                         }
                         break;
                     case 2:
@@ -669,6 +736,7 @@ public class CircularMotion : MonoBehaviour
             if(timer < 0.4f)
             {
                 animator.SetBool("isShoting", false);
+                //weaponInstanciated.transform.SetParent(playerHandMovement);
             }
             timer -= Time.deltaTime;
             if (timer < 0f)
@@ -683,7 +751,7 @@ public class CircularMotion : MonoBehaviour
                     Destroy(weaponInstanciated);
                     weaponInstanciated = null;
                     swapUISelected();
-                    createWeapon();
+                    createWeapon2();
                 }
                 else if (hasWeapon == 4)
                 {
@@ -691,7 +759,7 @@ public class CircularMotion : MonoBehaviour
                     Destroy(weaponInstanciated);
                     weaponInstanciated = null;
                     swapUISelected();
-                    createWeapon();
+                    createWeapon2();
                 }
             }
         }
