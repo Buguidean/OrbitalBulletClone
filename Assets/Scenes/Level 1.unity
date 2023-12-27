@@ -6622,6 +6622,14 @@ PrefabInstance:
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: audios.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: audios.Array.data[8]
+      value: 
+      objectReference: {fileID: 8300000, guid: 270069edcd060414192d795d1e80d543, type: 3}
     - target: {fileID: 7318158194023459078, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: m_Name
       value: playerAnimated

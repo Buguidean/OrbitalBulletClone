@@ -94,4 +94,5 @@ MonoBehaviour:
   radius: 0
   center: {fileID: 0}
   soundScript: {fileID: 0}
+  timer: 0
   ammo: 0
