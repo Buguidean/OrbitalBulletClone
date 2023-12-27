@@ -95,6 +95,7 @@ public class FlyingEnemy : MonoBehaviour
             {
                 other.GetComponent<CircularMotion>().damageRecived = damage;
                 other.GetComponent<CircularMotion>().currentSpeed = -other.GetComponent<CircularMotion>().currentSpeed;
+                other.GetComponent<PlayerSounds>().gruntSound = true;
                 //currentSpeed = -currentSpeed;
             }
             Debug.Log("Angle hit: " + angle_hit.ToString());

@@ -819,11 +819,6 @@ CharacterController:
   m_SkinWidth: 0.1
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 2.17, z: 0}
---- !u!4 &236513514 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 10aa0d20ec2ab2b4c9a3cf9c869ea4f4, type: 3}
-  m_PrefabInstance: {fileID: 236513509}
-  m_PrefabAsset: {fileID: 0}
 --- !u!82 &236513516
 AudioSource:
   m_ObjectHideFlags: 0
@@ -966,6 +961,9 @@ MonoBehaviour:
   teleport: 0
   transitionSound: 0
   changeWeaponSound: 0
+  gruntSound: 0
+  dyingSound: 0
+  gameOverSound: 0
   audios:
   - {fileID: 8300000, guid: 5721a696aab5fed438ae98e4115406b1, type: 3}
   - {fileID: 8300000, guid: 13895e6346916f74ea6727460f761ccc, type: 3}
@@ -3820,8 +3818,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {fileID: 1071403576}
-  player: {fileID: 236513513}
-  playerTransform: {fileID: 236513514}
+  player: {fileID: 1773467641}
+  playerTransform: {fileID: 1239227266}
   radius: 29
   camera: {fileID: 963194228}
   prefab: {fileID: 6210763348083485345, guid: ec603fa8042d74a4b8e0936262edb9c4, type: 3}
@@ -6834,6 +6832,18 @@ PrefabInstance:
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: audios.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: audios.Array.data[9]
+      value: 
+      objectReference: {fileID: 8300000, guid: 619a76155cfca3840915c302177dda43, type: 3}
+    - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: audios.Array.data[10]
+      value: 
+      objectReference: {fileID: 8300000, guid: fdd32c4866774674da95edec65d093e9, type: 3}
     - target: {fileID: 7318158194023459078, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: m_Name
       value: playerAnimated

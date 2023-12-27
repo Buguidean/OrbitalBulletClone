@@ -61,6 +61,7 @@ public class CircularMotion : MonoBehaviour
     private float angle = 0f;
     private float gravity = 0.6f;
     private float speedY = 0f;
+    private float speedDeath = 0.5f;
     private int orientation = 1;
     private float input = 0f;
 
@@ -99,6 +100,9 @@ public class CircularMotion : MonoBehaviour
 
     //Sounds
     private PlayerSounds soundScript;
+
+    //Dying
+    private bool isDying = false;
 
     private void Start()
     {
@@ -191,14 +195,27 @@ public class CircularMotion : MonoBehaviour
             health -= damageRecived;
             damageRecived = 0f;
             LifeBar.GetComponent<UI_LifeBar_Player>().actualHealth = health;
+            if(health <= 0f)
+            {
+                //Prepare die animation
+                timer = 1.15f;
+                animator.SetBool("isMoving", false);
+                animator.SetBool("isJumping", false);
+                animator.SetBool("isShoting", false);
+                animator.SetBool("hasRifle", false);
+                hasWeapon = 3;
+                showWeapon();
+                soundScript.dyingSound = true;
+                isDying = true;
+            }
             //Debug.Log("Player health: " + health.ToString());
         }
 
-        if (health <= 0f)
+        /*if (health <= 0f)
         {
             Destroy(gameObject);
             SceneManager.LoadScene(2, LoadSceneMode.Single);
-        }
+        }*/
 
     }
 
@@ -291,162 +308,187 @@ public class CircularMotion : MonoBehaviour
 
     }
 
+    private void makeDieAnimation()
+    {
+        
+
+    }
+
     private void FixedUpdate()
     {
-        //Debug.Log(this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
-        if (GetComponent<CharacterController>().isGrounded)//this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "jump" | 
+        if (health <= 0f)
         {
-            if (animator.GetBool("isJumping"))
+            Vector3 posPlayer = transform.position;
+            posPlayer.y += speedDeath;
+            speedDeath -= gravity * Time.deltaTime;
+            if (!GetComponent<CharacterController>().isGrounded | isDying)
             {
-                animator.SetBool("isJumping", false);
+                gameObject.transform.position = posPlayer;
+                isDying = false;
             }
+            timer -= Time.deltaTime;
+
+            if(timer <= 0f)
+                SceneManager.LoadScene(2, LoadSceneMode.Single);
+            speedDeath -= gravity * Time.deltaTime;
         }
-
-        float correction = Vector3.Angle((transform.position - center.position), transform.forward);
-
-        if (orientation == 1)
-            transform.Rotate(0.0f, correction - 90.0f, 0.0f);
         else
-            transform.Rotate(0.0f, 90.0f - correction, 0.0f);
-
-
-        if (currentSpeed != 0f)
         {
-            animator.SetBool("isMoving", true);
-        }
-
-
-        if (teleport && GetComponent<CharacterController>().isGrounded)
-        {
-            if (isExtRad)
-                radius -= 0.25f;
-            else
-                radius += 0.25f;
-            soundScript.teleport = true;
-            speedY = 0.5f;
-
-        }
-
-        else if (teleport)
-        {
-            if (isExtRad)
+            //Debug.Log(this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            if (GetComponent<CharacterController>().isGrounded)//this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "jump" | 
             {
-                if (radius <= internalRadius)
+                if (animator.GetBool("isJumping"))
                 {
-                    teleport = false;
-                    radius = internalRadius;
-                    isExtRad = false;
+                    animator.SetBool("isJumping", false);
                 }
-                else
-                    radius -= 0.25f;
             }
 
+            float correction = Vector3.Angle((transform.position - center.position), transform.forward);
+
+            if (orientation == 1)
+                transform.Rotate(0.0f, correction - 90.0f, 0.0f);
             else
+                transform.Rotate(0.0f, 90.0f - correction, 0.0f);
+
+
+            if (currentSpeed != 0f)
             {
-                if (radius >= externalRadius)
-                {
-                    teleport = false;
-                    radius = externalRadius;
-                    isExtRad = true;
-                }
+                animator.SetBool("isMoving", true);
+            }
+
+
+            if (teleport && GetComponent<CharacterController>().isGrounded)
+            {
+                if (isExtRad)
+                    radius -= 0.25f;
                 else
                     radius += 0.25f;
+                soundScript.teleport = true;
+                speedY = 0.5f;
 
             }
+
+            else if (teleport)
+            {
+                if (isExtRad)
+                {
+                    if (radius <= internalRadius)
+                    {
+                        teleport = false;
+                        radius = internalRadius;
+                        isExtRad = false;
+                    }
+                    else
+                        radius -= 0.25f;
+                }
+
+                else
+                {
+                    if (radius >= externalRadius)
+                    {
+                        teleport = false;
+                        radius = externalRadius;
+                        isExtRad = true;
+                    }
+                    else
+                        radius += 0.25f;
+
+                }
+            }
+
+            //Jump to the upper level
+            if (jumpTransition && GetComponent<CharacterController>().isGrounded)
+            {
+                speedY = 0.8f;
+                currentSpeed = 0f;
+                jumpTransition = false;
+                constrained = true;
+            }
+
+            if (constrained && speedY < 0f)
+            {
+                constrained = false;
+            }
+
+            // si la animación no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
+
+            if (!dodging & !invulnerable)
+            {
+                controlDamageImpact();
+            }
+            else
+            {
+                damageRecived = 0f;
+            }
+
+            collectedObjects();
+
+            // Adjust the current speed based on input and acceleration
+            currentSpeed += input * acceleration * Time.deltaTime;
+
+            // Clamp the speed to stay within the specified range
+            currentSpeed = Mathf.Clamp(currentSpeed, -maxVelocity, maxVelocity);
+            float prevAngle = angle;
+
+            // Adjust the angle based on the current speed
+            angle += currentSpeed * Time.deltaTime;
+            angle %= (2 * Mathf.PI);
+
+            // Calculate the new position based on the angle and radius
+            if (currentSpeed != 0f || speedY != 0f)
+            {
+                x = center.position.x + Mathf.Cos(angle) * radius;
+                z = center.position.z + Mathf.Sin(angle) * radius;
+                y = transform.position.y + speedY;
+            }
+
+            if ((speedY < 0) && characterController.isGrounded)
+                speedY = 0.0f;
+
+            speedY -= gravity * Time.deltaTime;
+
+            if (doJump)
+            {
+                speedY = 0.25f;
+                doJump = false;
+                animator.SetBool("isJumping", true);
+            }
+
+            if (doJumpHigh)
+            {
+                speedY = 0.30f;
+                doJumpHigh = false;
+            }
+
+            Friction(input);
+
+            Vector3 newPosition = new Vector3(x, y, z);
+            Vector3 displace = newPosition - transform.position;
+            Vector3 position = transform.position;
+            CollisionFlags collition = characterController.Move(displace);
+            if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+            {
+                transform.position = new Vector3(position.x, transform.position.y, position.z);
+                //Physics.SyncTransforms();
+                angle = prevAngle;
+                currentSpeed = 0f;
+            }
+
+            timer -= Time.deltaTime;
+            if (timer < 0f)
+                timer = 0f;
+
+            //update attributes for bullet
+            Pistol script1 = pistolInstanciated.GetComponent<Pistol>();
+            script1.angle = angle;
+            script1.orientation = orientation;
+            script1.radius = radius;
+
+            Rifle script2 = rifleInstanciated.GetComponent<Rifle>();
+            script2.angle = angle;
+            script2.orientation = orientation;
+            script2.radius = radius;
         }
-
-        //Jump to the upper level
-        if (jumpTransition && GetComponent<CharacterController>().isGrounded)
-        {
-            speedY = 0.8f;
-            currentSpeed = 0f;
-            jumpTransition = false;
-            constrained = true;
-        }
-
-        if (constrained && speedY < 0f)
-        {
-            constrained = false;
-        }
-
-        // si la animación no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
-
-        if (!dodging & !invulnerable)
-        {
-            controlDamageImpact();
-        }
-        else
-        {
-            damageRecived = 0f;
-        }
-
-        collectedObjects();
-
-        // Adjust the current speed based on input and acceleration
-        currentSpeed += input * acceleration * Time.deltaTime;
-
-        // Clamp the speed to stay within the specified range
-        currentSpeed = Mathf.Clamp(currentSpeed, -maxVelocity, maxVelocity);
-        float prevAngle = angle;
-
-        // Adjust the angle based on the current speed
-        angle += currentSpeed * Time.deltaTime;
-        angle %= (2 * Mathf.PI);
-
-        // Calculate the new position based on the angle and radius
-        if (currentSpeed != 0f || speedY != 0f)
-        {
-            x = center.position.x + Mathf.Cos(angle) * radius;
-            z = center.position.z + Mathf.Sin(angle) * radius;
-            y = transform.position.y + speedY;
-        }
-
-        if ((speedY < 0) && characterController.isGrounded)
-            speedY = 0.0f;
-
-        speedY -= gravity * Time.deltaTime;
-
-        if (doJump)
-        {
-            speedY = 0.25f;
-            doJump = false;
-            animator.SetBool("isJumping", true);
-        }
-
-        if (doJumpHigh)
-        {
-            speedY = 0.30f;
-            doJumpHigh = false;
-        }
-
-        Friction(input);
-
-        Vector3 newPosition = new Vector3(x, y, z);
-        Vector3 displace = newPosition - transform.position;
-        Vector3 position = transform.position;
-        CollisionFlags collition = characterController.Move(displace);
-        if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
-        {
-            transform.position = new Vector3(position.x, transform.position.y, position.z);
-            //Physics.SyncTransforms();
-            angle = prevAngle;
-            currentSpeed = 0f;
-        }
-
-        timer -= Time.deltaTime;
-        if (timer < 0f)
-            timer = 0f;
-
-        //update attributes for bullet
-        Pistol script1 = pistolInstanciated.GetComponent<Pistol>();
-        script1.angle = angle;
-        script1.orientation = orientation;
-        script1.radius = radius;
-
-        Rifle script2 = rifleInstanciated.GetComponent<Rifle>();
-        script2.angle = angle;
-        script2.orientation = orientation;
-        script2.radius = radius;
     }
 
     void swapUISelected()
@@ -528,136 +570,141 @@ public class CircularMotion : MonoBehaviour
 
     void Update()
     {
-        //Debug
-        if (Input.GetKey(KeyCode.Z))
+        
+        if(health > 0f)
         {
-            Debug.Log(angle);
-        }
 
-        input = 0f;
-
-        if (!constrained)
-        {
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            //Debug
+            if (Input.GetKey(KeyCode.Z))
             {
-                input = 1f;
-                if (orientation == 1)
-                    transform.Rotate(0.0f, 180.0f, 0.0f);
-                orientation = -1;
-            }
-            else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                input = -1f;
-                if (orientation == -1)
-                    transform.Rotate(0.0f, 180.0f, 0.0f);
-                orientation = 1;
+                Debug.Log(angle);
             }
 
-            if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
-            {
-                //Debug.Log("isJumping: ", animator.GetBool("isJumping").ToString);
-                doJump = true;
-                animator.SetBool("isJumping", true);
-                soundScript.jumpSound = true;
-            }
+            input = 0f;
 
-            if (Input.GetKey(KeyCode.C))
+            if (!constrained)
             {
-                takePistol = true;
-            }
-
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                takeRifle = true;
-            }
-
-            /*if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
-            {
-                hasWeapon = 0;
-                Destroy(weaponInstanciated);
-                weaponInstanciated = null;
-            }*/
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                maxVelocity = 1.5f;
-                dodging = true;
-                if (orientation == -1)
-                    currentSpeed += 1f;
-                else
-                    currentSpeed -= 1f;
-                //change animation a roll
-            }
-
-            //Key Cheats
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                collectAmmo = true;
-                soundScript.collectAmmoSound = true;
-            }
-
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                invulnerable = !invulnerable;
-
-                string s1 = "The player is ";
-                if (!invulnerable)
-                    s1 += "not ";
-                Debug.Log(s1 + "invulnerable");
-            }
-            //
-
-            if (Input.GetKey(KeyCode.P) & timer == 0f)
-            {
-                switch (hasWeapon)
+                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
                 {
-                    case 1:
-                    case 3:
-                        if (pistolAmmo > 0)
-                        {
-                            timer = 2f;
-                            pistolAmmo -= 1;
-                            pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
-                            animator.SetBool("isShoting", true);
-                            //weaponInstanciated.transform.SetParent(playerHandMovement2);
-                        }
-                        break;
-                    case 2:
-                    case 4:
-                        if (rifleAmmo > 0)
-                        {
-                            timer = 1.2f;
-                            rifleAmmo -= 1;
-                            rifleAmmoUI.GetComponent<TMP_Text>().text = rifleAmmo.ToString();
-                        }
-                        break;
+                    input = 1f;
+                    if (orientation == 1)
+                        transform.Rotate(0.0f, 180.0f, 0.0f);
+                    orientation = -1;
+                }
+                else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+                {
+                    input = -1f;
+                    if (orientation == -1)
+                        transform.Rotate(0.0f, 180.0f, 0.0f);
+                    orientation = 1;
                 }
 
-            }
-            if (timer < 0.4f)
-            {
-                animator.SetBool("isShoting", false);
-                //weaponInstanciated.transform.SetParent(playerHandMovement);
-            }
-            timer -= Time.deltaTime;
-            if (timer < 0f)
-                timer = 0f;
-
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                if (hasWeapon == 3)
+                if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
                 {
-                    soundScript.changeWeaponSound = true;
-                    hasWeapon = 4;
-                    showWeapon();
-                    swapUISelected();
+                    //Debug.Log("isJumping: ", animator.GetBool("isJumping").ToString);
+                    doJump = true;
+                    animator.SetBool("isJumping", true);
+                    soundScript.jumpSound = true;
                 }
-                else if (hasWeapon == 4)
+
+                if (Input.GetKey(KeyCode.C))
                 {
-                    soundScript.changeWeaponSound = true;
-                    hasWeapon = 3;
-                    showWeapon();
-                    swapUISelected();
+                    takePistol = true;
+                }
+
+                if (Input.GetKeyDown(KeyCode.V))
+                {
+                    takeRifle = true;
+                }
+
+                /*if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
+                {
+                    hasWeapon = 0;
+                    Destroy(weaponInstanciated);
+                    weaponInstanciated = null;
+                }*/
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    maxVelocity = 1.5f;
+                    dodging = true;
+                    if (orientation == -1)
+                        currentSpeed += 1f;
+                    else
+                        currentSpeed -= 1f;
+                    //change animation a roll
+                }
+
+                //Key Cheats
+                if (Input.GetKeyDown(KeyCode.M))
+                {
+                    collectAmmo = true;
+                    soundScript.collectAmmoSound = true;
+                }
+
+                if (Input.GetKeyDown(KeyCode.G))
+                {
+                    invulnerable = !invulnerable;
+
+                    string s1 = "The player is ";
+                    if (!invulnerable)
+                        s1 += "not ";
+                    Debug.Log(s1 + "invulnerable");
+                }
+                //
+
+                if (Input.GetKey(KeyCode.P) & timer == 0f)
+                {
+                    switch (hasWeapon)
+                    {
+                        case 1:
+                        case 3:
+                            if (pistolAmmo > 0)
+                            {
+                                timer = 2f;
+                                pistolAmmo -= 1;
+                                pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
+                                animator.SetBool("isShoting", true);
+                                //weaponInstanciated.transform.SetParent(playerHandMovement2);
+                            }
+                            break;
+                        case 2:
+                        case 4:
+                            if (rifleAmmo > 0)
+                            {
+                                timer = 1.2f;
+                                rifleAmmo -= 1;
+                                rifleAmmoUI.GetComponent<TMP_Text>().text = rifleAmmo.ToString();
+                            }
+                            break;
+                    }
+                }
+
+                if (timer < 0.4f)
+                {
+                    animator.SetBool("isShoting", false);
+                }
+
+                timer -= Time.deltaTime;
+                if (timer < 0f)
+                    timer = 0f;
+
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    if (hasWeapon == 3)
+                    {
+                        soundScript.changeWeaponSound = true;
+                        hasWeapon = 4;
+                        showWeapon();
+                        swapUISelected();
+                    }
+                    else if (hasWeapon == 4)
+                    {
+                        soundScript.changeWeaponSound = true;
+                        hasWeapon = 3;
+                        showWeapon();
+                        swapUISelected();
+                    }
                 }
             }
         }

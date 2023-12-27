@@ -34,6 +34,7 @@ public class MobBulled : MonoBehaviour
             case "Player":
                 Debug.Log("The bullet impacted with player");
                 obj.GetComponent<CircularMotion>().damageRecived = damage;
+                obj.GetComponent<PlayerSounds>().gruntSound = true;
                 Destroy(gameObject);
                 break;
             case "Environment":
