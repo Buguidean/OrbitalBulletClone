@@ -641,7 +641,7 @@ Transform:
   m_GameObject: {fileID: 223974226}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 150, z: 89.9}
+  m_LocalPosition: {x: 3, y: 37, z: 32.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2225,7 +2225,7 @@ Transform:
   m_GameObject: {fileID: 782628375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: 60, z: -45}
+  m_LocalPosition: {x: -3, y: 108, z: -9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6893,6 +6893,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c9d43e8ebcaff1d43a603789e466c5b3, type: 2}
+    - target: {fileID: 1804918120831634809, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: m_Center.y
+      value: 2.23
+      objectReference: {fileID: 0}
     - target: {fileID: 2216473201637896167, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: m_Name
       value: rightHand
