@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_LifeBar : MonoBehaviour
+public class UI_ShieldBar : MonoBehaviour
 {
     //public GameObject canvasLifeBar;
     public float actualHealth;
@@ -28,9 +28,12 @@ public class UI_LifeBar : MonoBehaviour
     void FixedUpdate()
     {
         lifeBar.fillAmount = actualHealth / maxHealth;
-        
+
         transform.rotation = camera.rotation;
 
-        transform.position = new Vector3(posEnemy.x, posEnemy.y + offset_y, posEnemy.z);
+        Vector3 delta = posEnemy - camera.position;
+        Vector3.Normalize(delta);
+
+        transform.position = new Vector3(posEnemy.x - delta.x*0.001f, posEnemy.y + offset_y, posEnemy.z - delta.z*0.001f);
     }
 }

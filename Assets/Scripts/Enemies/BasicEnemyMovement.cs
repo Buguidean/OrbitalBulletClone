@@ -40,7 +40,7 @@ public class BasicEnemyMovement : MonoBehaviour
     private GameObject canvasShieldBar;
 
     private UI_LifeBar scriptLifeBar;
-    private UI_LifeBar scriptShieldBar;
+    private UI_ShieldBar scriptShieldBar;
 
     private float maxHealth = 50f;
     private float maxShield = 25f;
@@ -134,7 +134,7 @@ public class BasicEnemyMovement : MonoBehaviour
         GameObject shieldBar = Resources.Load("prefabs/UI/Enemy/ShieldBar") as GameObject;
         Vector3 pos = transform.position + new Vector3(0f, 2f, 0f);
         canvasShieldBar = Instantiate(shieldBar, pos, Quaternion.identity);
-        scriptShieldBar = canvasShieldBar.transform.GetComponent<UI_LifeBar>();
+        scriptShieldBar = canvasShieldBar.transform.GetComponent<UI_ShieldBar>();
         scriptShieldBar.maxHealth = maxShield;
         scriptShieldBar.actualHealth = shield;
         scriptShieldBar.camera = camera;

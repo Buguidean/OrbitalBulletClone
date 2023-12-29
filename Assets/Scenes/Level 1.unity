@@ -3070,7 +3070,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e621779a0fbc6c3479b10eb049a2eb2a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.76
+      value: 4.15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e621779a0fbc6c3479b10eb049a2eb2a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3196,15 +3196,15 @@ CharacterController:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1.8
-  m_Radius: 0.9
+  m_Height: 0.3
+  m_Radius: 0.1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: -0.1, y: -0.1, z: 0}
+  m_Center: {x: -0.1, y: -3.24, z: 0}
 --- !u!95 &1073494247
 Animator:
   serializedVersion: 5
@@ -3217,7 +3217,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 98334d89a92e7534a8a395f7c1132a42, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -5649,7 +5649,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: af30d2a7a357b6548a353debe4d4eb3b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 

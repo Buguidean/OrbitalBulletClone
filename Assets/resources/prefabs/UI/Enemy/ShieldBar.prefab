@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1863239726051193360}
   - component: {fileID: 8458853704199283012}
   - component: {fileID: 4656952480922605165}
-  - component: {fileID: 6245968855327078385}
+  - component: {fileID: 9161963609773691531}
   m_Layer: 5
   m_Name: ShieldBar
   m_TagString: Untagged
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6245968855327078385
+--- !u!114 &9161963609773691531
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6210763348083485345}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc8fd1b36191feb43bd022a0e210f0d6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7942d4ab1c9244e4099c183b2385d60f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   actualHealth: 50
