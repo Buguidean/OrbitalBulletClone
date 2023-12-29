@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ammoChest : MonoBehaviour
 {
-    public bool isShoted = false;
+    public float damageRecived = 0f;
     public new Transform camera;
 
     private float health = 30f;
@@ -32,10 +32,10 @@ public class ammoChest : MonoBehaviour
             animator.SetBool("Hit", false);
         */
         //transform.rotation = camera.rotation;
-        if (isShoted)
+        if (damageRecived != 0f)
         {
-            health -= 10f;
-            isShoted = false;
+            health -= damageRecived;
+            damageRecived = 0f;
             animator.Play("Hitted",0,0);
         }
 

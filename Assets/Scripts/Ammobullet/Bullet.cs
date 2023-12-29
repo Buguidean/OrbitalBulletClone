@@ -57,7 +57,7 @@ public class Bullet : MonoBehaviour
                 break;
             case "ammoChest":
                 Debug.Log("The bullet impacted with the ammo chest");
-                obj.GetComponent<ammoChest>().isShoted = true;
+                obj.GetComponent<ammoChest>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "Untagged":
