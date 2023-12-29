@@ -251,7 +251,7 @@ public class BasicEnemyMovement : MonoBehaviour
             //Physics.SyncTransforms();
             angle = prevAngle;
 
-            if (this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Atack")
+            if (this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Atack 0")
             {
                 currentSpeed = -currentSpeed;
                 orientation = -orientation;

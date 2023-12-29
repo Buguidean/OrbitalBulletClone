@@ -15,6 +15,7 @@ TagManager:
   - FlyingMob
   - Environment
   - Spikes
+  - HumanEnemy
   layers:
   - Default
   - TransparentFX
