@@ -9,10 +9,13 @@ public class Rifle : MonoBehaviour
     public float radius;
     public Transform center;
     public PlayerSounds soundScript;
-    public float timer;
+    public bool isShoting = false;
+    
 
     public int ammo;
 
+    private float timer;
+    public bool changed = false;
     private float shotRate = 0.6f;
     private float bulletDamage = 12f;
     private float bulletTime = 3.5f;
@@ -54,11 +57,18 @@ public class Rifle : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (changed)
+        {
+            changed = false;
+            timer = shotRate;
+        }
+
         if (Input.GetKey(KeyCode.P) & timer == 0f & ammo > 0)
         {
             timer = shotRate;
             ammo -= 1;
             createBullet();
+            isShoting = true;
             soundScript.rifleSound = true;
             Debug.Log(ammo);
 

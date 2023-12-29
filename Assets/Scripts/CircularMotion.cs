@@ -201,7 +201,6 @@ public class CircularMotion : MonoBehaviour
                 timer = 1.15f;
                 animator.SetBool("isMoving", false);
                 animator.SetBool("isJumping", false);
-                animator.SetBool("isShoting", false);
                 animator.SetBool("hasRifle", false);
                 hasWeapon = 3;
                 showWeapon();
@@ -505,6 +504,8 @@ public class CircularMotion : MonoBehaviour
             backRifleUI.GetComponent<Image>().material = black;
             backPistolUI.GetComponent<Image>().material = selected;
         }
+        //pistolAmmoUI = pistolInstanciated.GetComponent<Pistol>.ammo;
+        //rifleAmmoUI = pistolInstanciated.GetComponent<Rifle>.ammo;
     }
 
     private void createPistolHand()
@@ -534,7 +535,7 @@ public class CircularMotion : MonoBehaviour
         script1.radius = radius;
         script1.center = center;
         script1.ammo = pistolAmmo;
-        script1.timer = timer;
+        script1.changed = false;
         script1.soundScript = gameObject.GetComponent<PlayerSounds>();
 
     }
@@ -563,7 +564,7 @@ public class CircularMotion : MonoBehaviour
         script2.radius = radius;
         script2.center = center;
         script2.ammo = rifleAmmo;
-        script2.timer = timer;
+        script2.changed = false;
         rifleInstanciated.transform.rotation *= Quaternion.Euler(0, 17, 0);
         script2.soundScript = gameObject.GetComponent<PlayerSounds>();
     }
@@ -651,38 +652,34 @@ public class CircularMotion : MonoBehaviour
                         s1 += "not ";
                     Debug.Log(s1 + "invulnerable");
                 }
-                //
 
-                if (Input.GetKey(KeyCode.P) & timer == 0f)
+                switch (hasWeapon)
                 {
-                    switch (hasWeapon)
-                    {
-                        case 1:
-                        case 3:
-                            if (pistolAmmo > 0)
-                            {
-                                timer = 2f;
-                                pistolAmmo -= 1;
-                                pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
-                                animator.SetBool("isShoting", true);
-                                //weaponInstanciated.transform.SetParent(playerHandMovement2);
-                            }
-                            break;
-                        case 2:
-                        case 4:
-                            if (rifleAmmo > 0)
-                            {
-                                timer = 1.2f;
-                                rifleAmmo -= 1;
-                                rifleAmmoUI.GetComponent<TMP_Text>().text = rifleAmmo.ToString();
-                            }
-                            break;
-                    }
+                    case 1:
+                    case 3:
+                        if (pistolAmmo > 0)
+                        {
+                            pistolAmmoUI.GetComponent<TMP_Text>().text = pistolInstanciated.GetComponent<Pistol>().ammo.ToString();
+                        }
+                        break;
+                    case 2:
+                    case 4:
+                        if (rifleAmmo > 0)
+                        {
+                            rifleAmmoUI.GetComponent<TMP_Text>().text = rifleInstanciated.GetComponent<Rifle>().ammo.ToString();
+                        }
+                        break;
                 }
 
-                if (timer < 0.4f)
+                if (pistolInstanciated.GetComponent<Pistol>().isShoting)
                 {
-                    animator.SetBool("isShoting", false);
+                    pistolInstanciated.GetComponent<Pistol>().isShoting = false;
+                    animator.Play("pistol_shoot", 0, 0);
+                }
+                if (rifleInstanciated.GetComponent<Rifle>().isShoting)
+                {
+                    rifleInstanciated.GetComponent<Rifle>().isShoting = false;
+                    animator.Play("rifle_fire", 0, 0);
                 }
 
                 timer -= Time.deltaTime;
@@ -696,6 +693,7 @@ public class CircularMotion : MonoBehaviour
                         soundScript.changeWeaponSound = true;
                         hasWeapon = 4;
                         showWeapon();
+                        rifleInstanciated.GetComponent<Rifle>().changed = true;
                         swapUISelected();
                     }
                     else if (hasWeapon == 4)
@@ -703,6 +701,7 @@ public class CircularMotion : MonoBehaviour
                         soundScript.changeWeaponSound = true;
                         hasWeapon = 3;
                         showWeapon();
+                        pistolInstanciated.GetComponent<Pistol>().changed = true;
                         swapUISelected();
                     }
                 }

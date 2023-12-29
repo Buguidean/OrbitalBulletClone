@@ -9,8 +9,10 @@ public class Pistol : MonoBehaviour
     public float radius;
     public Transform center;
     public PlayerSounds soundScript;
-    public float timer;
-
+    public bool changed = false;
+    public bool isShoting = false;
+    private float timer;
+    
     public int ammo;
 
     private float shotRate = 1f;
@@ -55,10 +57,17 @@ public class Pistol : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (changed)
+        {
+            changed = false;
+            timer = shotRate;
+        }
+
         if (Input.GetKey(KeyCode.P) & timer == 0f & ammo > 0)
         {
             timer = shotRate;
             ammo -= 1;
+            isShoting = true;
             soundScript.pistolSound = true;
             createBullet();
             Debug.Log(ammo);
@@ -69,6 +78,7 @@ public class Pistol : MonoBehaviour
             Debug.Log("No hay municion");
             soundScript.noAmmoSound = true;
         }
+
         timer -= Time.deltaTime;
         if (timer < 0f)
             timer = 0f;
