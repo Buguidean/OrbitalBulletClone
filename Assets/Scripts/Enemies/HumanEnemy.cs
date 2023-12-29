@@ -27,7 +27,8 @@ public class HumanEnemy : MonoBehaviour
     private int orientation = -1;
     private float speedY = 0f;
     private float gravity = 0.6f;
-    private float movementTimer = 4f;
+    private float movementTimer;
+    private float waitTimer = 0f;
 
     private CharacterController characterController;
     private BoxCollider boxCol;
@@ -64,6 +65,7 @@ public class HumanEnemy : MonoBehaviour
         lifeBarCreation();
         shieldBarCreation();
         damageRecived = 0f;
+        movementTimer = Random.Range(1f, 2f);
     }
 
     private void lifeBarCreation()
@@ -150,12 +152,15 @@ public class HumanEnemy : MonoBehaviour
     void FixedUpdate()
     {
         controlDamage();
-
+        
         float prevAngle = angle;
 
         // Adjust the angle based on the current speed
-        angle += currentSpeed / 2f * Time.deltaTime;
-        angle %= (2 * Mathf.PI);
+        if (movementTimer > 0f && waitTimer == 0f)
+        {
+            angle += currentSpeed / 2f * Time.deltaTime;
+            angle %= (2 * Mathf.PI);
+        }
 
         // Calculate the new position based on the angle and radius
         x = center.position.x + Mathf.Cos(angle) * radius;
@@ -172,17 +177,26 @@ public class HumanEnemy : MonoBehaviour
         Vector3 newPosition = new Vector3(x, y, z);
         Vector3 displace = newPosition - transform.position;
         Vector3 position = transform.position;
-        CollisionFlags collition = characterController.Move(displace);
 
-        if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+        if (movementTimer > 0f && waitTimer == 0f)
         {
-            transform.position = new Vector3(position.x, transform.position.y, position.z);
-            //Physics.SyncTransforms();
-            angle = prevAngle;
+            CollisionFlags collition = characterController.Move(displace);
 
-            currentSpeed = -currentSpeed;
-            orientation = -orientation;
-           
+            if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+            {
+                transform.position = new Vector3(position.x, transform.position.y, position.z);
+                //Physics.SyncTransforms();
+                angle = prevAngle;
+
+                currentSpeed = -currentSpeed;
+                orientation = -orientation;
+            }
+        }
+
+        if (movementTimer == 0f)
+        {
+            waitTimer = 2f;
+            movementTimer = Random.Range(1f, 2f);
         }
 
         if (!scriptLifeBar.Equals(null))
@@ -198,6 +212,19 @@ public class HumanEnemy : MonoBehaviour
             scriptShieldBar.orientation = orientation;
             scriptShieldBar.camera = camera;
         }
+
+
+        if (waitTimer == 0f)
+        {
+            movementTimer -= Time.deltaTime;
+            if (movementTimer < 0f)
+                movementTimer = 0f;
+        }
+
+        waitTimer -= Time.deltaTime;
+        if (waitTimer < 0f)
+            waitTimer = 0f;
+
     }
 
     void Update()
