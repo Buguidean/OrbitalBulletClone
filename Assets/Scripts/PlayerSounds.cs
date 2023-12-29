@@ -80,21 +80,21 @@ public class PlayerSounds: MonoBehaviour
             }
             if (gruntSound)
             {
-                controlAudio.PlayOneShot(audios[9], 1);
+                controlAudio.PlayOneShot(audios[9], 0.5f);
                 gruntSound = false;
             }
         }
         else if (dyingSound)
         {
-            controlAudio.PlayOneShot(audios[10], 1);
+            controlAudio.PlayOneShot(audios[10], 0.5f);
             dyingSound = false;
         }
 
-        if (gameOverSound)
+        /*if (gameOverSound)
         {
-            controlAudio.PlayOneShot(audios[11], 1);
+            controlAudio.PlayOneShot(audios[11], 1f);
             gameOverSound = false;
-        }
+        }*/
     }
 
 }

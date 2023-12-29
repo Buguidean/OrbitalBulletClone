@@ -13,6 +13,6 @@ public class GameOverMusic : MonoBehaviour
     {
         controlAudio = GetComponent<AudioSource>();
         controlAudio.loop = false;
-        controlAudio.PlayOneShot(audio, 1f);
+        controlAudio.PlayOneShot(audio, 0.2f);
     }
 }
