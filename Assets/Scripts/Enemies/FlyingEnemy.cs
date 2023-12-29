@@ -260,6 +260,6 @@ public class FlyingEnemy : MonoBehaviour
 
         gameObject.transform.rotation = camera.rotation;
         gameObject.transform.rotation *= Quaternion.Euler(0, 90, 0);
-        
+
     }
 }

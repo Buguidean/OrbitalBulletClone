@@ -424,6 +424,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8467466689734805406, guid: 7ac703cbcfb8ec749a6b923de77e09b3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 00a8b057b5e0ba54f8d01ea26af45ec2, type: 2}
     - target: {fileID: 919132149155446097, guid: 7ac703cbcfb8ec749a6b923de77e09b3, type: 3}
       propertyPath: m_Name
       value: loot_box
@@ -432,6 +436,18 @@ PrefabInstance:
       propertyPath: m_TagString
       value: ammoChest
       objectReference: {fileID: 0}
+    - target: {fileID: 3661308302805909637, guid: 7ac703cbcfb8ec749a6b923de77e09b3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 00a8b057b5e0ba54f8d01ea26af45ec2, type: 2}
+    - target: {fileID: 6503872091105950005, guid: 7ac703cbcfb8ec749a6b923de77e09b3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 00a8b057b5e0ba54f8d01ea26af45ec2, type: 2}
+    - target: {fileID: 8742736217207918856, guid: 7ac703cbcfb8ec749a6b923de77e09b3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 00a8b057b5e0ba54f8d01ea26af45ec2, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3104,6 +3120,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7262664780947619746, guid: e621779a0fbc6c3479b10eb049a2eb2a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a1ca68f0c25db5040a9e9fa2238b101c, type: 2}
     - target: {fileID: 919132149155446097, guid: e621779a0fbc6c3479b10eb049a2eb2a, type: 3}
       propertyPath: m_Name
       value: flying_mobF
@@ -4718,6 +4738,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: chest (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5671544178406609674, guid: 6935a2d4aeec3404ebe678cb09a3a9f8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ba3db8ca469b4ca43b0cc98743cd133b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
