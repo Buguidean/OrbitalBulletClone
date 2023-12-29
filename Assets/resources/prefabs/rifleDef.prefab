@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2882516483796504640
+--- !u!1001 &1218886510133549665
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -22,15 +22,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.142324
+      value: 22.872414
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.4522502
+      value: 2.093584
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.539564
+      value: -18.043829
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
       propertyPath: m_LocalRotation.w
@@ -62,28 +62,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
       propertyPath: m_Name
-      value: rifleDef
+      value: rifleDef 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3672323369959611678, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e94e0c07a40efe6469a971d851ac576d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9200038699570023853}
+      addedObject: {fileID: 8527014871599217001}
   m_SourcePrefab: {fileID: 100100000, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
---- !u!1 &2648583502490709265 stripped
+--- !u!1 &2029772146482063152 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b6590f4b6ac07b4982ea1b5fbb82b45, type: 3}
-  m_PrefabInstance: {fileID: 2882516483796504640}
+  m_PrefabInstance: {fileID: 1218886510133549665}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9200038699570023853
+--- !u!114 &8527014871599217001
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2648583502490709265}
+  m_GameObject: {fileID: 2029772146482063152}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8decc9d56ddd3e942bc5abc61b08a282, type: 3}
@@ -94,5 +98,6 @@ MonoBehaviour:
   radius: 0
   center: {fileID: 0}
   soundScript: {fileID: 0}
-  timer: 0
+  isShoting: 0
   ammo: 0
+  changed: 0
