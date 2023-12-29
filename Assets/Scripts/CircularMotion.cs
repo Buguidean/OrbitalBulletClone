@@ -224,7 +224,7 @@ public class CircularMotion : MonoBehaviour
         {
             pistolInstanciated.SetActive(false);
             rifleInstanciated.SetActive(true);
-            animator.SetBool("hasRifle", true);
+            //animator.SetBool("hasRifle", true);
         }
         else if (hasWeapon == 1 | hasWeapon == 3)
         {
@@ -544,7 +544,7 @@ public class CircularMotion : MonoBehaviour
     {
         float weaponAngle = angle;
 
-        float addAngle = 0.04f;
+        float addAngle = 0.06f;
         if (orientation == 1)
         {
             weaponAngle += addAngle * (29f / radius);
@@ -554,10 +554,11 @@ public class CircularMotion : MonoBehaviour
             weaponAngle -= addAngle * (29f / radius);
         }
         float xPos = playerHandRight.transform.position.x - (Mathf.Cos(weaponAngle) * 14.5f / radius) * 1f;
-        float zPos = playerHandRight.transform.position.z - (Mathf.Cos(weaponAngle) * 14.5f / radius) * 0.7f;
-        float yPos = playerHandRight.transform.position.y + 0.6f;
+        float zPos = playerHandRight.transform.position.z - (Mathf.Cos(weaponAngle) * 14.5f / radius) * 1.2f;
+        float yPos = playerHandRight.transform.position.y + 0.4f;
         rifleInstanciated = Instantiate(Resources.Load("prefabs/rifleDef") as GameObject, new Vector3(xPos, yPos, zPos), Quaternion.identity);
-        rifleInstanciated.transform.SetParent(playerHandMovement2);
+        //rifleInstanciated.transform.SetParent(playerHandMovement2);
+        rifleInstanciated.transform.SetParent(playerHandMovement);
         Rifle script2 = rifleInstanciated.GetComponent<Rifle>();
         script2.angle = weaponAngle;
         script2.orientation = orientation;
