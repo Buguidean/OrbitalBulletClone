@@ -9,12 +9,10 @@ public class HumanEnemy : MonoBehaviour
     public float damageRecived;
     public float radius = 29f;
     public GameObject prefab;
+    public Transform playerTransform;
 
     private GameObject rifleInstanciated = null;
-    private Transform playerHandMovement;
-    private Transform playerHand;
-    private Transform playerHandRight;
-
+    
     Animator animator;
 
     private float x;
@@ -29,6 +27,8 @@ public class HumanEnemy : MonoBehaviour
     private float gravity = 0.6f;
     private float movementTimer;
     private float waitTimer = 0f;
+
+    private Vector3 dist_player;
 
     private CharacterController characterController;
     private BoxCollider boxCol;
@@ -66,6 +66,17 @@ public class HumanEnemy : MonoBehaviour
         shieldBarCreation();
         damageRecived = 0f;
         movementTimer = Random.Range(1f, 2f);
+        getWeapon();
+    }
+
+    private void getWeapon()
+    {
+        rifleInstanciated = gameObject.transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(2).GetChild(1).gameObject;
+        RifleEnemy script = rifleInstanciated.GetComponent<RifleEnemy>();
+        script.soundScript = gameObject.GetComponent<HumanEnemySound>();
+        script.center = center;
+        script.radius = radius;
+        script.orientation = orientation;
     }
 
     private void lifeBarCreation()
@@ -148,11 +159,41 @@ public class HumanEnemy : MonoBehaviour
         }
     }
 
+    private void controlAttack()
+    {
+        dist_player = transform.position - playerTransform.position;
+
+        if (dist_player.magnitude < 10f && !rifleInstanciated.GetComponent<RifleEnemy>().canShoot)
+        {
+            Vector3 aux = Vector3.Normalize(dist_player);
+            float dir_of_attack = Vector3.Angle(aux, transform.forward);
+            Debug.Log(dir_of_attack);
+
+            if (dir_of_attack > 60f)
+            {
+                orientation = -orientation;
+                currentSpeed = -currentSpeed;
+            }
+            rifleInstanciated.GetComponent<RifleEnemy>().canShoot = true;
+            movementTimer = 0f;
+        }
+        else if(waitTimer == 0f)
+        {
+            rifleInstanciated.GetComponent<RifleEnemy>().canShoot = false;
+        }
+        /*else
+        {
+            //animator.SetBool("isAttack", false);
+        }*/
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
         controlDamage();
-        
+
+        controlAttack();
+
         float prevAngle = angle;
 
         // Adjust the angle based on the current speed
@@ -180,6 +221,7 @@ public class HumanEnemy : MonoBehaviour
 
         if (movementTimer > 0f && waitTimer == 0f)
         {
+            animator.SetBool("isMoving", true);
             CollisionFlags collition = characterController.Move(displace);
 
             if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
@@ -191,12 +233,24 @@ public class HumanEnemy : MonoBehaviour
                 currentSpeed = -currentSpeed;
                 orientation = -orientation;
             }
+            
         }
 
         if (movementTimer == 0f)
         {
+            animator.SetBool("isMoving", false);
             waitTimer = 2f;
             movementTimer = Random.Range(1f, 2f);
+            /*if (dist_player.magnitude >= 13f)
+            {
+                int aux = Random.Range(0, 2);
+                Debug.Log(aux);
+                if (aux == 1)
+                {
+                    currentSpeed = -currentSpeed;
+                    orientation = -orientation;
+                }
+            }*/
         }
 
         if (!scriptLifeBar.Equals(null))
@@ -225,6 +279,8 @@ public class HumanEnemy : MonoBehaviour
         if (waitTimer < 0f)
             waitTimer = 0f;
 
+        rifleInstanciated.GetComponent<RifleEnemy>().orientation = orientation;
+        rifleInstanciated.GetComponent<RifleEnemy>().angle = angle;
     }
 
     void Update()
