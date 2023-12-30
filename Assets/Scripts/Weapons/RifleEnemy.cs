@@ -42,15 +42,16 @@ public class RifleEnemy : MonoBehaviour
         Vector3 pos = new Vector3(xPos, transform.position.y + 1.2f, zPos);
 
         //instantiate
-        GameObject bulledPrefab = Resources.Load("prefabs/Sphere") as GameObject;
+        GameObject bulledPrefab = Resources.Load("prefabs/HumanEnemyBulled") as GameObject;
         GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
 
         //asign initiallization
-        obj.GetComponent<Bullet>().leftMove = leftMove;
-        obj.GetComponent<Bullet>().angle = bulletAngle;
-        obj.GetComponent<Bullet>().radius = radius;
-        obj.GetComponent<Bullet>().damage = bulletDamage;
-        obj.GetComponent<Bullet>().timer = bulletTime;
+        obj.GetComponent<HumanEnemyBulled>().leftMove = leftMove;
+        obj.GetComponent<HumanEnemyBulled>().angle = bulletAngle;
+        obj.GetComponent<HumanEnemyBulled>().radius = radius;
+        obj.GetComponent<HumanEnemyBulled>().damage = bulletDamage;
+        obj.GetComponent<HumanEnemyBulled>().timer = bulletTime;
+        obj.GetComponent<HumanEnemyBulled>().center = center;
     }
 
     // Update is called once per frame

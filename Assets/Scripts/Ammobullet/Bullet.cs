@@ -38,7 +38,7 @@ public class Bullet : MonoBehaviour
         switch (obj.tag)
         {
             case "Player":
-                Debug.Log("The bullet impacted with player");
+                //Debug.Log("The bullet impacted with player");
                 obj.GetComponent<CircularMotion>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
@@ -52,6 +52,15 @@ public class Bullet : MonoBehaviour
                 obj.GetComponent<FlyingEnemy>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
+            case "HumanEnemy":
+                Debug.Log("The bullet impacted with the HumanEnemy");
+                obj.GetComponent<HumanEnemy>().damageRecived = damage;
+                Destroy(gameObject);
+                break;
+            case "HumanEnemyBullet":
+                Debug.Log("The bullet impacted with the HumanEnemyBullet");
+                //Destroy(gameObject);
+                break;
             case "Bullet":
                 Debug.Log("Bullet were touched");
                 break;
@@ -61,11 +70,11 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
                 break;
             case "Untagged":
-                Debug.Log("The bullet was destroyed because touched Untagged object");
+                //Debug.Log("The bullet was destroyed because touched Untagged object");
                 Destroy(gameObject);
                 break;
             case "Environment":
-                Debug.Log("The bullet was destroyed because touched the Environment");
+                //Debug.Log("The bullet was destroyed because touched the Environment");
                 Destroy(gameObject);
                 break;
         }

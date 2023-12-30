@@ -16,6 +16,7 @@ TagManager:
   - Environment
   - Spikes
   - HumanEnemy
+  - HumanEnemyBullet
   layers:
   - Default
   - TransparentFX

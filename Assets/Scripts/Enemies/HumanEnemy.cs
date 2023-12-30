@@ -173,6 +173,7 @@ public class HumanEnemy : MonoBehaviour
             {
                 orientation = -orientation;
                 currentSpeed = -currentSpeed;
+                transform.Rotate(0.0f, 180.0f, 0.0f);
             }
             rifleInstanciated.GetComponent<RifleEnemy>().canShoot = true;
             movementTimer = 0f;
@@ -241,7 +242,7 @@ public class HumanEnemy : MonoBehaviour
             animator.SetBool("isMoving", false);
             waitTimer = 2f;
             movementTimer = Random.Range(1f, 2f);
-            /*if (dist_player.magnitude >= 13f)
+            if (dist_player.magnitude >= 13f)
             {
                 int aux = Random.Range(0, 2);
                 Debug.Log(aux);
@@ -250,7 +251,7 @@ public class HumanEnemy : MonoBehaviour
                     currentSpeed = -currentSpeed;
                     orientation = -orientation;
                 }
-            }*/
+            }
         }
 
         if (!scriptLifeBar.Equals(null))
@@ -281,6 +282,7 @@ public class HumanEnemy : MonoBehaviour
 
         rifleInstanciated.GetComponent<RifleEnemy>().orientation = orientation;
         rifleInstanciated.GetComponent<RifleEnemy>().angle = angle;
+        Debug.Log("The orientation is " + orientation.ToString());
     }
 
     void Update()

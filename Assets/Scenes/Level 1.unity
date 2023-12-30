@@ -828,6 +828,7 @@ MonoBehaviour:
   jumpTransition: 0
   openedWC: 0
   currentSpeed: 0
+  orientation: 1
   doJump: 0
   doJumpHigh: 0
 --- !u!143 &236513513

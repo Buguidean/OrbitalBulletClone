@@ -62,7 +62,7 @@ public class CircularMotion : MonoBehaviour
     private float gravity = 0.6f;
     private float speedY = 0f;
     private float speedDeath = 0.5f;
-    private int orientation = 1;
+    public int orientation = 1;
     private float input = 0f;
 
     private float x;
@@ -207,6 +207,7 @@ public class CircularMotion : MonoBehaviour
                 soundScript.dyingSound = true;
                 isDying = true;
             }
+            
             //Debug.Log("Player health: " + health.ToString());
         }
 
@@ -307,12 +308,6 @@ public class CircularMotion : MonoBehaviour
 
     }
 
-    private void makeDieAnimation()
-    {
-        
-
-    }
-
     private void FixedUpdate()
     {
         if (health <= 0f)
@@ -409,7 +404,7 @@ public class CircularMotion : MonoBehaviour
                 constrained = false;
             }
 
-            // si la animación no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
+            // si la animaciï¿½n no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
 
             if (!dodging & !invulnerable)
             {
@@ -686,6 +681,14 @@ public class CircularMotion : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer < 0f)
                     timer = 0f;
+
+                if (Input.GetKeyDown(KeyCode.O))
+                {
+                    for (int i = 1; i < gameObject.transform.childCount - 1; i++)
+                    {
+                        gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/Black") as Material;
+                    }
+                }
 
                 if (Input.GetKeyDown(KeyCode.S))
                 {

@@ -79,26 +79,23 @@ public class FlyingEnemy : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Vector2 aux_e = new Vector2(boxCol.transform.position.y, boxCol.transform.position.z);
-            Vector2 aux_p = new Vector2(playerTransform.position.y, boxCol.transform.position.z - 1f);
-            Vector2 result = aux_p - aux_e;
-            result.Normalize();
-            float angle_hit = Vector2.Angle(Vector2.up, result);
-
-            if (angle_hit >= 148f & angle_hit <= 162f)
+            CircularMotion script = other.GetComponent<CircularMotion>();
+            script.damageRecived = damage;
+            other.GetComponent<PlayerSounds>().gruntSound = true;
+            
+            if (script.currentSpeed != 0f)
             {
-                other.GetComponent<CircularMotion>().doJumpHigh = true;
-
-                damageRecived = 25f;
+                if(script.currentSpeed < 0f)
+                    script.currentSpeed = 0.3f;
+                else
+                    script.currentSpeed = -0.3f;
             }
-            else
-            {
-                other.GetComponent<CircularMotion>().damageRecived = damage;
-                other.GetComponent<CircularMotion>().currentSpeed = -other.GetComponent<CircularMotion>().currentSpeed;
-                other.GetComponent<PlayerSounds>().gruntSound = true;
-                //currentSpeed = -currentSpeed;
+            else {
+                if (script.orientation == -1)
+                    script.currentSpeed = -0.3f;
+                else
+                    script.currentSpeed = 0.3f;
             }
-            Debug.Log("Angle hit: " + angle_hit.ToString());
         }
     }
 
