@@ -55,6 +55,9 @@ public class BasicEnemyMovement : MonoBehaviour
     private float coolDown = 0f;
     private float initialCoolDown = 4f;
 
+    private float damageTimer;
+    private bool materialSet = false;
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -141,10 +144,28 @@ public class BasicEnemyMovement : MonoBehaviour
         scriptShieldBar.orientation = orientation;
     }
 
+    private void callChilds(Transform t, Material m)
+    {
+        if (t.childCount == 0 & t.name != "cylinder")
+            t.GetComponent<MeshRenderer>().material = m;
+        else
+        {
+            for (int i = 0; i < t.childCount; i++)
+            {
+                callChilds(t.GetChild(i), m);
+            }
+        }
+    }
+
     private void controlDamage()
     {
         if (damageRecived != 0f)
         {
+            callChilds(gameObject.transform, Resources.Load("Materials/EnemyDamaged") as Material);
+
+            damageTimer = 0.1f;
+            materialSet = true;
+
             if (shield > 0f)
             {
                 shield -= damageRecived;
@@ -218,6 +239,13 @@ public class BasicEnemyMovement : MonoBehaviour
         }
 
         controlDamage();
+
+        if (damageTimer == 0f & materialSet)
+        {
+            materialSet = false;
+            callChilds(gameObject.transform, Resources.Load("Materials/Spider") as Material);
+        }
+
         // Adjust the current speed based on input and acceleration
         float prevAngle = angle;
 
@@ -274,6 +302,10 @@ public class BasicEnemyMovement : MonoBehaviour
         coolDown -= Time.deltaTime;
         if (coolDown < 0f)
             coolDown = 0f;
+
+        damageTimer -= Time.deltaTime;
+        if (damageTimer < 0f)
+            damageTimer = 0f;
     }
 
     void Update()

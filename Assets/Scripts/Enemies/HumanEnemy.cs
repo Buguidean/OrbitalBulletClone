@@ -46,6 +46,9 @@ public class HumanEnemy : MonoBehaviour
     private UI_LifeBar scriptLifeBar;
     private UI_ShieldBar scriptShieldBar;
 
+    private float damageTimer;
+    private bool materialSet = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -106,6 +109,13 @@ public class HumanEnemy : MonoBehaviour
     {
         if (damageRecived != 0f)
         {
+            for (int i = 1; i < gameObject.transform.childCount - 3; i++)
+            {
+                gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/EnemyDamaged") as Material;
+            }
+            damageTimer = 0.1f;
+            materialSet = true;
+
             if (shield > 0f)
             {
                 shield -= damageRecived;
@@ -195,6 +205,17 @@ public class HumanEnemy : MonoBehaviour
 
         controlAttack();
 
+        if(damageTimer == 0f & materialSet)
+        {
+            materialSet = false;
+            for (int i = 1; i < gameObject.transform.childCount - 3; i++)
+            {
+                gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/HumanEnemy") as Material;
+            }
+        }
+
+
+
         float prevAngle = angle;
 
         // Adjust the angle based on the current speed
@@ -280,9 +301,13 @@ public class HumanEnemy : MonoBehaviour
         if (waitTimer < 0f)
             waitTimer = 0f;
 
+        damageTimer -= Time.deltaTime;
+        if (damageTimer < 0f)
+            damageTimer = 0f;
+
         rifleInstanciated.GetComponent<RifleEnemy>().orientation = orientation;
         rifleInstanciated.GetComponent<RifleEnemy>().angle = angle;
-        Debug.Log("The orientation is " + orientation.ToString());
+        //Debug.Log("The orientation is " + orientation.ToString());
     }
 
     void Update()

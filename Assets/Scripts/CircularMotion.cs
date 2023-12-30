@@ -104,6 +104,9 @@ public class CircularMotion : MonoBehaviour
     //Dying
     private bool isDying = false;
 
+    private float damageTimer;
+    private bool materialSet = false;
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -192,6 +195,13 @@ public class CircularMotion : MonoBehaviour
     {
         if (damageRecived != 0f)
         {
+            for (int i = 1; i < gameObject.transform.childCount - 3; i++)
+            {
+                gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/PlayerDamaged") as Material;
+            }
+            damageTimer = 0.1f;
+            materialSet = true;
+
             health -= damageRecived;
             damageRecived = 0f;
             LifeBar.GetComponent<UI_LifeBar_Player>().actualHealth = health;
@@ -415,6 +425,15 @@ public class CircularMotion : MonoBehaviour
                 damageRecived = 0f;
             }
 
+            if (damageTimer == 0f & materialSet)
+            {
+                materialSet = false;
+                for (int i = 1; i < gameObject.transform.childCount - 3; i++)
+                {
+                    gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/Player") as Material;
+                }
+            }
+
             collectedObjects();
 
             // Adjust the current speed based on input and acceleration
@@ -471,6 +490,10 @@ public class CircularMotion : MonoBehaviour
             timer -= Time.deltaTime;
             if (timer < 0f)
                 timer = 0f;
+
+            damageTimer -= Time.deltaTime;
+            if (damageTimer < 0f)
+                damageTimer = 0f;
 
             //update attributes for bullet
             Pistol script1 = pistolInstanciated.GetComponent<Pistol>();
@@ -681,14 +704,6 @@ public class CircularMotion : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer < 0f)
                     timer = 0f;
-
-                if (Input.GetKeyDown(KeyCode.O))
-                {
-                    for (int i = 1; i < gameObject.transform.childCount - 1; i++)
-                    {
-                        gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/Black") as Material;
-                    }
-                }
 
                 if (Input.GetKeyDown(KeyCode.S))
                 {

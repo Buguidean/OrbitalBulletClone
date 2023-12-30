@@ -51,7 +51,7 @@ public class Rifle : MonoBehaviour
         obj.GetComponent<Bullet>().angle = bulletAngle;
         obj.GetComponent<Bullet>().radius = radius;
         obj.GetComponent<Bullet>().damage = bulletDamage;
-        obj.GetComponent<Bullet>().timer = bulletTime;
+        obj.GetComponent<Bullet>().timer = bulletTime/2f;
     }
 
     // Update is called once per frame

@@ -48,6 +48,9 @@ public class FlyingEnemy : MonoBehaviour
     private float maxHealth = 50f;
     private float maxShield = 25f;
 
+    private float damageTimer;
+    private bool materialSet = false;
+
 
 
 
@@ -142,10 +145,28 @@ public class FlyingEnemy : MonoBehaviour
         scriptShieldBar.orientation = orientation;
     }
 
+    private void callChilds(Transform t, Material m)
+    {
+        if(t.childCount == 0 && t.name != "BulledMob(Clone)" & t.name != "pyramid")
+            t.GetComponent<MeshRenderer>().material = m;
+        else
+        {
+            for (int i = 0; i < t.childCount; i++)
+            {
+                callChilds(t.GetChild(i), m);
+            }
+        }
+    }
+
     private void controlDamage()
     {
         if (damageRecived != 0f)
         {
+            callChilds(gameObject.transform, Resources.Load("Materials/EnemyDamaged") as Material);
+            
+            damageTimer = 0.1f;
+            materialSet = true;
+
             if (shield > 0f)
             {
                 shield -= damageRecived;
@@ -204,7 +225,15 @@ public class FlyingEnemy : MonoBehaviour
         coolDown -= Time.deltaTime;
         if (coolDown < 0f)
             coolDown = 0f;
+
         controlDamage();
+
+        if (damageTimer == 0f & materialSet)
+        {
+            materialSet = false;
+            callChilds(gameObject.transform, Resources.Load("Materials/FlyingMob") as Material);
+        }
+
         // Adjust the current speed based on input and acceleration
         float prevAngle = angle;
 
@@ -258,5 +287,8 @@ public class FlyingEnemy : MonoBehaviour
         gameObject.transform.rotation = camera.rotation;
         gameObject.transform.rotation *= Quaternion.Euler(0, 90, 0);
 
+        damageTimer -= Time.deltaTime;
+        if (damageTimer < 0f)
+            damageTimer = 0f;
     }
 }
