@@ -2806,6 +2806,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &1030056518
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030056507}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 4, z: 1.5}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &1046405308
 GameObject:
   m_ObjectHideFlags: 0
@@ -6971,6 +6992,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1071403576}
     - target: {fileID: 6651407749798411861, guid: 14f06dbe93991374d80e8e2e6150890b, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1773467641}
+    - target: {fileID: 6651407749798411861, guid: 14f06dbe93991374d80e8e2e6150890b, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 1239227266}
@@ -6991,6 +7016,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6693526900997714763, guid: 14f06dbe93991374d80e8e2e6150890b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1030056514}
+    - targetCorrespondingSourceObject: {fileID: 6693526900997714763, guid: 14f06dbe93991374d80e8e2e6150890b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1030056518}
     - targetCorrespondingSourceObject: {fileID: 5108962455837853587, guid: 14f06dbe93991374d80e8e2e6150890b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 180049448}

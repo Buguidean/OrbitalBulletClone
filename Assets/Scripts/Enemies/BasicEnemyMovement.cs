@@ -92,10 +92,24 @@ public class BasicEnemyMovement : MonoBehaviour
             }
             else
             {
-                other.GetComponent<CircularMotion>().damageRecived = damage;
-                other.GetComponent<CircularMotion>().currentSpeed = -other.GetComponent<CircularMotion>().currentSpeed;
+                CircularMotion script = other.GetComponent<CircularMotion>();
+                script.damageRecived = damage;
                 other.GetComponent<PlayerSounds>().gruntSound = true;
-                //currentSpeed = -currentSpeed;
+
+                if (script.currentSpeed != 0f)
+                {
+                    if (script.currentSpeed < 0f)
+                        script.currentSpeed = 0.5f;
+                    else
+                        script.currentSpeed = -0.5f;
+                }
+                else
+                {
+                    if (script.orientation == -1)
+                        script.currentSpeed = -0.5f;
+                    else
+                        script.currentSpeed = 0.5f;
+                }
             }
             //Debug.Log("Angle hit: " + angle_hit.ToString());
         }

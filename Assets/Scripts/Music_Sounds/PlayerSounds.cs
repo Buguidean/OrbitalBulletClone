@@ -45,12 +45,12 @@ public class PlayerSounds: MonoBehaviour
             }
             if (pistolSound)
             {
-                controlAudio.PlayOneShot(audios[2], 1);
+                controlAudio.PlayOneShot(audios[2], 0.2f);
                 pistolSound = false;
             }
             if (rifleSound)
             {
-                controlAudio.PlayOneShot(audios[3], 1);
+                controlAudio.PlayOneShot(audios[3], 0.2f);
                 rifleSound = false;
             }
             if (collectAmmoSound)
@@ -60,7 +60,7 @@ public class PlayerSounds: MonoBehaviour
             }
             if (noAmmoSound)
             {
-                controlAudio.PlayOneShot(audios[5], 1);
+                controlAudio.PlayOneShot(audios[5], 0.5f);
                 noAmmoSound = false;
             }
             if (teleport)

@@ -89,15 +89,15 @@ public class FlyingEnemy : MonoBehaviour
             if (script.currentSpeed != 0f)
             {
                 if(script.currentSpeed < 0f)
-                    script.currentSpeed = 0.3f;
+                    script.currentSpeed = 0.4f;
                 else
-                    script.currentSpeed = -0.3f;
+                    script.currentSpeed = -0.4f;
             }
             else {
                 if (script.orientation == -1)
-                    script.currentSpeed = -0.3f;
+                    script.currentSpeed = -0.4f;
                 else
-                    script.currentSpeed = 0.3f;
+                    script.currentSpeed = 0.4f;
             }
         }
     }

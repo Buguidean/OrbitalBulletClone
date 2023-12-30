@@ -150,6 +150,7 @@ MonoBehaviour:
   damageRecived: 0
   radius: 29
   prefab: {fileID: 6210763348083485345, guid: ec603fa8042d74a4b8e0936262edb9c4, type: 3}
+  playerTransform: {fileID: 0}
   currentSpeed: 1
 --- !u!95 &1617949978385596501
 Animator:

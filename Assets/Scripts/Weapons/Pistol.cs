@@ -11,6 +11,8 @@ public class Pistol : MonoBehaviour
     public PlayerSounds soundScript;
     public bool changed = false;
     public bool isShoting = false;
+    public bool canShoot = true;
+
     private float timer;
     
     public int ammo;
@@ -63,7 +65,7 @@ public class Pistol : MonoBehaviour
             timer = shotRate;
         }
 
-        if (Input.GetKey(KeyCode.P) & timer == 0f & ammo > 0)
+        if (canShoot && Input.GetKey(KeyCode.P) & timer == 0f & ammo > 0)
         {
             timer = shotRate;
             ammo -= 1;
@@ -73,7 +75,7 @@ public class Pistol : MonoBehaviour
             Debug.Log(ammo);
 
         }
-        else if (ammo == 0 & Input.GetKeyDown(KeyCode.P))
+        else if (canShoot && ammo == 0 && Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("No hay municion");
             soundScript.noAmmoSound = true;

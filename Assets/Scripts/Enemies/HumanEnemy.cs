@@ -10,6 +10,7 @@ public class HumanEnemy : MonoBehaviour
     public float radius = 29f;
     public GameObject prefab;
     public Transform playerTransform;
+    public CharacterController player;
 
     private GameObject rifleInstanciated = null;
     
@@ -40,6 +41,8 @@ public class HumanEnemy : MonoBehaviour
     private float maxHealth = 50f;
     private float maxShield = 25f;
 
+    private float damage = 25f;
+
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
     private GameObject canvasShieldBar;
 
@@ -62,7 +65,7 @@ public class HumanEnemy : MonoBehaviour
         boxCol = GetComponent<BoxCollider>();
         animator = gameObject.GetComponent<Animator>();
         animator.SetBool("isMoving", true);
-        //Physics.IgnoreCollision(characterController, player, true);
+        Physics.IgnoreCollision(characterController, player, true);
         
         //player = playerObject.GetComponent<characterController>();
         lifeBarCreation();
@@ -103,6 +106,31 @@ public class HumanEnemy : MonoBehaviour
         scriptShieldBar.actualHealth = shield;
         scriptShieldBar.camera = camera;
         scriptShieldBar.orientation = orientation;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            CircularMotion script = other.GetComponent<CircularMotion>();
+            script.damageRecived = damage;
+            other.GetComponent<PlayerSounds>().gruntSound = true;
+
+            if (script.currentSpeed != 0f)
+            {
+                if (script.currentSpeed < 0f)
+                    script.currentSpeed = 0.4f;
+                else
+                    script.currentSpeed = -0.4f;
+            }
+            else
+            {
+                if (script.orientation == -1)
+                    script.currentSpeed = -0.4f;
+                else
+                    script.currentSpeed = 0.4f;
+            }
+        }
     }
 
     private void controlDamage()
@@ -177,7 +205,7 @@ public class HumanEnemy : MonoBehaviour
         {
             Vector3 aux = Vector3.Normalize(dist_player);
             float dir_of_attack = Vector3.Angle(aux, transform.forward);
-            Debug.Log(dir_of_attack);
+            Debug.Log("Direction of attack: " + dir_of_attack.ToString() + " Orientation: " + orientation.ToString());
 
             if (dir_of_attack > 60f)
             {
@@ -266,7 +294,7 @@ public class HumanEnemy : MonoBehaviour
             if (dist_player.magnitude >= 13f)
             {
                 int aux = Random.Range(0, 2);
-                Debug.Log(aux);
+                //Debug.Log(aux);
                 if (aux == 1)
                 {
                     currentSpeed = -currentSpeed;

@@ -107,6 +107,8 @@ public class CircularMotion : MonoBehaviour
     private float damageTimer;
     private bool materialSet = false;
 
+    private float dodgingTimer = 0f;
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -415,6 +417,17 @@ public class CircularMotion : MonoBehaviour
             }
 
             // si la animaci�n no es la de esquivar, pon dodging a false y la velocidad a la que estava (currentSpeed /= 1.4f)
+            if (this.animator.GetCurrentAnimatorClipInfoCount(0) > 0)
+            {
+                //Debug.Log(this.animator.GetCurrentAnimatorClipInfoCount(0));
+                if (dodging && this.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "roll")
+                {
+                    dodging = false;
+                    maxVelocity = 0.5f;
+                    dodgingTimer = 0.2f;
+                }
+            }
+
 
             if (!dodging & !invulnerable)
             {
@@ -495,16 +508,22 @@ public class CircularMotion : MonoBehaviour
             if (damageTimer < 0f)
                 damageTimer = 0f;
 
+            dodgingTimer -= Time.deltaTime;
+            if (dodgingTimer < 0f)
+                dodgingTimer = 0f;
+
             //update attributes for bullet
             Pistol script1 = pistolInstanciated.GetComponent<Pistol>();
             script1.angle = angle;
             script1.orientation = orientation;
             script1.radius = radius;
+            script1.canShoot = !dodging;
 
             Rifle script2 = rifleInstanciated.GetComponent<Rifle>();
             script2.angle = angle;
             script2.orientation = orientation;
             script2.radius = radius;
+            script2.canShoot = !dodging;
         }
     }
 
@@ -644,15 +663,15 @@ public class CircularMotion : MonoBehaviour
                     weaponInstanciated = null;
                 }*/
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) && !dodging && dodgingTimer == 0f)
                 {
-                    maxVelocity = 1.5f;
+                    maxVelocity = 0.7f;
                     dodging = true;
                     if (orientation == -1)
                         currentSpeed += 1f;
                     else
                         currentSpeed -= 1f;
-                    //change animation a roll
+                    animator.Play("roll", 0, 0);
                 }
 
                 //Key Cheats
