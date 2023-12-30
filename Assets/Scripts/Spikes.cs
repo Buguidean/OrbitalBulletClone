@@ -16,6 +16,7 @@ public class Spikes : MonoBehaviour
                 //{
                 obj.GetComponent<CircularMotion>().damageRecived = 10f;
                 obj.GetComponent<CircularMotion>().doJump = true;
+                obj.GetComponent<PlayerSounds>().gruntSound = true;
                 coolDown = initCoolDown;
                 //}
                 break;
