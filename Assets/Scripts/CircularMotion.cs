@@ -167,6 +167,8 @@ public class CircularMotion : MonoBehaviour
         UI_LifeBar_Player script = LifeBar.GetComponent<UI_LifeBar_Player>();
         script.maxHealth = maxHealth;
         script.actualHealth = health;
+        
+
     }
 
     private void Friction(float input)
@@ -623,14 +625,14 @@ public class CircularMotion : MonoBehaviour
 
             if (!constrained)
             {
-                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+                if (Time.deltaTime != 0f && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
                 {
                     input = 1f;
                     if (orientation == 1)
                         transform.Rotate(0.0f, 180.0f, 0.0f);
                     orientation = -1;
                 }
-                else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+                else if (Time.deltaTime != 0f && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
                 {
                     input = -1f;
                     if (orientation == -1)
