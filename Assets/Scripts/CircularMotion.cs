@@ -122,12 +122,15 @@ public class CircularMotion : MonoBehaviour
         health = maxHealth;
         createLifeBar();
         getHand();
+
         getUI();
+        pistolUI.SetActive(false);
+
         transform.rotation *= Quaternion.Euler(0, 180, 0);
         soundScript = gameObject.GetComponent<PlayerSounds>();
-        hasWeapon = 1;
-        pistolUI.SetActive(true);
+        hasWeapon = 0;
         createPistolHand();
+        pistolInstanciated.SetActive(false);
         createRifleHand();
         rifleInstanciated.SetActive(false);
     }
@@ -309,6 +312,8 @@ public class CircularMotion : MonoBehaviour
             switch (hasWeapon)
             {
                 case 0:
+                    animator.SetBool("hasWeapon", true);
+                    pistolUI.SetActive(true);
                     hasWeapon = 1;
                     showWeapon();
                     break;
