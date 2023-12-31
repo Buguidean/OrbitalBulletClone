@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Boss : MonoBehaviour
@@ -49,6 +50,10 @@ public class Boss : MonoBehaviour
     //attack
     private Transform leftParticle;
     private Transform rightParticle;
+    private Transform reactor;
+    private GameObject explosion;
+    private GameObject flameAsset;
+    private GameObject fireParticle;
 
     private Animator animator;
 
@@ -73,12 +78,15 @@ public class Boss : MonoBehaviour
         damageRecived = 0f;
 
         getParticles();
+        explosion = Resources.Load("prefabs/Spheres Explode") as GameObject;
+        flameAsset = Resources.Load("prefabs/FlameThrower") as GameObject;
     }
 
     private void getParticles()
     {
         leftParticle = gameObject.transform.GetChild(2).GetChild(1).GetChild(7);
         rightParticle = gameObject.transform.GetChild(3).GetChild(1).GetChild(7);
+        reactor = gameObject.transform.GetChild(0).GetChild(0);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -146,7 +154,9 @@ public class Boss : MonoBehaviour
 
     private void callChilds(Transform t, Material m)
     {
-        if (t.childCount == 0 && t.name != "BulledMob(Clone)" & t.name != "pyramid")
+        if (t.childCount == 0 && t.name != "particleLeft" && t.name != "particleRight" && t.name != "center"
+            && t.name != "m1" && t.name != "m2" && t.name != "m3" && t.name != "m4" && t.name != "m5" 
+            && t.name != "m6" && t.name != "m7" && t.name != "m8" && t.name != "m9" && t.name != "m10")
             t.GetComponent<MeshRenderer>().material = m;
         else
         {
@@ -185,8 +195,38 @@ public class Boss : MonoBehaviour
         }
     }
 
+    private void controlAttack()
+    {
+        dist_player = transform.position - playerTransform.position;
+
+        if (dist_player.magnitude < 47f)
+        {
+            currentSpeed = 0f;
+            if (!animator.GetBool("BigShoot"))
+                animator.Play("ReadyUp", 0, 0);
+            animator.SetBool("BigShoot", true);
+            if (leftParticle.position.y > 24.2f)
+            {
+                GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
+                Destroy(aux1, 2f);
+            }
+            if (rightParticle.position.y > 24.4f)
+            {
+                GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
+                Destroy(aux2, 2f);
+            }
+        }
+        else
+        {
+            currentSpeed = 0.2f;
+            animator.SetBool("BigShoot", false);
+        }
+    }
+
     void FixedUpdate()
     {
+        //Debug.Log(leftParticle.position.y);
+        //Debug.Log(rightParticle.position.y);
         if (player.isGrounded && playerTransform.position.y + 3f >= gameObject.transform.position.y && !canMove)
         {
             LifeBarObject.SetActive(true);
@@ -215,6 +255,16 @@ public class Boss : MonoBehaviour
 
         if (canMove)
         {
+            if (fireParticle == null)
+            {
+                fireParticle = Instantiate(flameAsset, reactor.position, Quaternion.identity);
+                fireParticle.transform.Translate(0f, 1f, 0f);
+                fireParticle.transform.Rotate(0f, 0f, -90f);
+                fireParticle.transform.SetParent(reactor);               
+            }
+
+            controlAttack();
+
             float prevAngle = angle;
 
             // Adjust the angle based on the current speed
@@ -249,6 +299,7 @@ public class Boss : MonoBehaviour
                 orientation = -orientation;
             }
         }
+
         if (!startTeleport && characterController.isGrounded)
         {
             dist_player = transform.position - playerTransform.position;
