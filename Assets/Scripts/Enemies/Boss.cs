@@ -19,7 +19,7 @@ public class Boss : MonoBehaviour
     private float y;
 
     private float acceleration = 1f; // acceleration factor
-    public float currentSpeed = 1f;
+    private float currentSpeed = 0.2f;
     private float angle = 0f;
     private int orientation = -1;
     private float speedY = 0f;
@@ -44,6 +44,13 @@ public class Boss : MonoBehaviour
 
     private float damageTimer;
     private bool materialSet = false;
+    private bool canMove = false;
+
+    //attack
+    private Transform leftParticle;
+    private Transform rightParticle;
+
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +61,7 @@ public class Boss : MonoBehaviour
         y = transform.position.y;
         transform.position = new Vector3(x, y, z);
 
+        animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         boxCol = GetComponent<BoxCollider>();
         Physics.IgnoreCollision(characterController, player, true);
@@ -63,6 +71,14 @@ public class Boss : MonoBehaviour
         scriptLifeBar.maxHealth = maxHealth;
         LifeBarObject.SetActive(false);
         damageRecived = 0f;
+
+        getParticles();
+    }
+
+    private void getParticles()
+    {
+        leftParticle = gameObject.transform.GetChild(2).GetChild(1).GetChild(7);
+        rightParticle = gameObject.transform.GetChild(3).GetChild(1).GetChild(7);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -171,12 +187,13 @@ public class Boss : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (player.isGrounded && playerTransform.position.y + 3f >= gameObject.transform.position.y)
+        if (player.isGrounded && playerTransform.position.y + 3f >= gameObject.transform.position.y && !canMove)
         {
             LifeBarObject.SetActive(true);
+            canMove = true;
+            animator.Play("ReadyUp", 0, 0);
         }
-            
-
+        
         controlDamage();
 
         if (damageTimer == 0f & materialSet)
@@ -185,45 +202,52 @@ public class Boss : MonoBehaviour
             callChilds(gameObject.transform, Resources.Load("Materials/Boss") as Material);
         }
 
-        float correction = Vector3.Angle((transform.position - center.position), -transform.right);
+        float correction;
+        if (canMove)
+            correction = Vector3.Angle((transform.position - center.position), transform.right);
+        else
+            correction = Vector3.Angle((transform.position - center.position), -transform.right);
 
         if (orientation == 1)
             transform.Rotate(0.0f, correction - 90.0f, 0.0f);
         else
             transform.Rotate(0.0f, 90.0f - correction, 0.0f);
 
-        float prevAngle = angle;
-
-        // Adjust the angle based on the current speed
-        angle += currentSpeed / 2f * Time.deltaTime;
-        angle %= (2 * Mathf.PI);
-        
-        // Calculate the new position based on the angle and radius
-        x = center.position.x + Mathf.Cos(angle) * radius;
-        z = center.position.z + Mathf.Sin(angle) * radius;
-        y = transform.position.y + speedY;
-
-        if ((speedY < 0) && characterController.isGrounded)
-            speedY = 0.0f;
-
-        speedY -= gravity * Time.deltaTime;
-
-        Friction();
-
-        Vector3 newPosition = new Vector3(x, y, z);
-        Vector3 displace = newPosition - transform.position;
-        Vector3 position = transform.position;
-
-        CollisionFlags collition = characterController.Move(displace);
-
-        if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+        if (canMove)
         {
-            transform.position = new Vector3(position.x, transform.position.y, position.z);
-            //Physics.SyncTransforms();
-            angle = prevAngle;
+            float prevAngle = angle;
 
-            currentSpeed = -currentSpeed;
-            orientation = -orientation;
+            // Adjust the angle based on the current speed
+            angle += currentSpeed / 2f * Time.deltaTime;
+            angle %= (2 * Mathf.PI);
+
+            // Calculate the new position based on the angle and radius
+            x = center.position.x + Mathf.Cos(angle) * radius;
+            z = center.position.z + Mathf.Sin(angle) * radius;
+            y = transform.position.y + speedY;
+
+            if ((speedY < 0) && characterController.isGrounded)
+                speedY = 0.0f;
+
+            speedY -= gravity * Time.deltaTime;
+
+            Friction();
+
+            Vector3 newPosition = new Vector3(x, y, z);
+            Vector3 displace = newPosition - transform.position;
+            Vector3 position = transform.position;
+
+            CollisionFlags collition = characterController.Move(displace);
+
+            if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+            {
+                transform.position = new Vector3(position.x, transform.position.y, position.z);
+                //Physics.SyncTransforms();
+                angle = prevAngle;
+
+                currentSpeed = -currentSpeed;
+                orientation = -orientation;
+            }
         }
         if (!startTeleport && characterController.isGrounded)
         {
@@ -244,7 +268,6 @@ public class Boss : MonoBehaviour
         damageTimer -= Time.deltaTime;
         if (damageTimer < 0f)
             damageTimer = 0f;
-
     }
     
     // Update is called once per frame
