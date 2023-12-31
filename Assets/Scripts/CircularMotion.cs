@@ -30,7 +30,7 @@ public class CircularMotion : MonoBehaviour
     private GameObject rifleInstanciated = null;
 
     //has Weapon (0: any, 1: pistol, 2 rifle, 3 both (pistol active), 4 both (rifle active))
-    private int hasWeapon;
+    public int hasWeapon;
 
     private int maxAmmoPistol = 10;
     private int maxAmmoRifle = 30;

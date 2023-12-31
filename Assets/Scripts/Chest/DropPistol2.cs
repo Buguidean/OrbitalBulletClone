@@ -10,7 +10,10 @@ public class DropPistol2 : MonoBehaviour
     private float zPlayer;
     private Transform playerTransform;
     private GameObject pistol = null;
+    private GameObject rifle = null;
     private float velocity = 0.9f;
+
+    private float hasWeapon;
 
     private void Start()
     {
@@ -28,24 +31,51 @@ public class DropPistol2 : MonoBehaviour
         pistol.GetComponent<Pistol>().enabled = false;
     }
 
+    private void dropRifle()
+    {
+        Vector3 pistolPos = transform.position;
+
+        GameObject riflePrefab = Resources.Load("prefabs/rifleDef") as GameObject;
+        rifle = Instantiate(riflePrefab, pistolPos + new Vector3(0f, -0.5f, 0f), Quaternion.identity);
+
+        rifle.transform.rotation = playerTransform.rotation;
+        rifle.GetComponent<Rifle>().enabled = false;
+    }
+
     private void OnTriggerStay(Collider obj)
     {
         if (obj.tag == "Player")
         {
             playerTransform = obj.transform;
 
-            if (Input.GetKeyUp(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.I))
             {
+                hasWeapon = obj.GetComponent<CircularMotion>().hasWeapon;
+                
                 if (!animator.GetBool("Open"))
                 {
                     animator.SetBool("Open", true);
-                    dropPistol();
+                    if (hasWeapon == 0)
+                        dropPistol();
+                    else
+                        dropRifle();
                 }
 
-                if (pistol != null & animator.GetCurrentAnimatorStateInfo(0).IsName("Finish"))
+                if (hasWeapon == 0)
                 {
-                    obj.GetComponent<CircularMotion>().takePistol = true;
-                    Destroy(pistol);
+                    if (pistol != null & animator.GetCurrentAnimatorStateInfo(0).IsName("Finish"))
+                    {
+                        obj.GetComponent<CircularMotion>().takePistol = true;
+                        Destroy(pistol);
+                    }
+                }
+                else
+                {
+                    if (rifle != null & animator.GetCurrentAnimatorStateInfo(0).IsName("Finish"))
+                    {
+                        obj.GetComponent<CircularMotion>().takeRifle = true;
+                        Destroy(rifle);
+                    }
                 }
             }
         }
@@ -55,7 +85,10 @@ public class DropPistol2 : MonoBehaviour
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Openning"))
         {
-            pistol.transform.Translate(new Vector3(0f,velocity, 0f) * Time.deltaTime);
+            if(hasWeapon == 0)
+                pistol.transform.Translate(new Vector3(0f,velocity, 0f) * Time.deltaTime);
+            else
+                rifle.transform.Translate(new Vector3(0f, velocity, 0f) * Time.deltaTime);
         }
 
         /*if (animator.GetCurrentAnimatorStateInfo(0).IsName("Openning"))
