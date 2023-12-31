@@ -77,6 +77,11 @@ public class Bullet : MonoBehaviour
                 //Debug.Log("The bullet was destroyed because touched the Environment");
                 Destroy(gameObject);
                 break;
+            case "Boss":
+                obj.GetComponent<Boss>().damageRecived = damage;
+                Debug.Log("The bullet impacted with the boss");
+                Destroy(gameObject);
+                break;
         }
     }
 
