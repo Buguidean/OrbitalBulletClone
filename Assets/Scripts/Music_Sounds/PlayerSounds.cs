@@ -75,7 +75,7 @@ public class PlayerSounds: MonoBehaviour
             }
             if (changeWeaponSound)
             {
-                controlAudio.PlayOneShot(audios[8], 1);
+                controlAudio.PlayOneShot(audios[8], 0.5f);
                 changeWeaponSound = false;
             }
             if (gruntSound)

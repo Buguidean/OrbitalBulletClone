@@ -155,14 +155,19 @@ public class Boss : MonoBehaviour
     private void callChilds(Transform t, Material m)
     {
         if (t.childCount == 0 && t.name != "particleLeft" && t.name != "particleRight" && t.name != "center"
-            && t.name != "m1" && t.name != "m2" && t.name != "m3" && t.name != "m4" && t.name != "m5" 
+            && t.name != "m1" && t.name != "m2" && t.name != "m3" && t.name != "m4" && t.name != "m5"
             && t.name != "m6" && t.name != "m7" && t.name != "m8" && t.name != "m9" && t.name != "m10")
+        {
             t.GetComponent<MeshRenderer>().material = m;
+        }
         else
         {
-            for (int i = 0; i < t.childCount; i++)
+            if (t.name != "cuboid")
             {
-                callChilds(t.GetChild(i), m);
+                for (int i = 0; i < t.childCount; i++)
+                {
+                    callChilds(t.GetChild(i), m);
+                }
             }
         }
     }
@@ -190,6 +195,8 @@ public class Boss : MonoBehaviour
 
         if (health <= 0f)
         {
+            player.gameObject.GetComponent<PlayerMusic>().isStageMusic = true;
+            player.gameObject.GetComponent<PlayerMusic>().stopMusic = true;
             Destroy(LifeBarObject);
             Destroy(gameObject);
         }
@@ -232,6 +239,8 @@ public class Boss : MonoBehaviour
             LifeBarObject.SetActive(true);
             canMove = true;
             animator.Play("ReadyUp", 0, 0);
+            player.gameObject.GetComponent<PlayerMusic>().isBossMusic = true;
+            player.gameObject.GetComponent<PlayerMusic>().stopMusic = true;
         }
         
         controlDamage();
