@@ -202,13 +202,7 @@ public class CircularMotion : MonoBehaviour
     {
         if (damageRecived != 0f)
         {
-            for (int i = 1; i < gameObject.transform.childCount - 3; i++)
-            {
-                gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/PlayerDamaged") as Material;
-            }
-            gameObject.GetComponent<PlayerSounds>().gruntSound = true;
-            damageTimer = 0.1f;
-            materialSet = true;
+            
 
             health -= damageRecived;
             damageRecived = 0f;
@@ -224,8 +218,21 @@ public class CircularMotion : MonoBehaviour
                 showWeapon();
                 soundScript.dyingSound = true;
                 isDying = true;
+                transform.Rotate(0,180,0);
+                animator.Play("death");
             }
-            
+
+            if (!isDying)
+            {
+                for (int i = 1; i < gameObject.transform.childCount - 3; i++)
+                {
+                    gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/PlayerDamaged") as Material;
+                }
+                gameObject.GetComponent<PlayerSounds>().gruntSound = true;
+                damageTimer = 0.1f;
+                materialSet = true;
+            }
+
             //Debug.Log("Player health: " + health.ToString());
         }
 

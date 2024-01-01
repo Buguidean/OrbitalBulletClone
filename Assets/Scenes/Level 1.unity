@@ -891,6 +891,8 @@ MonoBehaviour:
   jumpTransition: 0
   openedWC: 0
   hasWeapon: 0
+  dodging: 0
+  invulnerable: 0
   currentSpeed: 0
   orientation: 1
   doJump: 0
