@@ -94,7 +94,6 @@ public class BasicEnemyMovement : MonoBehaviour
             {
                 CircularMotion script = other.GetComponent<CircularMotion>();
                 script.damageRecived = damage;
-                other.GetComponent<PlayerSounds>().gruntSound = true;
 
                 if (script.currentSpeed != 0f)
                 {

@@ -48,8 +48,8 @@ public class CircularMotion : MonoBehaviour
     private bool isExtRad = true;
 
     //dodge attributes
-    private bool dodging = false;
-    private bool invulnerable = false;
+    public bool dodging = false;
+    public bool invulnerable = false;
 
     //Movement
     private bool constrained = false;
@@ -206,6 +206,7 @@ public class CircularMotion : MonoBehaviour
             {
                 gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/PlayerDamaged") as Material;
             }
+            gameObject.GetComponent<PlayerSounds>().gruntSound = true;
             damageTimer = 0.1f;
             materialSet = true;
 
