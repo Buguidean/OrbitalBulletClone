@@ -43,7 +43,11 @@ public class RifleEnemy : MonoBehaviour
 
         //instantiate
         GameObject bulledPrefab = Resources.Load("prefabs/HumanEnemyBulled") as GameObject;
+        GameObject trailPrefab = Resources.Load("prefabs/BulletTrail") as GameObject;
         GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
+        GameObject trail = Instantiate(trailPrefab, pos, Quaternion.identity);
+        trail.GetComponent<Follow>().bullet = obj.transform;
+        Destroy(trail, 5f);
 
         //asign initiallization
         obj.GetComponent<HumanEnemyBulled>().leftMove = leftMove;
