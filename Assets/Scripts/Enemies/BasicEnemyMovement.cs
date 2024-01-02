@@ -38,6 +38,7 @@ public class BasicEnemyMovement : MonoBehaviour
 
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
     private GameObject canvasShieldBar;
+    private GameObject alert;
 
     private UI_LifeBar scriptLifeBar;
     private UI_ShieldBar scriptShieldBar;
@@ -76,6 +77,7 @@ public class BasicEnemyMovement : MonoBehaviour
         shieldBarCreation();
         damageRecived = 0f;
         soundScript = gameObject.GetComponent<SpiderSound>();
+        alert = Resources.Load("prefabs/true_exclamation_spider") as GameObject;
 
     }
 
@@ -229,18 +231,24 @@ public class BasicEnemyMovement : MonoBehaviour
 
         if (dist_player.magnitude < 10f && characterController.isGrounded && coolDown == 0f)
         {
+            Vector3 alert_par_pos = new Vector3(transform.position.x, transform.position.y + 5f, transform.position.z);
+            GameObject alert_par = Instantiate(alert, alert_par_pos, Quaternion.identity);
+            alert_par.transform.rotation = camera.rotation;
+            alert_par.GetComponent<Follow_spider>().spider = gameObject.transform;
+            alert_par.transform.Rotate(0, 90, -90);
+            Destroy(alert_par, 0.5f);
+
             Vector3 aux = Vector3.Normalize(dist_player);
             float dir_of_attack = Vector3.Angle(aux, transform.forward);
-            //Debug.Log(dir_of_attack);
             coolDown = initialCoolDown;
             speedY = 0.25f;
-            //Debug.Log("Hace el ataque")
             soundScript.attackSound = true;
 
 
             if (dir_of_attack > 60f)
             {
                 orientation = -orientation;
+                transform.Rotate(0.0f, 180.0f, 0.0f);
                 if (currentSpeed < 0f)
                     currentSpeed = 1.2f;
                 else

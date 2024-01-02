@@ -45,6 +45,7 @@ public class HumanEnemy : MonoBehaviour
 
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
     private GameObject canvasShieldBar;
+    private GameObject alert;
 
     private UI_LifeBar scriptLifeBar;
     private UI_ShieldBar scriptShieldBar;
@@ -73,6 +74,7 @@ public class HumanEnemy : MonoBehaviour
         damageRecived = 0f;
         movementTimer = Random.Range(1f, 2f);
         getWeapon();
+        alert = Resources.Load("prefabs/true_exclamation") as GameObject;
     }
 
     private void getWeapon()
@@ -212,6 +214,13 @@ public class HumanEnemy : MonoBehaviour
                 currentSpeed = -currentSpeed;
                 transform.Rotate(0.0f, 180.0f, 0.0f);
             }
+
+            Vector3 alert_par_pos = new Vector3(transform.position.x, transform.position.y + 5f, transform.position.z);
+            GameObject alert_par = Instantiate(alert, alert_par_pos, Quaternion.identity);
+            alert_par.transform.rotation = camera.rotation;
+            alert_par.transform.Rotate(0, 90, -90);
+            Destroy(alert_par,0.5f);
+
             rifleInstanciated.GetComponent<RifleEnemy>().canShoot = true;
             movementTimer = 0f;
         }
