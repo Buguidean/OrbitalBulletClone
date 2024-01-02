@@ -18,6 +18,7 @@ TagManager:
   - HumanEnemy
   - HumanEnemyBullet
   - Boss
+  - BossBullet
   layers:
   - Default
   - TransparentFX

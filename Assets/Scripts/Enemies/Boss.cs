@@ -54,11 +54,16 @@ public class Boss : MonoBehaviour
     private GameObject explosion;
     private GameObject flameAsset;
     private GameObject fireParticle;
+    private GameObject bulletPrefab;
+    private GameObject staticbulletPrefab;
+    private GameObject trailPrefab;
     private int randomAttack;
 
     //timers
     private float coolDown = 0f;
     private float attackDuration = 0f;
+    private float bulletDurationL = 0f;
+    private float bulletDurationR = 0f;
 
     private Animator animator;
 
@@ -85,6 +90,9 @@ public class Boss : MonoBehaviour
         getParticles();
         explosion = Resources.Load("prefabs/Spheres Explode") as GameObject;
         flameAsset = Resources.Load("prefabs/FlameThrower") as GameObject;
+        bulletPrefab = Resources.Load("prefabs/BossEnemyBullet") as GameObject;
+        staticbulletPrefab = Resources.Load("prefabs/BossEnemyStaticB") as GameObject;
+        trailPrefab = Resources.Load("prefabs/BulletTrail") as GameObject;
     }
 
     private void getParticles()
@@ -256,25 +264,93 @@ public class Boss : MonoBehaviour
             {
                 GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
                 Destroy(aux1, 2f);
+
+                /////////////////////////////////////////
+
+                float randomAngle = Random.Range(0, 2 * Mathf.PI);
+                Vector3 bullet_pos = new Vector3(center.position.x + Mathf.Cos(randomAngle) * radius, 70f, center.position.z + Mathf.Sin(randomAngle) * radius);
+
+                GameObject obj = Instantiate(bulletPrefab, bullet_pos, Quaternion.identity);
+                GameObject trail = Instantiate(trailPrefab, bullet_pos, Quaternion.identity);
+                obj.GetComponent<BossEnemyBullet>().damage = 30f;
+                obj.GetComponent<BossEnemyBullet>().explosion = explosion;
+                trail.GetComponent<Follow>().bullet = obj.transform;
+                Destroy(trail, 5f);
+
+                /////////////////////////////////////////
             }
             if (rightParticle.position.y > 24.2f)
             {
                 GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
                 Destroy(aux2, 2f);
+
+                /////////////////////////////////////////
+
+                float randomAngle = Random.Range(0, 2 * Mathf.PI);
+                Vector3 bullet_pos = new Vector3(center.position.x + Mathf.Cos(randomAngle) * radius, 70f, center.position.z + Mathf.Sin(randomAngle) * radius);
+
+                GameObject obj = Instantiate(bulletPrefab, bullet_pos, Quaternion.identity);
+                GameObject trail = Instantiate(trailPrefab, bullet_pos, Quaternion.identity);
+                obj.GetComponent<BossEnemyBullet>().damage = 30f;
+                obj.GetComponent<BossEnemyBullet>().explosion = explosion;
+                trail.GetComponent<Follow>().bullet = obj.transform;
+                Destroy(trail, 5f);
+
+                /////////////////////////////////////////
             }
         }
 
         else if (attackDuration != 0f && randomAttack == 0)
         {
-            if (leftParticle.position.y < 23f)
+            if (leftParticle.position.y < 23f && bulletDurationL == 0f)
             {
+                bulletDurationL = 0.2f;
+
                 GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
                 Destroy(aux1, 2f);
+
+                /////////////////////////////////////////
+
+                Vector3 lpos = new Vector3(leftParticle.position.x, leftParticle.position.y - 1.5f, leftParticle.position.z);
+
+                GameObject obj = Instantiate(staticbulletPrefab, lpos, Quaternion.identity);
+                GameObject trail = Instantiate(trailPrefab, lpos, Quaternion.identity);
+                obj.GetComponent<BossEnemyStaticBullet>().leftMove = false;
+                obj.GetComponent<BossEnemyStaticBullet>().angle = angle + 0.2f;
+                obj.GetComponent<BossEnemyStaticBullet>().radius = radius;
+                obj.GetComponent<BossEnemyStaticBullet>().damage = 20f;
+                obj.GetComponent<BossEnemyStaticBullet>().timer = 3.5f;
+                obj.GetComponent<BossEnemyStaticBullet>().center = center;
+                obj.GetComponent<BossEnemyStaticBullet>().explosion = explosion;
+                trail.GetComponent<Follow>().bullet = obj.transform;
+                Destroy(trail, 7f);
+
+                /////////////////////////////////////////
             }
-            if (rightParticle.position.y < 23f)
+            if (rightParticle.position.y < 23f && bulletDurationR == 0f)
             {
+                bulletDurationR = 0.2f;
+
                 GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
                 Destroy(aux2, 2f);
+
+                /////////////////////////////////////////
+                
+                Vector3 rpos = new Vector3(rightParticle.position.x, rightParticle.position.y - 1.5f, rightParticle.position.z);
+
+                GameObject obj = Instantiate(staticbulletPrefab, rpos, Quaternion.identity);
+                GameObject trail = Instantiate(trailPrefab, rpos, Quaternion.identity);
+                obj.GetComponent<BossEnemyStaticBullet>().leftMove = true;
+                obj.GetComponent<BossEnemyStaticBullet>().angle = angle - 0.2f;
+                obj.GetComponent<BossEnemyStaticBullet>().radius = radius;
+                obj.GetComponent<BossEnemyStaticBullet>().damage = 20f;
+                obj.GetComponent<BossEnemyStaticBullet>().timer = 3.5f;
+                obj.GetComponent<BossEnemyStaticBullet>().center = center;
+                obj.GetComponent<BossEnemyStaticBullet>().explosion = explosion;
+                trail.GetComponent<Follow>().bullet = obj.transform;
+                Destroy(trail, 7f);
+
+                /////////////////////////////////////////
             }
         }
     }
@@ -365,7 +441,7 @@ public class Boss : MonoBehaviour
         {
             dist_player = transform.position - playerTransform.position;
             randomNumber = Random.Range(0, 4);
-            if (randomNumber == 1 && dist_player.magnitude < 15)
+            if (randomNumber == 1 && (dist_player.magnitude < 15 || dist_player.magnitude > 47))
             {
                 startTeleport = true;
                 speedY = 0.67f;
@@ -387,6 +463,14 @@ public class Boss : MonoBehaviour
         attackDuration -= Time.deltaTime;
         if (attackDuration < 0f)
             attackDuration = 0f;
+
+        bulletDurationL -= Time.deltaTime;
+        if (bulletDurationL < 0f)
+            bulletDurationL = 0f;
+
+        bulletDurationR -= Time.deltaTime;
+        if (bulletDurationR < 0f)
+            bulletDurationR = 0f;
     }
     
     // Update is called once per frame

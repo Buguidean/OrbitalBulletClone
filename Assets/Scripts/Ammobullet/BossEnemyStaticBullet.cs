@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HumanEnemyBulled : MonoBehaviour
+public class BossEnemyStaticBullet : MonoBehaviour
 {
     public Transform center; // the center point of the circle
+    public GameObject explosion;
     public bool leftMove;
     public float angle;
     public float radius; // radius of the circle
@@ -37,12 +38,18 @@ public class HumanEnemyBulled : MonoBehaviour
 
     void OnTriggerEnter(Collider obj)
     {
+        GameObject aux = Instantiate(explosion, transform.position, Quaternion.identity);
+        Destroy(aux, 2f);
         switch (obj.tag)
         {
             case "Player":
                 //Debug.Log("The bullet impacted with player");
                 obj.GetComponent<CircularMotion>().damageRecived = damage;
                 Destroy(gameObject);
+                break;
+            case "Bullet":
+                break;
+            case "BossBullet":
                 break;
             default:
                 Destroy(gameObject);
