@@ -41,6 +41,8 @@ public class FlyingEnemy : MonoBehaviour
 
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
     private GameObject canvasShieldBar;
+    private GameObject trailPrefab;
+    private GameObject alert;
 
     private UI_LifeBar scriptLifeBar;
     private UI_ShieldBar scriptShieldBar;
@@ -76,6 +78,8 @@ public class FlyingEnemy : MonoBehaviour
         shieldBarCreation();
         damageRecived = 0f;
         instanciatedBulled = null;
+        trailPrefab = Resources.Load("prefabs/BulletTrail") as GameObject;
+        alert = Resources.Load("prefabs/true_exclamation_spider") as GameObject;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -209,11 +213,22 @@ public class FlyingEnemy : MonoBehaviour
             GameObject bulledPrefab = Resources.Load("prefabs/BulledMob") as GameObject;
             Vector3 pos = gameObject.transform.position + new Vector3(0f, 1f, 0f);
             instanciatedBulled = Instantiate(bulledPrefab, pos, Quaternion.identity);
+            GameObject trail = Instantiate(trailPrefab, pos, Quaternion.identity);
+            trail.GetComponent<Follow>().bullet = instanciatedBulled.transform;
+            Destroy(trail, 5f);
+            
             instanciatedBulled.transform.parent = gameObject.transform;
             MobBulled script = instanciatedBulled.GetComponent<MobBulled>();
             script.player = playerTransform;
             script.center = center;
             coolDown = 2f;
+
+            Vector3 alert_par_pos = new Vector3(transform.position.x, transform.position.y + 5f, transform.position.z);
+            GameObject alert_par = Instantiate(alert, alert_par_pos, Quaternion.identity);
+            alert_par.transform.rotation = camera.rotation;
+            alert_par.GetComponent<Follow_spider>().spider = gameObject.transform;
+            alert_par.transform.Rotate(0, 90, -90);
+            Destroy(alert_par, 0.5f);
         }
     }
 
