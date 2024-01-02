@@ -54,6 +54,11 @@ public class Boss : MonoBehaviour
     private GameObject explosion;
     private GameObject flameAsset;
     private GameObject fireParticle;
+    private int randomAttack;
+
+    //timers
+    private float coolDown = 0f;
+    private float attackDuration = 0f;
 
     private Animator animator;
 
@@ -206,27 +211,71 @@ public class Boss : MonoBehaviour
     {
         dist_player = transform.position - playerTransform.position;
 
-        if (dist_player.magnitude < 47f)
+        if (coolDown == 0f  && dist_player.magnitude < 47f)
         {
+            
+            randomAttack = Random.Range(0,2);
+            if (randomAttack == 1)
+            {
+                attackDuration = 4f;
+                coolDown = 7f;
+            }
+            else
+            {
+                attackDuration = 5.5f;
+                coolDown = 8f;
+            }
+
+            if (attackDuration != 0f && randomAttack == 1)
+            {
+                if (!animator.GetBool("BigShoot"))
+                    animator.Play("ReadyUp", 0, 0);
+                animator.SetBool("BigShoot", true);
+            }
+            else if (attackDuration != 0f && randomAttack == 0)
+            {
+                if (!animator.GetBool("StaticShoot"))
+                    animator.Play("ReadyUp", 0, 0);
+                animator.SetBool("StaticShoot", true);
+            }
+
             currentSpeed = 0f;
-            if (!animator.GetBool("BigShoot"))
-                animator.Play("ReadyUp", 0, 0);
-            animator.SetBool("BigShoot", true);
+            
+        }
+        else if (attackDuration <= 0f)
+        {
+            attackDuration = 0f;
+            currentSpeed = 0.2f;
+            animator.SetBool("BigShoot", false);
+            animator.SetBool("StaticShoot", false);
+        }
+
+        if (attackDuration != 0f && randomAttack == 1)
+        {
             if (leftParticle.position.y > 24.2f)
             {
                 GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
                 Destroy(aux1, 2f);
             }
-            if (rightParticle.position.y > 24.4f)
+            if (rightParticle.position.y > 24.2f)
             {
                 GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
                 Destroy(aux2, 2f);
             }
         }
-        else
+
+        else if (attackDuration != 0f && randomAttack == 0)
         {
-            currentSpeed = 0.2f;
-            animator.SetBool("BigShoot", false);
+            if (leftParticle.position.y < 23f)
+            {
+                GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
+                Destroy(aux1, 2f);
+            }
+            if (rightParticle.position.y < 23f)
+            {
+                GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
+                Destroy(aux2, 2f);
+            }
         }
     }
 
@@ -272,7 +321,10 @@ public class Boss : MonoBehaviour
                 fireParticle.transform.SetParent(reactor);               
             }
 
-            controlAttack();
+            if (characterController.isGrounded)
+            {
+                controlAttack();
+            }
 
             float prevAngle = angle;
 
@@ -290,7 +342,7 @@ public class Boss : MonoBehaviour
 
             speedY -= gravity * Time.deltaTime;
 
-            Friction();
+            //Friction();
 
             Vector3 newPosition = new Vector3(x, y, z);
             Vector3 displace = newPosition - transform.position;
@@ -308,8 +360,8 @@ public class Boss : MonoBehaviour
                 orientation = -orientation;
             }
         }
-
-        if (!startTeleport && characterController.isGrounded)
+        
+        if (!startTeleport && characterController.isGrounded && attackDuration == 0f)
         {
             dist_player = transform.position - playerTransform.position;
             randomNumber = Random.Range(0, 4);
@@ -317,7 +369,6 @@ public class Boss : MonoBehaviour
             {
                 startTeleport = true;
                 speedY = 0.67f;
-
             }
         }
         else if (startTeleport)
@@ -328,6 +379,14 @@ public class Boss : MonoBehaviour
         damageTimer -= Time.deltaTime;
         if (damageTimer < 0f)
             damageTimer = 0f;
+
+        coolDown -= Time.deltaTime;
+        if (coolDown < 0f)
+            coolDown = 0f;
+
+        attackDuration -= Time.deltaTime;
+        if (attackDuration < 0f)
+            attackDuration = 0f;
     }
     
     // Update is called once per frame
