@@ -46,7 +46,8 @@ public class DropPistol2 : MonoBehaviour
     {
         if(obj.tag == "Player")
         {
-            obj.GetComponent<CircularMotion>().showInteract = true;
+            if(!animator.GetBool("Open"))
+                obj.GetComponent<CircularMotion>().showInteract = true;
         }
     }
 
@@ -63,7 +64,6 @@ public class DropPistol2 : MonoBehaviour
         if (obj.tag == "Player")
         {
             playerTransform = obj.transform;
-
             
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -84,6 +84,7 @@ public class DropPistol2 : MonoBehaviour
                     {
                         obj.GetComponent<CircularMotion>().takePistol = true;
                         Destroy(pistol);
+                        obj.GetComponent<CircularMotion>().showInteract = false;
                     }
                 }
                 else
@@ -92,6 +93,7 @@ public class DropPistol2 : MonoBehaviour
                     {
                         obj.GetComponent<CircularMotion>().takeRifle = true;
                         Destroy(rifle);
+                        obj.GetComponent<CircularMotion>().showInteract = false;
                     }
                 }
             }
