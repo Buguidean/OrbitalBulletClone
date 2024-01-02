@@ -353,8 +353,7 @@ public class CircularMotion : MonoBehaviour
 
             Vector3 newPosition = new Vector3(x, y, z);
             Vector3 displace = newPosition - transform.position;
-            Vector3 position = transform.position;
-            CollisionFlags collition = characterController.Move(displace);
+            characterController.Move(displace);
 
             timer -= Time.deltaTime;
 
