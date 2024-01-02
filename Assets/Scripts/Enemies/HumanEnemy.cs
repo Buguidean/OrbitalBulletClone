@@ -220,6 +220,7 @@ public class HumanEnemy : MonoBehaviour
             alert_par.transform.rotation = camera.rotation;
             alert_par.transform.Rotate(0, 90, -90);
             Destroy(alert_par,0.5f);
+            gameObject.GetComponent<HumanEnemySound>().alertSound = true;
 
             rifleInstanciated.GetComponent<RifleEnemy>().canShoot = true;
             movementTimer = 0f;

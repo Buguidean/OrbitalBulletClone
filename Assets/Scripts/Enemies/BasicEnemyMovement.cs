@@ -236,6 +236,7 @@ public class BasicEnemyMovement : MonoBehaviour
             alert_par.transform.rotation = camera.rotation;
             alert_par.GetComponent<Follow_spider>().spider = gameObject.transform;
             alert_par.transform.Rotate(0, 90, -90);
+            soundScript.alertSound = true;
             Destroy(alert_par, 0.5f);
 
             Vector3 aux = Vector3.Normalize(dist_player);

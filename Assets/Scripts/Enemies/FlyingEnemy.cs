@@ -229,6 +229,7 @@ public class FlyingEnemy : MonoBehaviour
             alert_par.GetComponent<Follow_spider>().spider = gameObject.transform;
             alert_par.transform.Rotate(0, 90, -90);
             Destroy(alert_par, 0.5f);
+            gameObject.GetComponent<FlyingMobSound>().alertSound = true;
         }
     }
 

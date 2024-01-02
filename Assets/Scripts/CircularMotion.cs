@@ -717,7 +717,14 @@ public class CircularMotion : MonoBehaviour
                 //Key Cheats
                 if (Input.GetKeyDown(KeyCode.M))
                 {
-                    collectAmmo = true;
+                    pistolAmmo = maxAmmoPistol;
+                    pistolInstanciated.GetComponent<Pistol>().ammo = maxAmmoPistol;
+                    pistolAmmoUI.GetComponent<TMP_Text>().text = pistolAmmo.ToString();
+
+                    rifleAmmo = maxAmmoRifle;
+                    rifleInstanciated.GetComponent<Rifle>().ammo = maxAmmoRifle;
+                    rifleAmmoUI.GetComponent<TMP_Text>().text = rifleAmmo.ToString();
+
                     soundScript.collectAmmoSound = true;
                 }
 

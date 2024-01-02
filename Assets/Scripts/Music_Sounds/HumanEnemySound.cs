@@ -5,6 +5,7 @@ using UnityEngine;
 public class HumanEnemySound : MonoBehaviour
 {
     public bool shootSound = false;
+    public bool alertSound = false;
 
     [SerializeField]
     private AudioClip[] audios;
@@ -21,6 +22,11 @@ public class HumanEnemySound : MonoBehaviour
         {
             controlAudio.PlayOneShot(audios[0], 0.01f);
             shootSound = false;
+        }
+        else if (alertSound)
+        {
+            controlAudio.PlayOneShot(audios[1], 0.1f);
+            alertSound = false;
         }
     }
 }
