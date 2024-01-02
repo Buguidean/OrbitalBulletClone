@@ -61,7 +61,7 @@ public class CircularMotion : MonoBehaviour
     private float angle = 0f;
     private float gravity = 0.6f;
     private float speedY = 0f;
-    private float speedDeath = 0.5f;
+    private float speedDeath = 0.1f;
     public int orientation = 1;
     private float input = 0f;
 
@@ -210,7 +210,7 @@ public class CircularMotion : MonoBehaviour
             if(health <= 0f)
             {
                 //Prepare die animation
-                timer = 1.15f;
+                timer = 1.5f;
                 animator.SetBool("isMoving", false);
                 animator.SetBool("isJumping", false);
                 animator.SetBool("hasRifle", false);
@@ -218,7 +218,6 @@ public class CircularMotion : MonoBehaviour
                 showWeapon();
                 soundScript.dyingSound = true;
                 isDying = true;
-                transform.Rotate(0,180,0);
                 animator.Play("death");
             }
 
@@ -339,19 +338,22 @@ public class CircularMotion : MonoBehaviour
     {
         if (health <= 0f)
         {
-            Vector3 posPlayer = transform.position;
-            posPlayer.y += speedDeath;
-            speedDeath -= gravity * Time.deltaTime;
-            if (!GetComponent<CharacterController>().isGrounded | isDying)
-            {
-                gameObject.transform.position = posPlayer;
-                isDying = false;
-            }
+            if ((speedY < 0) && characterController.isGrounded)
+                speedY = 0.0f;
+
+            speedY -= gravity * Time.deltaTime;
+
+            y = transform.position.y + speedY;
+
+            Vector3 newPosition = new Vector3(x, y, z);
+            Vector3 displace = newPosition - transform.position;
+            Vector3 position = transform.position;
+            CollisionFlags collition = characterController.Move(displace);
+
             timer -= Time.deltaTime;
 
             if(timer <= 0f)
                 SceneManager.LoadScene(2, LoadSceneMode.Single);
-            speedDeath -= gravity * Time.deltaTime;
         }
         else
         {
