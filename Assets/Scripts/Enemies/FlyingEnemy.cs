@@ -58,7 +58,7 @@ public class FlyingEnemy : MonoBehaviour
     private GameObject instanciatedBulled = null;
 
     //private bool doJump = false
-    
+
     private float coolDown = 0f;
 
     private void Start()
@@ -84,15 +84,16 @@ public class FlyingEnemy : MonoBehaviour
         {
             CircularMotion script = other.GetComponent<CircularMotion>();
             script.damageRecived = damage;
-            
+
             if (script.currentSpeed != 0f)
             {
-                if(script.currentSpeed < 0f)
+                if (script.currentSpeed < 0f)
                     script.currentSpeed = 0.4f;
                 else
                     script.currentSpeed = -0.4f;
             }
-            else {
+            else
+            {
                 if (script.orientation == -1)
                     script.currentSpeed = -0.4f;
                 else
@@ -146,7 +147,7 @@ public class FlyingEnemy : MonoBehaviour
 
     private void callChilds(Transform t, Material m)
     {
-        if(t.childCount == 0 && t.name != "BulledMob(Clone)" & t.name != "pyramid")
+        if (t.childCount == 0 && t.name != "BulledMob(Clone)" & t.name != "pyramid")
             t.GetComponent<MeshRenderer>().material = m;
         else
         {
@@ -162,7 +163,7 @@ public class FlyingEnemy : MonoBehaviour
         if (damageRecived != 0f)
         {
             callChilds(gameObject.transform, Resources.Load("Materials/EnemyDamaged") as Material);
-            
+
             damageTimer = 0.1f;
             materialSet = true;
 

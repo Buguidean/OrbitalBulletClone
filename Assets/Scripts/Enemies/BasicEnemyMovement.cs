@@ -58,6 +58,9 @@ public class BasicEnemyMovement : MonoBehaviour
     private float damageTimer;
     private bool materialSet = false;
 
+    //sounds
+    private SpiderSound soundScript;
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -72,6 +75,8 @@ public class BasicEnemyMovement : MonoBehaviour
         lifeBarCreation();
         shieldBarCreation();
         damageRecived = 0f;
+        soundScript = gameObject.GetComponent<SpiderSound>();
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -229,15 +234,20 @@ public class BasicEnemyMovement : MonoBehaviour
             //Debug.Log(dir_of_attack);
             coolDown = initialCoolDown;
             speedY = 0.25f;
+            //Debug.Log("Hace el ataque")
+            soundScript.attackSound = true;
 
-            if (dir_of_attack > 60f) {
+
+            if (dir_of_attack > 60f)
+            {
                 orientation = -orientation;
                 if (currentSpeed < 0f)
                     currentSpeed = 1.2f;
                 else
                     currentSpeed = -1.2f;
             }
-            else {
+            else
+            {
                 if (currentSpeed < 0f)
                     currentSpeed -= 1f;
                 else

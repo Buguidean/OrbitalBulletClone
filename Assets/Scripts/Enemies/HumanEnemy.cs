@@ -13,7 +13,7 @@ public class HumanEnemy : MonoBehaviour
     public CharacterController player;
 
     private GameObject rifleInstanciated = null;
-    
+
     Animator animator;
 
     private float x;
@@ -60,13 +60,13 @@ public class HumanEnemy : MonoBehaviour
         z = center.position.z + Mathf.Sin(angle) * radius;
         y = transform.position.y;
         transform.position = new Vector3(x, y, z);
-        
+
         characterController = GetComponent<CharacterController>();
         boxCol = GetComponent<BoxCollider>();
         animator = gameObject.GetComponent<Animator>();
         animator.SetBool("isMoving", true);
         Physics.IgnoreCollision(characterController, player, true);
-        
+
         //player = playerObject.GetComponent<characterController>();
         lifeBarCreation();
         shieldBarCreation();
@@ -215,7 +215,7 @@ public class HumanEnemy : MonoBehaviour
             rifleInstanciated.GetComponent<RifleEnemy>().canShoot = true;
             movementTimer = 0f;
         }
-        else if(waitTimer == 0f)
+        else if (waitTimer == 0f)
         {
             rifleInstanciated.GetComponent<RifleEnemy>().canShoot = false;
         }
@@ -232,7 +232,7 @@ public class HumanEnemy : MonoBehaviour
 
         controlAttack();
 
-        if(damageTimer == 0f & materialSet)
+        if (damageTimer == 0f & materialSet)
         {
             materialSet = false;
             for (int i = 1; i < gameObject.transform.childCount - 3; i++)
@@ -282,7 +282,7 @@ public class HumanEnemy : MonoBehaviour
                 currentSpeed = -currentSpeed;
                 orientation = -orientation;
             }
-            
+
         }
 
         if (movementTimer == 0f)
@@ -307,7 +307,7 @@ public class HumanEnemy : MonoBehaviour
             scriptLifeBar.posEnemy = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
             scriptLifeBar.orientation = orientation;
             scriptLifeBar.camera = camera;
-        }   
+        }
 
         if (!scriptShieldBar.Equals(null))
         {

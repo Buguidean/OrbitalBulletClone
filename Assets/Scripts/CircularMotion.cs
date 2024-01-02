@@ -214,8 +214,12 @@ public class CircularMotion : MonoBehaviour
                 animator.SetBool("isMoving", false);
                 animator.SetBool("isJumping", false);
                 animator.SetBool("hasRifle", false);
-                hasWeapon = 3;
-                showWeapon();
+                rifleInstanciated.SetActive(false);
+                pistolInstanciated.SetActive(false);
+                if(orientation == 1)
+                {
+                    transform.Rotate(0, 180f, 0);
+                }
                 soundScript.dyingSound = true;
                 isDying = true;
                 animator.Play("death");
