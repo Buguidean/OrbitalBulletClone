@@ -106,8 +106,12 @@ public class CircularMotion : MonoBehaviour
 
     private float damageTimer;
     private bool materialSet = false;
-
+   
     private float dodgingTimer = 0f;
+
+    //interactions
+    public bool showInteract = false;
+    private GameObject interaction = null;
 
     private void Start()
     {
@@ -543,6 +547,23 @@ public class CircularMotion : MonoBehaviour
             script2.orientation = orientation;
             script2.radius = radius;
             script2.canShoot = !dodging;
+
+            Vector3 pos = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
+            if (showInteract && interaction == null)
+            {
+                GameObject prefab = Resources.Load("prefabs/interaction") as GameObject;
+                interaction = Instantiate(prefab, pos, Quaternion.identity);
+                interaction.transform.rotation = camera.rotation;
+            }
+            else if (!showInteract && interaction != null)
+            {
+                Destroy(interaction);
+            }
+            else if (showInteract && interaction != null)
+            {
+                interaction.transform.position = pos;
+                interaction.transform.rotation = camera.rotation;
+            }
         }
     }
 

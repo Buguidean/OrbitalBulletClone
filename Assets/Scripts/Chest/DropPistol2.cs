@@ -42,12 +42,29 @@ public class DropPistol2 : MonoBehaviour
         rifle.GetComponent<Rifle>().enabled = false;
     }
 
+    private void OnTriggerEnter(Collider obj)
+    {
+        if(obj.tag == "Player")
+        {
+            obj.GetComponent<CircularMotion>().showInteract = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider obj)
+    {
+        if (obj.tag == "Player")
+        {
+            obj.GetComponent<CircularMotion>().showInteract = false;
+        }
+    }
+
     private void OnTriggerStay(Collider obj)
     {
         if (obj.tag == "Player")
         {
             playerTransform = obj.transform;
 
+            
             if (Input.GetKeyDown(KeyCode.E))
             {
                 hasWeapon = obj.GetComponent<CircularMotion>().hasWeapon;
