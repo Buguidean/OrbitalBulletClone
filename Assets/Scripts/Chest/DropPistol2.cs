@@ -48,7 +48,7 @@ public class DropPistol2 : MonoBehaviour
         {
             playerTransform = obj.transform;
 
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 hasWeapon = obj.GetComponent<CircularMotion>().hasWeapon;
                 

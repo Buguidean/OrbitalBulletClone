@@ -202,8 +202,6 @@ public class CircularMotion : MonoBehaviour
     {
         if (damageRecived != 0f)
         {
-            
-
             health -= damageRecived;
             damageRecived = 0f;
             LifeBar.GetComponent<UI_LifeBar_Player>().actualHealth = health;
@@ -684,7 +682,7 @@ public class CircularMotion : MonoBehaviour
                     weaponInstanciated = null;
                 }*/
 
-                if (Input.GetKeyDown(KeyCode.E) && !dodging && dodgingTimer == 0f)
+                if (Input.GetKeyDown(KeyCode.Space) && !dodging && dodgingTimer == 0f)
                 {
                     maxVelocity = 0.7f;
                     dodging = true;
