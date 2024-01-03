@@ -11,7 +11,7 @@ public class FinishedImage : MonoBehaviour
     {
         if (timer <= 0f)
         {
-            SceneManager.LoadScene(1, LoadSceneMode.Single);
+            SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
         timer -= Time.deltaTime;
     }
