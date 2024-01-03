@@ -12,7 +12,7 @@ public class Unrenderlevel1 : MonoBehaviour
     void Start()
     {
         script = playerAnimate.gameObject.GetComponent<CircularMotion>();
-        timer = 3f;
+        timer = 2f;
     }
 
     void FixedUpdate()

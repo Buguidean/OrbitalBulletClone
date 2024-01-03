@@ -207,8 +207,9 @@ public class HumanEnemy : MonoBehaviour
     private void controlAttack()
     {
         dist_player = transform.position - playerTransform.position;
+        bool sameHeight = playerTransform.position.y <= transform.position.y + 5f;
 
-        if (dist_player.magnitude < 10f && !rifleInstanciated.GetComponent<RifleEnemy>().canShoot)
+        if (sameHeight && dist_player.magnitude < 30f && !rifleInstanciated.GetComponent<RifleEnemy>().canShoot)
         {
             Vector3 aux = Vector3.Normalize(dist_player);
             float dir_of_attack = Vector3.Angle(aux, transform.forward);
@@ -305,17 +306,7 @@ public class HumanEnemy : MonoBehaviour
         {
             animator.SetBool("isMoving", false);
             waitTimer = 2f;
-            movementTimer = Random.Range(1f, 2f);
-            if (dist_player.magnitude >= 13f)
-            {
-                int aux = Random.Range(0, 2);
-                //Debug.Log(aux);
-                if (aux == 1)
-                {
-                    currentSpeed = -currentSpeed;
-                    orientation = -orientation;
-                }
-            }
+            movementTimer = Random.Range(1f, 3f);
         }
 
         if (!scriptLifeBar.Equals(null))

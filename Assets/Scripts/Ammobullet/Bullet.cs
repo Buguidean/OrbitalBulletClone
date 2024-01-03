@@ -35,6 +35,62 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider obj)
+    {
+        switch (obj.tag) 
+        {
+            case "Spider":
+                GameObject aux1 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux1, 2f);
+                Debug.Log("The bullet impacted with the spider");
+                obj.GetComponent<BasicEnemyMovement>().damageRecived = damage;
+                Destroy(gameObject);
+                break;
+            case "FlyingMob":
+                GameObject aux2 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux2, 2f);
+                Debug.Log("The bullet impacted with the mob");
+                obj.GetComponent<FlyingEnemy>().damageRecived = damage;
+                Destroy(gameObject);
+                break;
+            case "HumanEnemy":
+                GameObject aux3 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux3, 2f);
+                Debug.Log("The bullet impacted with the HumanEnemy");
+                obj.GetComponent<HumanEnemy>().damageRecived = damage;
+                Destroy(gameObject);
+                break;
+            case "ammoChest":
+                GameObject aux4 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux4, 2f);
+                Debug.Log("The bullet impacted with the ammo chest");
+                obj.GetComponent<ammoChest>().damageRecived = damage;
+                Destroy(gameObject);
+                break;
+            case "Boss":
+                GameObject aux5 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux5, 2f);
+                obj.GetComponent<Boss>().damageRecived = damage;
+                Debug.Log("The bullet impacted with the boss");
+                Destroy(gameObject);
+                break;
+            case "HumanEnemyBullet":
+                break;
+            case "Bullet":
+                break;
+            case "WeaponChest":
+                break;
+            case "BossBullet":
+                break;
+            default:
+                GameObject aux6 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux6, 2f);
+                Destroy(gameObject);
+                break;
+        }
+        
+    }
+
     void OnTriggerEnter(Collider obj)
     {
         GameObject aux = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
@@ -80,7 +136,6 @@ public class Bullet : MonoBehaviour
                 break;
             case "Untagged":
                 //Debug.Log("The bullet was destroyed because touched Untagged object");
-                aux.GetComponent<BulletSound>().impactSound = true;
                 Destroy(gameObject);
                 break;
             case "Environment":
@@ -92,6 +147,11 @@ public class Bullet : MonoBehaviour
                 obj.GetComponent<Boss>().damageRecived = damage;
                 Debug.Log("The bullet impacted with the boss");
                 Destroy(gameObject);
+                break;
+            case "BossBullet":
+                break;
+            default:
+                Destroy(aux);
                 break;
         }
     }

@@ -207,6 +207,7 @@ public class Boss : MonoBehaviour
         if (health <= 0f)
         {
             player.gameObject.GetComponent<PlayerMusic>().stopMusic = true;
+            player.gameObject.GetComponent<CircularMotion>().invulnerable = true;
             Destroy(LifeBarObject);
             ParentBoss.GetComponent<MakeExplosion>().lastBossPosition = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
             Destroy(gameObject);
