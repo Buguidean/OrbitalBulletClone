@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FlyingMobSound : MonoBehaviour
 {
-    //public bool shootSound = false;
     public bool alertSound = false;
 
     [SerializeField]
@@ -19,11 +18,6 @@ public class FlyingMobSound : MonoBehaviour
 
     private void FixedUpdate()
     {
-        /*if (shootSound)
-        {
-            controlAudio.PlayOneShot(audios[0], 0.01f);
-            shootSound = false;
-        }*/
         if (alertSound)
         {
             controlAudio.PlayOneShot(audios[1], 0.1f);

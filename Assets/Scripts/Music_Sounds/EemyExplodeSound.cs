@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderSound : MonoBehaviour
+public class EemyExplodeSound : MonoBehaviour
 {
-
-    public bool attackSound = false;
-    public bool alertSound = false;
-    public bool enemyDie = false;
+    public bool explodeSound = false;
 
     [SerializeField]
     private AudioClip[] audios;
@@ -22,15 +19,10 @@ public class SpiderSound : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (attackSound)
+        if (explodeSound)
         {
             controlAudio.PlayOneShot(audios[0], 0.2f);
-            attackSound = false;
-        }
-        else if (alertSound)
-        {
-            controlAudio.PlayOneShot(audios[1], 0.1f);
-            alertSound = false;
+            explodeSound = false;
         }
     }
 }

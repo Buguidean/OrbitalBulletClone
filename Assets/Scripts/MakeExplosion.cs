@@ -17,6 +17,7 @@ public class MakeExplosion : MonoBehaviour
         oneTime = true;
         timer = 3f;
         finalExplosion = Resources.Load("prefabs/ExplosionFire") as GameObject;
+        finalExplosion.GetComponent<MakeExplode>().explosionSound = true;
     }
 
     // Update is called once per frame

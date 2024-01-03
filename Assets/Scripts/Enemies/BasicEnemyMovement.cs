@@ -219,6 +219,7 @@ public class BasicEnemyMovement : MonoBehaviour
         {
             Vector3 pos_die = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1f, gameObject.transform.position.z);
             GameObject aux = Instantiate(dieee, pos_die, Quaternion.identity);
+            aux.GetComponent<EemyExplodeSound>().explodeSound = true;
             Destroy(aux, 2f);
             Destroy(canvasLifeBar);
             Destroy(gameObject);

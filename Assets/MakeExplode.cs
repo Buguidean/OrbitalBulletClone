@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoChestSound : MonoBehaviour
+public class MakeExplode : MonoBehaviour
 {
-    public bool destroySound = false;
+    public bool explosionSound = false;
 
     [SerializeField]
     private AudioClip[] audios;
@@ -19,10 +19,11 @@ public class AmmoChestSound : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (destroySound)
+        if (explosionSound)
         {
             controlAudio.PlayOneShot(audios[0], 0.5f);
-            destroySound = false;
+            Debug.Log("Hace el sonido de explosión");
+            explosionSound = false;
         }
     }
 }

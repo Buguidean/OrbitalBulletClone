@@ -6,8 +6,8 @@ public class PlayerMusic : MonoBehaviour
 {
     public bool isBossMusic = false;
     public bool isStageMusic = true;
-    public bool stageClear = false;
     public bool stopMusic = false;
+
     // Start is called before the first frame update
     [SerializeField]
     private AudioClip[] audios;
@@ -24,29 +24,26 @@ public class PlayerMusic : MonoBehaviour
     {
         if (stopMusic)
         {
-            stopMusic = false;
             controlAudio.Stop();
+            stopMusic = false;
         }
-        if (!controlAudio.isPlaying)
+        if (isStageMusic)
         {
-            if (isStageMusic)
-            {
-                controlAudio.loop = true;
-                controlAudio.PlayOneShot(audios[0], 0.1f);
-                isStageMusic = false;
-            }
-            else if (isBossMusic)
-            {
-                controlAudio.loop = true;
-                controlAudio.PlayOneShot(audios[1], 0.1f);
-                isBossMusic = false;
-            }
-            else if (stageClear)
-            {
-                controlAudio.loop = true;
-                controlAudio.PlayOneShot(audios[2], 0.5f);
-                stageClear = false;
-            }
+            controlAudio.Stop();
+            controlAudio.clip = audios[0];
+            controlAudio.loop = true;
+            controlAudio.volume = 0.05f;
+            controlAudio.Play();
+            isStageMusic = false;
+        }
+        else if (isBossMusic)
+        {
+            controlAudio.Stop();
+            controlAudio.clip = audios[1];
+            controlAudio.loop = true;
+            controlAudio.volume = 0.05f;
+            controlAudio.Play();
+            isBossMusic = false;
         }
     }
 }

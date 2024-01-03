@@ -5,7 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class FinishedImage : MonoBehaviour
 {
-    float timer = 3f;
+    private float timer;
+
+    void Start()
+    {
+        timer = 3f;
+        gameObject.GetComponent<CongratulationSound>().congratsSound = true;
+    }
 
     void FixedUpdate()
     {

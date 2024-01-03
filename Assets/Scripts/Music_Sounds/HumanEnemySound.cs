@@ -20,7 +20,7 @@ public class HumanEnemySound : MonoBehaviour
     private void FixedUpdate() {
         if (shootSound)
         {
-            controlAudio.PlayOneShot(audios[0], 0.01f);
+            controlAudio.PlayOneShot(audios[0], 0.1f);
             shootSound = false;
         }
         else if (alertSound)
