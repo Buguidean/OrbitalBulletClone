@@ -18,6 +18,7 @@ public class FlyingEnemy : MonoBehaviour
     private BoxCollider boxCol;
     private CircularMotion playerScript;
     Animator animator;
+    private GameObject dieee;
 
     private float acceleration = 1f; // acceleration factor
     private float currentSpeed = 0.2f;
@@ -80,6 +81,7 @@ public class FlyingEnemy : MonoBehaviour
         instanciatedBulled = null;
         trailPrefab = Resources.Load("prefabs/BulletTrail") as GameObject;
         alert = Resources.Load("prefabs/true_exclamation_spider") as GameObject;
+        dieee = Resources.Load("prefabs/Triangles Explode") as GameObject;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -200,6 +202,9 @@ public class FlyingEnemy : MonoBehaviour
 
         if (health <= 0f)
         {
+            Vector3 pos_die = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 2f, gameObject.transform.position.z);
+            GameObject aux = Instantiate(dieee, pos_die, Quaternion.identity);
+            Destroy(aux, 2f);
             Destroy(canvasLifeBar);
             Destroy(gameObject);
         }

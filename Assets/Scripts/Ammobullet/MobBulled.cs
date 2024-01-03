@@ -6,6 +6,7 @@ public class MobBulled : MonoBehaviour
 { 
     public Transform player;
     public Transform center;
+    private GameObject explosion;
 
     public bool playerCollided;
 
@@ -25,6 +26,7 @@ public class MobBulled : MonoBehaviour
         displacement = new Vector3(0f, 0f, 0f);
         gravity = 0f;
         speedY = 0f;
+        explosion = Resources.Load("prefabs/Spheres Explode") as GameObject;
     }
 
     void OnTriggerEnter(Collider obj)
@@ -32,17 +34,23 @@ public class MobBulled : MonoBehaviour
         switch (obj.tag)
         {
             case "Player":
+                GameObject aux1 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux1, 2f);
                 Debug.Log("The bullet impacted with player");
                 obj.GetComponent<CircularMotion>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "Environment":
+                GameObject aux2 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux2, 2f);
                 Debug.Log("BulledMob was distroyed because touched the environment");
                 Destroy(gameObject);
                 break;
             case "FlyingMob":
                 break;
             default:
+                GameObject aux3 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                Destroy(aux3, 2f);
                 Debug.Log("BulledMob was distroyed because touched something: " + obj.tag);
                 Destroy(gameObject);
                 break;
@@ -56,6 +64,8 @@ public class MobBulled : MonoBehaviour
 
         if (xDist > 30f | zDist > 30f)
         {
+            GameObject aux = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+            Destroy(aux, 2f);
             Debug.Log("BulledMob out od cylinder");
             Destroy(gameObject);
         }

@@ -13,6 +13,7 @@ public class Bullet : MonoBehaviour
     public float damage;
 
     private Rigidbody rbController;
+    private GameObject explosion;
 
     //movement
 
@@ -24,6 +25,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
+        explosion = Resources.Load("prefabs/Spheres Explode Player") as GameObject;
         rbController = GetComponent<Rigidbody>();
         if (leftMove) {
             currentSpeed = -2f * 14.5f / radius;
@@ -35,6 +37,8 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter(Collider obj)
     {
+        GameObject aux = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+        Destroy(aux, 2f);
         switch (obj.tag)
         {
             case "Player":

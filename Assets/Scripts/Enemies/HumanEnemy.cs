@@ -46,6 +46,7 @@ public class HumanEnemy : MonoBehaviour
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
     private GameObject canvasShieldBar;
     private GameObject alert;
+    private GameObject dieee;
 
     private UI_LifeBar scriptLifeBar;
     private UI_ShieldBar scriptShieldBar;
@@ -75,6 +76,7 @@ public class HumanEnemy : MonoBehaviour
         movementTimer = Random.Range(1f, 2f);
         getWeapon();
         alert = Resources.Load("prefabs/true_exclamation") as GameObject;
+        dieee = Resources.Load("prefabs/Triangles Explode") as GameObject;
     }
 
     private void getWeapon()
@@ -174,6 +176,9 @@ public class HumanEnemy : MonoBehaviour
 
         if (health <= 0f)
         {
+            Vector3 pos_die = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 2f, gameObject.transform.position.z);
+            GameObject aux = Instantiate(dieee, pos_die, Quaternion.identity);
+            Destroy(aux, 2f);
             Destroy(canvasLifeBar);
             Destroy(gameObject);
         }

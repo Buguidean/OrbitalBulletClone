@@ -13,6 +13,7 @@ public class HumanEnemyBulled : MonoBehaviour
     public float damage;
 
     private Rigidbody rbController;
+    private GameObject explosion;
 
     //movement
 
@@ -24,6 +25,7 @@ public class HumanEnemyBulled : MonoBehaviour
 
     private void Start()
     {
+        explosion = Resources.Load("prefabs/Spheres Explode") as GameObject;
         rbController = GetComponent<Rigidbody>();
         if (leftMove)
         {
@@ -37,6 +39,8 @@ public class HumanEnemyBulled : MonoBehaviour
 
     void OnTriggerEnter(Collider obj)
     {
+        GameObject aux = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+        Destroy(aux, 2f);
         switch (obj.tag)
         {
             case "Player":

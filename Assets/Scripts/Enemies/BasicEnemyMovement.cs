@@ -39,6 +39,7 @@ public class BasicEnemyMovement : MonoBehaviour
     private GameObject canvasLifeBar; // adapted lifeBar with interactions
     private GameObject canvasShieldBar;
     private GameObject alert;
+    private GameObject dieee;
 
     private UI_LifeBar scriptLifeBar;
     private UI_ShieldBar scriptShieldBar;
@@ -78,6 +79,7 @@ public class BasicEnemyMovement : MonoBehaviour
         damageRecived = 0f;
         soundScript = gameObject.GetComponent<SpiderSound>();
         alert = Resources.Load("prefabs/true_exclamation_spider") as GameObject;
+        dieee = Resources.Load("prefabs/Triangles Explode") as GameObject;
 
     }
 
@@ -215,6 +217,9 @@ public class BasicEnemyMovement : MonoBehaviour
 
         if (health <= 0f)
         {
+            Vector3 pos_die = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1f, gameObject.transform.position.z);
+            GameObject aux = Instantiate(dieee, pos_die, Quaternion.identity);
+            Destroy(aux, 2f);
             Destroy(canvasLifeBar);
             Destroy(gameObject);
         }
