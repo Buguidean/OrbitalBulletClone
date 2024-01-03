@@ -59,6 +59,7 @@ public class Boss : MonoBehaviour
     private GameObject bulletPrefab;
     private GameObject staticbulletPrefab;
     private GameObject trailPrefab;
+    private GameObject finalExplosion;
     private int randomAttack;
 
     //timers
@@ -66,6 +67,7 @@ public class Boss : MonoBehaviour
     private float attackDuration = 0f;
     private float bulletDurationL = 0f;
     private float bulletDurationR = 0f;
+    private float deadTimer;
 
     private Animator animator;
 
@@ -95,6 +97,8 @@ public class Boss : MonoBehaviour
         bulletPrefab = Resources.Load("prefabs/BossEnemyBullet") as GameObject;
         staticbulletPrefab = Resources.Load("prefabs/BossEnemyStaticB") as GameObject;
         trailPrefab = Resources.Load("prefabs/BulletTrail") as GameObject;
+        finalExplosion = Resources.Load("prefab/ExplosionFlame") as GameObject;
+        deadTimer = 4f;
     }
 
     private void getParticles()
@@ -213,8 +217,8 @@ public class Boss : MonoBehaviour
             player.gameObject.GetComponent<PlayerMusic>().isStageMusic = true;
             player.gameObject.GetComponent<PlayerMusic>().stopMusic = true;
             Destroy(LifeBarObject);
-            FinishedImage.SetActive(true);
-            Destroy(gameObject);
+            deadTimer = 3f;
+            //Destroy(gameObject);
         }
     }
 
@@ -362,122 +366,137 @@ public class Boss : MonoBehaviour
     {
         //Debug.Log(leftParticle.position.y);
         //Debug.Log(rightParticle.position.y);
-        if (player.isGrounded && playerTransform.position.y + 3f >= gameObject.transform.position.y && !canMove)
-        {
-            LifeBarObject.SetActive(true);
-            canMove = true;
-            animator.Play("ReadyUp", 0, 0);
-            player.gameObject.GetComponent<PlayerMusic>().isBossMusic = true;
-            player.gameObject.GetComponent<PlayerMusic>().stopMusic = true;
-        }
-        
-        controlDamage();
 
-        if (damageTimer == 0f & materialSet)
+        if (health > 0f)
         {
-            materialSet = false;
-            callChilds(gameObject.transform, Resources.Load("Materials/Boss") as Material);
-        }
+            if (player.isGrounded && playerTransform.position.y + 3f >= gameObject.transform.position.y && !canMove)
+            {
+                LifeBarObject.SetActive(true);
+                canMove = true;
+                animator.Play("ReadyUp", 0, 0);
+                player.gameObject.GetComponent<PlayerMusic>().isBossMusic = true;
+                player.gameObject.GetComponent<PlayerMusic>().stopMusic = true;
+            }
 
-        float correction;
-        if (canMove)
-            correction = Vector3.Angle((transform.position - center.position), transform.right);
+            controlDamage();
+
+            if (damageTimer == 0f & materialSet)
+            {
+                materialSet = false;
+                callChilds(gameObject.transform, Resources.Load("Materials/Boss") as Material);
+            }
+
+            float correction;
+            if (canMove)
+                correction = Vector3.Angle((transform.position - center.position), transform.right);
+            else
+                correction = Vector3.Angle((transform.position - center.position), -transform.right);
+
+            if (orientation == 1)
+                transform.Rotate(0.0f, correction - 90.0f, 0.0f);
+            else
+                transform.Rotate(0.0f, 90.0f - correction, 0.0f);
+
+            if (canMove)
+            {
+                if (fireParticle == null)
+                {
+                    fireParticle = Instantiate(flameAsset, reactor.position, Quaternion.identity);
+                    fireParticle.transform.Translate(0f, 1f, 0f);
+                    fireParticle.transform.Rotate(0f, 0f, -90f);
+                    fireParticle.transform.SetParent(reactor);
+                }
+
+                if (characterController.isGrounded)
+                {
+                    controlAttack();
+                }
+
+                float prevAngle = angle;
+
+                // Adjust the angle based on the current speed
+                angle += currentSpeed / 2f * Time.deltaTime;
+                angle %= (2 * Mathf.PI);
+
+                // Calculate the new position based on the angle and radius
+                x = center.position.x + Mathf.Cos(angle) * radius;
+                z = center.position.z + Mathf.Sin(angle) * radius;
+                y = transform.position.y + speedY;
+
+                if ((speedY < 0) && characterController.isGrounded)
+                    speedY = 0.0f;
+
+                speedY -= gravity * Time.deltaTime;
+
+                //Friction();
+
+                Vector3 newPosition = new Vector3(x, y, z);
+                Vector3 displace = newPosition - transform.position;
+                Vector3 position = transform.position;
+
+                CollisionFlags collition = characterController.Move(displace);
+
+                if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+                {
+                    transform.position = new Vector3(position.x, transform.position.y, position.z);
+                    //Physics.SyncTransforms();
+                    angle = prevAngle;
+
+                    currentSpeed = -currentSpeed;
+                    orientation = -orientation;
+                }
+            }
+
+            if (!startTeleport && characterController.isGrounded && attackDuration == 0f)
+            {
+                dist_player = transform.position - playerTransform.position;
+                randomNumber = Random.Range(0, 4);
+                if (randomNumber == 1 && (dist_player.magnitude < 15 || dist_player.magnitude > 47))
+                {
+                    startTeleport = true;
+                    speedY = 0.67f;
+                }
+            }
+            else if (startTeleport)
+            {
+                teleport();
+            }
+
+            damageTimer -= Time.deltaTime;
+            if (damageTimer < 0f)
+                damageTimer = 0f;
+
+            coolDown -= Time.deltaTime;
+            if (coolDown < 0f)
+                coolDown = 0f;
+
+            attackDuration -= Time.deltaTime;
+            if (attackDuration < 0f)
+                attackDuration = 0f;
+
+            bulletDurationL -= Time.deltaTime;
+            if (bulletDurationL < 0f)
+                bulletDurationL = 0f;
+
+            bulletDurationR -= Time.deltaTime;
+            if (bulletDurationR < 0f)
+                bulletDurationR = 0f;
+        }
         else
-            correction = Vector3.Angle((transform.position - center.position), -transform.right);
-
-        if (orientation == 1)
-            transform.Rotate(0.0f, correction - 90.0f, 0.0f);
-        else
-            transform.Rotate(0.0f, 90.0f - correction, 0.0f);
-
-        if (canMove)
         {
-            if (fireParticle == null)
-            {
-                fireParticle = Instantiate(flameAsset, reactor.position, Quaternion.identity);
-                fireParticle.transform.Translate(0f, 1f, 0f);
-                fireParticle.transform.Rotate(0f, 0f, -90f);
-                fireParticle.transform.SetParent(reactor);               
+            if(deadTimer == 3f) {
+                Vector3 pos = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+                GameObject aux2 = Instantiate(explosion, pos, Quaternion.identity);
+                Destroy(aux2, 2f);
             }
 
-            if (characterController.isGrounded)
+            if(deadTimer <= 0f)
             {
-                controlAttack();
+                FinishedImage.SetActive(true);
+                Destroy(gameObject);
             }
 
-            float prevAngle = angle;
-
-            // Adjust the angle based on the current speed
-            angle += currentSpeed / 2f * Time.deltaTime;
-            angle %= (2 * Mathf.PI);
-
-            // Calculate the new position based on the angle and radius
-            x = center.position.x + Mathf.Cos(angle) * radius;
-            z = center.position.z + Mathf.Sin(angle) * radius;
-            y = transform.position.y + speedY;
-
-            if ((speedY < 0) && characterController.isGrounded)
-                speedY = 0.0f;
-
-            speedY -= gravity * Time.deltaTime;
-
-            //Friction();
-
-            Vector3 newPosition = new Vector3(x, y, z);
-            Vector3 displace = newPosition - transform.position;
-            Vector3 position = transform.position;
-
-            CollisionFlags collition = characterController.Move(displace);
-
-            if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
-            {
-                transform.position = new Vector3(position.x, transform.position.y, position.z);
-                //Physics.SyncTransforms();
-                angle = prevAngle;
-
-                currentSpeed = -currentSpeed;
-                orientation = -orientation;
-            }
+            deadTimer -= Time.deltaTime;
         }
-        
-        if (!startTeleport && characterController.isGrounded && attackDuration == 0f)
-        {
-            dist_player = transform.position - playerTransform.position;
-            randomNumber = Random.Range(0, 4);
-            if (randomNumber == 1 && (dist_player.magnitude < 15 || dist_player.magnitude > 47))
-            {
-                startTeleport = true;
-                speedY = 0.67f;
-            }
-        }
-        else if (startTeleport)
-        {
-            teleport();
-        }
-
-        damageTimer -= Time.deltaTime;
-        if (damageTimer < 0f)
-            damageTimer = 0f;
-
-        coolDown -= Time.deltaTime;
-        if (coolDown < 0f)
-            coolDown = 0f;
-
-        attackDuration -= Time.deltaTime;
-        if (attackDuration < 0f)
-            attackDuration = 0f;
-
-        bulletDurationL -= Time.deltaTime;
-        if (bulletDurationL < 0f)
-            bulletDurationL = 0f;
-
-        bulletDurationR -= Time.deltaTime;
-        if (bulletDurationR < 0f)
-            bulletDurationR = 0f;
-    }
-    
-    // Update is called once per frame
-    void Update()
-    {
     }
 }
