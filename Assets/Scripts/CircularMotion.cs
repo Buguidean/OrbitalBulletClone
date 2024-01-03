@@ -637,7 +637,6 @@ public class CircularMotion : MonoBehaviour
         float zPos = playerHandRight.transform.position.z - (Mathf.Cos(weaponAngle) * 14.5f / radius) * 0.7f;
         float yPos = playerHandRight.transform.position.y + 0.4f;
         rifleInstanciated = Instantiate(Resources.Load("prefabs/rifleDef") as GameObject, new Vector3(xPos, yPos, zPos), Quaternion.identity);
-        //rifleInstanciated.transform.SetParent(playerHandMovement2);
         rifleInstanciated.transform.SetParent(playerHandMovement);
         Rifle script2 = rifleInstanciated.GetComponent<Rifle>();
         script2.angle = weaponAngle;
@@ -654,24 +653,18 @@ public class CircularMotion : MonoBehaviour
     { 
         if(health > 0f && canMove)
         {
-            //Debug
-            if (Input.GetKey(KeyCode.Z))
-            {
-                Debug.Log(angle);
-            }
-
             input = 0f;
 
             if (!constrained)
             {
-                if (Time.deltaTime != 0f && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
+                if (Time.deltaTime != 0f && Input.GetKey(KeyCode.D))
                 {
                     input = 1f;
                     if (orientation == 1)
                         transform.Rotate(0.0f, 180.0f, 0.0f);
                     orientation = -1;
                 }
-                else if (Time.deltaTime != 0f && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
+                else if (Time.deltaTime != 0f && Input.GetKey(KeyCode.A))
                 {
                     input = -1f;
                     if (orientation == -1)
@@ -681,7 +674,6 @@ public class CircularMotion : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space) && GetComponent<CharacterController>().isGrounded)
                 {
-                    //Debug.Log("isJumping: ", animator.GetBool("isJumping").ToString);
                     doJump = true;
                     animator.SetBool("isJumping", true);
 
@@ -689,23 +681,6 @@ public class CircularMotion : MonoBehaviour
 
                     soundScript.jumpSound = true;
                 }
-
-                if (Input.GetKey(KeyCode.C))
-                {
-                    takePistol = true;
-                }
-
-                if (Input.GetKeyDown(KeyCode.V))
-                {
-                    takeRifle = true;
-                }
-
-                /*if (Input.GetKey(KeyCode.T) && hasWeapon != 0)
-                {
-                    hasWeapon = 0;
-                    Destroy(weaponInstanciated);
-                    weaponInstanciated = null;
-                }*/
 
                 if (Input.GetKeyDown(KeyCode.O) && !dodging && dodgingTimer == 0f)
                 {

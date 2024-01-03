@@ -110,7 +110,6 @@ public class Boss : MonoBehaviour
         {
             CircularMotion script = other.GetComponent<CircularMotion>();
             script.damageRecived = damage;
-            other.GetComponent<PlayerSounds>().gruntSound = true;
 
             if (script.currentSpeed != 0f)
             {
@@ -262,6 +261,7 @@ public class Boss : MonoBehaviour
             if (leftParticle.position.y > 24.2f)
             {
                 GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
+                leftParticle.GetComponent<BossSound>().shotSound = true;
                 Destroy(aux1, 2f);
 
                 /////////////////////////////////////////
@@ -281,6 +281,7 @@ public class Boss : MonoBehaviour
             if (rightParticle.position.y > 24.2f)
             {
                 GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
+                rightParticle.GetComponent<BossSound>().shotSound = true;
                 Destroy(aux2, 2f);
 
                 /////////////////////////////////////////
@@ -306,6 +307,7 @@ public class Boss : MonoBehaviour
                 bulletDurationL = 0.2f;
 
                 GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
+                leftParticle.GetComponent<BossSound>().shotSound = true;
                 Destroy(aux1, 2f);
 
                 /////////////////////////////////////////
@@ -331,6 +333,7 @@ public class Boss : MonoBehaviour
                 bulletDurationR = 0.2f;
 
                 GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
+                rightParticle.GetComponent<BossSound>().shotSound = true;
                 Destroy(aux2, 2f);
 
                 /////////////////////////////////////////
@@ -439,10 +442,11 @@ public class Boss : MonoBehaviour
         if (!startTeleport && characterController.isGrounded && attackDuration == 0f)
         {
             dist_player = transform.position - playerTransform.position;
-            randomNumber = Random.Range(0, 4);
+            randomNumber = Random.Range(0, 80);
             if (randomNumber == 1 && (dist_player.magnitude < 15 || dist_player.magnitude > 47))
             {
                 startTeleport = true;
+                GetComponent<BossSound>().jumpSound = true;
                 speedY = 0.67f;
             }
         }
