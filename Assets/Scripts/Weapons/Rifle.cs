@@ -21,6 +21,13 @@ public class Rifle : MonoBehaviour
     private float bulletDamage = 12f;
     private float bulletTime = 3.5f;
 
+    private GameObject trailPrefab;
+
+    private void Start()
+    {
+        trailPrefab = Resources.Load("prefabs/BulletTrailPlayer") as GameObject;
+    }
+
 
     private void createBullet()
     {
@@ -46,6 +53,10 @@ public class Rifle : MonoBehaviour
         //instantiate
         GameObject bulledPrefab = Resources.Load("prefabs/Sphere") as GameObject;
         GameObject obj = Instantiate(bulledPrefab, pos, Quaternion.identity);
+
+        GameObject trail = Instantiate(trailPrefab, obj.transform.position, Quaternion.identity);
+        trail.GetComponent<Follow>().bullet = obj.transform;
+        Destroy(trail, 7f);
 
         //asign initiallization
         obj.GetComponent<Bullet>().leftMove = leftMove;

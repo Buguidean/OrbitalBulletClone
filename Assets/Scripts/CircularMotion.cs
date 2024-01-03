@@ -682,6 +682,9 @@ public class CircularMotion : MonoBehaviour
                     //Debug.Log("isJumping: ", animator.GetBool("isJumping").ToString);
                     doJump = true;
                     animator.SetBool("isJumping", true);
+
+                        animator.Play("jump", 0, 0);
+
                     soundScript.jumpSound = true;
                 }
 
@@ -759,11 +762,13 @@ public class CircularMotion : MonoBehaviour
                 {
                     pistolInstanciated.GetComponent<Pistol>().isShoting = false;
                     animator.Play("pistol_shoot", 0, 0);
+                    currentSpeed = 0f;
                 }
                 if (rifleInstanciated.GetComponent<Rifle>().isShoting)
                 {
                     rifleInstanciated.GetComponent<Rifle>().isShoting = false;
                     animator.Play("rifle_fire", 0, 0);
+                    currentSpeed = 0f;
                 }
 
                 timer -= Time.deltaTime;
