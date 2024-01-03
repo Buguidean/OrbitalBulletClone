@@ -48,20 +48,24 @@ public class Bullet : MonoBehaviour
                 break;
             case "Spider":
                 Debug.Log("The bullet impacted with the spider");
+                aux.GetComponent<BulletSound>().impactSound = true;
                 obj.GetComponent<BasicEnemyMovement>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "FlyingMob":
                 Debug.Log("The bullet impacted with the mob");
+                aux.GetComponent<BulletSound>().impactSound = true;
                 obj.GetComponent<FlyingEnemy>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "HumanEnemy":
                 Debug.Log("The bullet impacted with the HumanEnemy");
+                aux.GetComponent<BulletSound>().impactSound = true;
                 obj.GetComponent<HumanEnemy>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "HumanEnemyBullet":
+                aux.GetComponent<BulletSound>().impactSound = true;
                 Debug.Log("The bullet impacted with the HumanEnemyBullet");
                 //Destroy(gameObject);
                 break;
@@ -70,11 +74,13 @@ public class Bullet : MonoBehaviour
                 break;
             case "ammoChest":
                 Debug.Log("The bullet impacted with the ammo chest");
+                aux.GetComponent<BulletSound>().impactSound = true;
                 obj.GetComponent<ammoChest>().damageRecived = damage;
                 Destroy(gameObject);
                 break;
             case "Untagged":
                 //Debug.Log("The bullet was destroyed because touched Untagged object");
+                aux.GetComponent<BulletSound>().impactSound = true;
                 Destroy(gameObject);
                 break;
             case "Environment":
@@ -82,6 +88,7 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
                 break;
             case "Boss":
+                aux.GetComponent<BulletSound>().impactSound = true;
                 obj.GetComponent<Boss>().damageRecived = damage;
                 Debug.Log("The bullet impacted with the boss");
                 Destroy(gameObject);

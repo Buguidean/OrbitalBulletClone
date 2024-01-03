@@ -42,6 +42,7 @@ public class MobBulled : MonoBehaviour
                 break;
             case "Environment":
                 GameObject aux2 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                aux2.GetComponent<BulletSound>().impactSound = true;
                 Destroy(aux2, 2f);
                 Debug.Log("BulledMob was distroyed because touched the environment");
                 Destroy(gameObject);
@@ -50,6 +51,7 @@ public class MobBulled : MonoBehaviour
                 break;
             default:
                 GameObject aux3 = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
+                aux3.GetComponent<BulletSound>().impactSound = true;
                 Destroy(aux3, 2f);
                 Debug.Log("BulledMob was distroyed because touched something: " + obj.tag);
                 Destroy(gameObject);

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoChestSound : MonoBehaviour
+public class BulletSound : MonoBehaviour
 {
-    public bool destroySound = false;
+    public bool impactSound = false;
 
     [SerializeField]
     private AudioClip[] audios;
@@ -19,10 +19,10 @@ public class AmmoChestSound : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (destroySound)
+        if (impactSound)
         {
-            controlAudio.PlayOneShot(audios[0], 1);
-            destroySound = false;
+            controlAudio.PlayOneShot(audios[0], 0.7f);
+            impactSound = false;
         }
     }
 }
