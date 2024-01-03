@@ -17,6 +17,7 @@ public class PlayerSounds: MonoBehaviour
     public bool dyingSound = false;
     public bool gameOverSound = false;
     public bool takeWeaponSound = false;
+    public bool stageClear = false;
 
     // Start is called before the first frame update
     [SerializeField]
@@ -88,6 +89,11 @@ public class PlayerSounds: MonoBehaviour
             {
                 controlAudio.PlayOneShot(audios[11], 0.5f);
                 takeWeaponSound = false;
+            }
+            if (stageClear)
+            {
+                controlAudio.PlayOneShot(audios[12], 0.5f);
+                stageClear = false;
             }
         }
         else if (dyingSound)

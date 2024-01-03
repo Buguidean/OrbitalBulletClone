@@ -1082,6 +1082,7 @@ MonoBehaviour:
   takeRifle: 0
   jumpTransition: 0
   openedWC: 0
+  canMove: 0
   hasWeapon: 0
   dodging: 0
   invulnerable: 0
@@ -1234,6 +1235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isBossMusic: 0
   isStageMusic: 1
+  stageClear: 0
   stopMusic: 0
   audios:
   - {fileID: 8300000, guid: 90ab487afd01ad04ba549110460a0fdd, type: 3}
@@ -1263,6 +1265,7 @@ MonoBehaviour:
   dyingSound: 0
   gameOverSound: 0
   takeWeaponSound: 0
+  stageClear: 0
   audios:
   - {fileID: 8300000, guid: 5721a696aab5fed438ae98e4115406b1, type: 3}
   - {fileID: 8300000, guid: 13895e6346916f74ea6727460f761ccc, type: 3}
@@ -2920,6 +2923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76b366b7f161314c8364a25fe986b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimate: {fileID: 1239227266}
 --- !u!1 &750518658
 GameObject:
   m_ObjectHideFlags: 0
@@ -9368,7 +9372,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: audios.Array.size
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: audios.Array.data[6]
@@ -9390,6 +9394,10 @@ PrefabInstance:
       propertyPath: audios.Array.data[11]
       value: 
       objectReference: {fileID: 8300000, guid: 189a7ba9eb94a694396a888fdcbc58d2, type: 3}
+    - target: {fileID: 4605559441089325013, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
+      propertyPath: audios.Array.data[12]
+      value: 
+      objectReference: {fileID: 8300000, guid: cf3501e305bf2b649af070fa7d466f15, type: 3}
     - target: {fileID: 7318158194023459078, guid: 198a0bdba29b6414b9e0a5572f9851a5, type: 3}
       propertyPath: m_Name
       value: playerAnimated

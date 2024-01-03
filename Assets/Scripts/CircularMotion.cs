@@ -26,6 +26,8 @@ public class CircularMotion : MonoBehaviour
 
     public bool openedWC = false;
 
+    public bool canMove = false;
+
     private GameObject pistolInstanciated = null;
     private GameObject rifleInstanciated = null;
 
@@ -231,7 +233,7 @@ public class CircularMotion : MonoBehaviour
                 {
                     gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/PlayerDamaged") as Material;
                 }
-                gameObject.GetComponent<PlayerSounds>().gruntSound = true;
+                soundScript.gruntSound = true;
                 damageTimer = 0.1f;
                 materialSet = true;
             }
@@ -649,11 +651,9 @@ public class CircularMotion : MonoBehaviour
     }
 
     void Update()
-    {
-        
-        if(health > 0f)
+    { 
+        if(health > 0f && canMove)
         {
-
             //Debug
             if (Input.GetKey(KeyCode.Z))
             {
@@ -679,7 +679,7 @@ public class CircularMotion : MonoBehaviour
                     orientation = 1;
                 }
 
-                if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && GetComponent<CharacterController>().isGrounded)
+                if (Input.GetKeyDown(KeyCode.Space) && GetComponent<CharacterController>().isGrounded)
                 {
                     //Debug.Log("isJumping: ", animator.GetBool("isJumping").ToString);
                     doJump = true;
@@ -707,7 +707,7 @@ public class CircularMotion : MonoBehaviour
                     weaponInstanciated = null;
                 }*/
 
-                if (Input.GetKeyDown(KeyCode.Space) && !dodging && dodgingTimer == 0f)
+                if (Input.GetKeyDown(KeyCode.O) && !dodging && dodgingTimer == 0f)
                 {
                     maxVelocity = 0.7f;
                     dodging = true;

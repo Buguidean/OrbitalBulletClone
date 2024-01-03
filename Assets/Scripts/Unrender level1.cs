@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class Unrenderlevel1 : MonoBehaviour
 {
-    private float timer = 3f;
+    public Transform playerAnimate;
+
+    private CircularMotion script;
+    private float timer;
+
+    void Start()
+    {
+        script = playerAnimate.gameObject.GetComponent<CircularMotion>();
+        timer = 3f;
+    }
 
     void FixedUpdate()
     {
         timer -= Time.deltaTime;
         if(timer <= 0f)
         {
+            script.canMove = true;
             Destroy(gameObject);
         }
     }
