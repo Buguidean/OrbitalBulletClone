@@ -314,6 +314,7 @@ public class CircularMotion : MonoBehaviour
                     break;
 
             }
+            soundScript.takeWeaponSound = true;
             takeRifle = false;
         }
 
@@ -335,6 +336,7 @@ public class CircularMotion : MonoBehaviour
                     showWeapon();
                     break;
             }
+            soundScript.takeWeaponSound = true;
             takePistol = false;
         }
 

@@ -85,6 +85,7 @@ public class DropPistol2 : MonoBehaviour
                         dropRifle();
 
                     obj.GetComponent<CircularMotion>().showInteract = false;
+                    gameObject.GetComponent<WeaponChestSounds>().openSound = true;
                 }
 
                 if (hasWeapon == 0)
