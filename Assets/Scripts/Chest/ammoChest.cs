@@ -22,6 +22,7 @@ public class ammoChest : MonoBehaviour
         GameObject obj = Instantiate(ammoPrefab, transform.position, Quaternion.identity);
         obj.transform.rotation *= Quaternion.Euler(0, -20, 0);
         obj.GetComponent<CollectAmmo>().camera = camera;
+        obj.GetComponent<AmmoChestSound>().destroySound = true;
     }
 
     // Update is called once per frame
