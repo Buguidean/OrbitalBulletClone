@@ -61,7 +61,6 @@ public class CircularMotion : MonoBehaviour
     private float angle = 0f;
     private float gravity = 0.6f;
     private float speedY = 0f;
-    private float speedDeath = 0.1f;
     public int orientation = 1;
     private float input = 0f;
 
@@ -84,7 +83,6 @@ public class CircularMotion : MonoBehaviour
     private GameObject LifeBar;
 
     //private bool isPistolUI = false;
-    private bool isRifleUI = false;
     private GameObject pistolUI;
     private GameObject rifleUI;
     private GameObject pistolAmmoUI;
@@ -299,23 +297,22 @@ public class CircularMotion : MonoBehaviour
         // Cambar segun el hasWeapon
         if (takeRifle)
         {
-            if (!isRifleUI)
-            {
-                isRifleUI = true;
-                rifleUI.SetActive(true);
-                Image img = backPistolUI.GetComponent<Image>();
-                img.material = Resources.Load("Materials/Black") as Material;
-            }
             switch (hasWeapon)
             {
                 case 0:
+                    animator.SetBool("hasWeapon", true);
+                    rifleUI.SetActive(true);
                     hasWeapon = 2;
                     showWeapon();
                     break;
                 case 1:
+                    rifleUI.SetActive(true);
+                    Image img = backPistolUI.GetComponent<Image>();
+                    img.material = Resources.Load("Materials/Black") as Material;
                     hasWeapon = 4;
                     showWeapon();
                     break;
+
             }
             takeRifle = false;
         }
@@ -331,6 +328,9 @@ public class CircularMotion : MonoBehaviour
                     showWeapon();
                     break;
                 case 2:
+                    pistolUI.SetActive(true);
+                    Image img = backRifleUI.GetComponent<Image>();
+                    img.material = Resources.Load("Materials/Black") as Material;
                     hasWeapon = 3;
                     showWeapon();
                     break;
@@ -630,7 +630,7 @@ public class CircularMotion : MonoBehaviour
             weaponAngle -= addAngle * (29f / radius);
         }
         float xPos = playerHandRight.transform.position.x - (Mathf.Cos(weaponAngle) * 14.5f / radius) * 1f;
-        float zPos = playerHandRight.transform.position.z - (Mathf.Cos(weaponAngle) * 14.5f / radius) * 1.2f;
+        float zPos = playerHandRight.transform.position.z - (Mathf.Cos(weaponAngle) * 14.5f / radius) * 1f;
         float yPos = playerHandRight.transform.position.y + 0.4f;
         rifleInstanciated = Instantiate(Resources.Load("prefabs/rifleDef") as GameObject, new Vector3(xPos, yPos, zPos), Quaternion.identity);
         //rifleInstanciated.transform.SetParent(playerHandMovement2);
