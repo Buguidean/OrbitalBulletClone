@@ -6,7 +6,6 @@ public class DropPistol2 : MonoBehaviour
 {
     Animator animator;
 
-
     private float zPlayer;
     private Transform playerTransform;
     private GameObject pistol = null;
@@ -48,6 +47,11 @@ public class DropPistol2 : MonoBehaviour
         {
             if(!animator.GetBool("Open"))
                 obj.GetComponent<CircularMotion>().showInteract = true;
+            else
+                obj.GetComponent<CircularMotion>().showInteract = false;
+
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Finish") && (pistol != null || rifle != null))
+                obj.GetComponent<CircularMotion>().showInteract = true;
         }
     }
 
@@ -64,7 +68,10 @@ public class DropPistol2 : MonoBehaviour
         if (obj.tag == "Player")
         {
             playerTransform = obj.transform;
-            
+
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Finish") && (pistol != null || rifle != null))
+                    obj.GetComponent<CircularMotion>().showInteract = true;
+
             if (Input.GetKeyDown(KeyCode.E))
             {
                 hasWeapon = obj.GetComponent<CircularMotion>().hasWeapon;
@@ -76,6 +83,8 @@ public class DropPistol2 : MonoBehaviour
                         dropPistol();
                     else
                         dropRifle();
+
+                    obj.GetComponent<CircularMotion>().showInteract = false;
                 }
 
                 if (hasWeapon == 0)

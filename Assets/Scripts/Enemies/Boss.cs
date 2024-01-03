@@ -13,6 +13,8 @@ public class Boss : MonoBehaviour
     public GameObject LifeBarObject;
     public float damageRecived;
 
+    public GameObject FinishedImage;
+
     private UI_LifeBar_Boss scriptLifeBar;
 
     private float x;
@@ -211,6 +213,7 @@ public class Boss : MonoBehaviour
             player.gameObject.GetComponent<PlayerMusic>().isStageMusic = true;
             player.gameObject.GetComponent<PlayerMusic>().stopMusic = true;
             Destroy(LifeBarObject);
+            FinishedImage.SetActive(true);
             Destroy(gameObject);
         }
     }
