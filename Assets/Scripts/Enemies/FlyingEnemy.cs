@@ -54,6 +54,7 @@ public class FlyingEnemy : MonoBehaviour
     private float damageTimer;
     private bool materialSet = false;
 
+    public float startAngle;
 
 
 
@@ -73,7 +74,7 @@ public class FlyingEnemy : MonoBehaviour
         boxCol = GetComponent<BoxCollider>();
         animator = gameObject.GetComponent<Animator>();
         Physics.IgnoreCollision(characterController, player, true);
-        angle = -1.182f;
+        angle = startAngle;
         //player = playerObject.GetComponent<characterController>();
         lifeBarCreation();
         shieldBarCreation();

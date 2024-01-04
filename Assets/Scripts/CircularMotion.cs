@@ -392,11 +392,17 @@ public class CircularMotion : MonoBehaviour
             if (teleport && GetComponent<CharacterController>().isGrounded)
             {
                 if (isExtRad)
+                {
                     radius -= 0.25f;
+                    speedY = 0.5f;
+                }
                 else
+                {
                     radius += 0.25f;
+                    speedY = 0.35f;
+                }
                 soundScript.teleport = true;
-                speedY = 0.5f;
+                
 
             }
 
@@ -483,8 +489,16 @@ public class CircularMotion : MonoBehaviour
             float prevAngle = angle;
 
             // Adjust the angle based on the current speed
-            angle += currentSpeed * Time.deltaTime;
-            angle %= (2 * Mathf.PI);
+            if (isExtRad)
+            {
+                angle += currentSpeed * Time.deltaTime;
+                angle %= (2 * Mathf.PI);
+            }
+            else
+            {
+                angle += currentSpeed * 1.5f * Time.deltaTime;
+                angle %= (2 * Mathf.PI);
+            }
 
             // Calculate the new position based on the angle and radius
             if (currentSpeed != 0f || speedY != 0f)

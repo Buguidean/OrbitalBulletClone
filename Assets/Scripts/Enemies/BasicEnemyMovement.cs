@@ -63,6 +63,8 @@ public class BasicEnemyMovement : MonoBehaviour
     //sounds
     private SpiderSound soundScript;
 
+    public float startAngle;
+
     private void Start()
     {
         x = center.position.x + Mathf.Cos(0f) * radius;
@@ -72,7 +74,7 @@ public class BasicEnemyMovement : MonoBehaviour
         boxCol = GetComponent<BoxCollider>();
         animator = gameObject.GetComponent<Animator>();
         Physics.IgnoreCollision(characterController, player, true);
-        angle = -2.64f;
+        angle = startAngle;
         //player = playerObject.GetComponent<characterController>();
         lifeBarCreation();
         shieldBarCreation();

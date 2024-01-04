@@ -47,6 +47,7 @@ public class HumanEnemy : MonoBehaviour
     private GameObject canvasShieldBar;
     private GameObject alert;
     private GameObject dieee;
+    private GameObject ammo;
 
     private UI_LifeBar scriptLifeBar;
     private UI_ShieldBar scriptShieldBar;
@@ -54,10 +55,12 @@ public class HumanEnemy : MonoBehaviour
     private float damageTimer;
     private bool materialSet = false;
 
+    public float startAngle;
+
     // Start is called before the first frame update
     void Start()
     {
-        angle = -2.3f;
+        angle = startAngle;
         x = center.position.x + Mathf.Cos(angle) * radius;
         z = center.position.z + Mathf.Sin(angle) * radius;
         y = transform.position.y;
@@ -77,6 +80,7 @@ public class HumanEnemy : MonoBehaviour
         getWeapon();
         alert = Resources.Load("prefabs/true_exclamation") as GameObject;
         dieee = Resources.Load("prefabs/Triangles Explode") as GameObject;
+        ammo = Resources.Load("prefabs/AmmoBox") as GameObject;
     }
 
     private void getWeapon()
@@ -178,6 +182,8 @@ public class HumanEnemy : MonoBehaviour
         {
             Vector3 pos_die = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 2f, gameObject.transform.position.z);
             GameObject aux = Instantiate(dieee, pos_die, Quaternion.identity);
+            GameObject aux2 = Instantiate(ammo, pos_die, Quaternion.identity);
+            aux2.GetComponent<CollectAmmo>().camera = camera;
             aux.GetComponent<EemyExplodeSound>().explodeSound = true;
             Destroy(aux, 2f);
             Destroy(canvasLifeBar);

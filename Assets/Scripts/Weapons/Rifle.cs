@@ -46,8 +46,8 @@ public class Rifle : MonoBehaviour
         }
 
         //Compute position
-        float xPos = center.position.x + Mathf.Cos(bulletAngle) * 29f;
-        float zPos = center.position.z + Mathf.Sin(bulletAngle) * 29f;
+        float xPos = center.position.x + Mathf.Cos(bulletAngle) * radius;
+        float zPos = center.position.z + Mathf.Sin(bulletAngle) * radius;
         Vector3 pos = new Vector3(xPos, transform.position.y + 1.25f, zPos);
 
         //instantiate
