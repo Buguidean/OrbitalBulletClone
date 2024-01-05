@@ -9,6 +9,7 @@ public class MobBulled : MonoBehaviour
     private GameObject explosion;
 
     public bool playerCollided;
+    public float modifier;
 
     private Vector3 displacement;
     private Vector3 goal;
@@ -75,9 +76,9 @@ public class MobBulled : MonoBehaviour
     private void move()
     {
         Vector3 initialPos = gameObject.transform.position;
-        gameObject.transform.position += new Vector3(-displacement.x/5f, speedY, -displacement.z/5f);
+        gameObject.transform.position += new Vector3(-displacement.x/4.4f, speedY, -displacement.z/4.4f);
 
-        speedY -= gravity * Time.deltaTime;
+        speedY -= gravity * modifier * Time.deltaTime;
         
 
         if (speedY < -0.5f)

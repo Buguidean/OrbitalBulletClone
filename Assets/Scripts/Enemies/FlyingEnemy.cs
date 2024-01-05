@@ -10,6 +10,8 @@ public class FlyingEnemy : MonoBehaviour
     public CharacterController player;
     public Transform playerTransform;
     public float radius = 29f; // radius of the circle
+    public float modifier;
+    public float dist_attack;
     public new Transform camera;
 
     public float damageRecived;
@@ -215,8 +217,9 @@ public class FlyingEnemy : MonoBehaviour
     private void prepareAttack()
     {
         dist_player = playerTransform.position - transform.position;
-        if (dist_player.magnitude < 10f & coolDown == 0f)
+        if (dist_player.magnitude < dist_attack & coolDown == 0f)
         {
+            Debug.Log(dist_player.magnitude);
             GameObject bulledPrefab = Resources.Load("prefabs/BulledMob") as GameObject;
             Vector3 pos = gameObject.transform.position + new Vector3(0f, 1f, 0f);
             instanciatedBulled = Instantiate(bulledPrefab, pos, Quaternion.identity);
@@ -228,6 +231,12 @@ public class FlyingEnemy : MonoBehaviour
             MobBulled script = instanciatedBulled.GetComponent<MobBulled>();
             script.player = playerTransform;
             script.center = center;
+            if(dist_player.magnitude < 18)
+            {
+                script.modifier = 1f;
+            }
+            else
+                script.modifier = modifier;
             coolDown = 2f;
 
             Vector3 alert_par_pos = new Vector3(transform.position.x, transform.position.y + 5f, transform.position.z);
@@ -288,7 +297,7 @@ public class FlyingEnemy : MonoBehaviour
         if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
         {
             transform.position = new Vector3(position.x, transform.position.y, position.z);
-            Physics.SyncTransforms();
+            //Physics.SyncTransforms();
             angle = prevAngle;
             currentSpeed = -currentSpeed;
             orientation = -orientation;

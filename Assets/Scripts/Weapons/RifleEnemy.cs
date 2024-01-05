@@ -8,6 +8,7 @@ public class RifleEnemy : MonoBehaviour
     public int orientation;
     public float radius;
     public Transform center;
+    public Animator animator; 
 
     public HumanEnemySound soundScript;
     public bool isShoting = false;
@@ -67,6 +68,7 @@ public class RifleEnemy : MonoBehaviour
             createBullet();
             isShoting = true;
             soundScript.shootSound = true;
+            animator.Play("rifle_fire", 0, 0);
         }
 
         timer -= Time.deltaTime;

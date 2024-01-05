@@ -259,16 +259,20 @@ public class Boss : MonoBehaviour
 
         if (attackDuration != 0f && randomAttack == 1)
         {
-            if (leftParticle.position.y > 24.2f)
+            if (leftParticle.position.y > 53.9f)
             {
                 GameObject aux1 = Instantiate(explosion, leftParticle.position, Quaternion.identity);
-                leftParticle.GetComponent<BossSound>().shotSound = true;
+                if (bulletDurationL == 0f)
+                {
+                    bulletDurationL = 0.2f;
+                    leftParticle.GetComponent<BossSound>().shotSound = true;
+                }
                 Destroy(aux1, 2f);
 
                 /////////////////////////////////////////
 
                 float randomAngle = Random.Range(0, 2 * Mathf.PI);
-                Vector3 bullet_pos = new Vector3(center.position.x + Mathf.Cos(randomAngle) * radius, 70f, center.position.z + Mathf.Sin(randomAngle) * radius);
+                Vector3 bullet_pos = new Vector3(center.position.x + Mathf.Cos(randomAngle) * radius, 100f, center.position.z + Mathf.Sin(randomAngle) * radius);
 
                 GameObject obj = Instantiate(bulletPrefab, bullet_pos, Quaternion.identity);
                 GameObject trail = Instantiate(trailPrefab, bullet_pos, Quaternion.identity);
@@ -279,16 +283,20 @@ public class Boss : MonoBehaviour
 
                 /////////////////////////////////////////
             }
-            if (rightParticle.position.y > 24.2f)
+            if (rightParticle.position.y > 53.9f)
             {
                 GameObject aux2 = Instantiate(explosion, rightParticle.position, Quaternion.identity);
-                rightParticle.GetComponent<BossSound>().shotSound = true;
+                if (bulletDurationR == 0f)
+                {
+                    bulletDurationR = 0.2f;
+                    rightParticle.GetComponent<BossSound>().shotSound = true;
+                }
                 Destroy(aux2, 2f);
 
                 /////////////////////////////////////////
 
                 float randomAngle = Random.Range(0, 2 * Mathf.PI);
-                Vector3 bullet_pos = new Vector3(center.position.x + Mathf.Cos(randomAngle) * radius, 70f, center.position.z + Mathf.Sin(randomAngle) * radius);
+                Vector3 bullet_pos = new Vector3(center.position.x + Mathf.Cos(randomAngle) * radius, 100f, center.position.z + Mathf.Sin(randomAngle) * radius);
 
                 GameObject obj = Instantiate(bulletPrefab, bullet_pos, Quaternion.identity);
                 GameObject trail = Instantiate(trailPrefab, bullet_pos, Quaternion.identity);
@@ -303,7 +311,7 @@ public class Boss : MonoBehaviour
 
         else if (attackDuration != 0f && randomAttack == 0)
         {
-            if (leftParticle.position.y < 23f && bulletDurationL == 0f)
+            if (leftParticle.position.y < 52.4f && bulletDurationL == 0f)
             {
                 bulletDurationL = 0.2f;
 
@@ -329,7 +337,7 @@ public class Boss : MonoBehaviour
 
                 /////////////////////////////////////////
             }
-            if (rightParticle.position.y < 23f && bulletDurationR == 0f)
+            if (rightParticle.position.y < 52.4f && bulletDurationR == 0f)
             {
                 bulletDurationR = 0.2f;
 
@@ -360,8 +368,11 @@ public class Boss : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Debug.Log(leftParticle.position.y);
-        //Debug.Log(rightParticle.position.y);
+        Debug.Log(leftParticle.position.y);
+        Debug.Log(rightParticle.position.y);
+
+        //Debug.Log(gameObject.transform.position.y);
+        //Debug.Log(player.transform.position.y);
 
         if (player.isGrounded && playerTransform.position.y + 3f >= gameObject.transform.position.y && !canMove)
         {
@@ -381,9 +392,9 @@ public class Boss : MonoBehaviour
 
         float correction;
         if (canMove)
-            correction = Vector3.Angle((transform.position - center.position), transform.right);
-        else
             correction = Vector3.Angle((transform.position - center.position), -transform.right);
+        else
+            correction = Vector3.Angle((transform.position - center.position), transform.right);
 
         if (orientation == 1)
             transform.Rotate(0.0f, correction - 90.0f, 0.0f);

@@ -522,8 +522,9 @@ public class CircularMotion : MonoBehaviour
 
             if (doJumpHigh)
             {
-                speedY = 0.30f;
+                speedY = 0.25f;
                 doJumpHigh = false;
+                animator.Play("jump", 0, 0);
             }
 
             Friction(input);
@@ -691,7 +692,7 @@ public class CircularMotion : MonoBehaviour
                     doJump = true;
                     animator.SetBool("isJumping", true);
 
-                        animator.Play("jump", 0, 0);
+                    animator.Play("jump", 0, 0);
 
                     soundScript.jumpSound = true;
                 }

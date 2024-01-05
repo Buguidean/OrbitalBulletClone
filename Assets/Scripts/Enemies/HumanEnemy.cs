@@ -236,6 +236,7 @@ public class HumanEnemy : MonoBehaviour
             gameObject.GetComponent<HumanEnemySound>().alertSound = true;
 
             rifleInstanciated.GetComponent<RifleEnemy>().canShoot = true;
+            rifleInstanciated.GetComponent<RifleEnemy>().animator = animator;
             movementTimer = 0f;
         }
         else if (waitTimer == 0f)
@@ -251,103 +252,106 @@ public class HumanEnemy : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        controlDamage();
-
-        controlAttack();
-
-        if (damageTimer == 0f & materialSet)
+        if (player.transform.position.y >= transform.position.y - 3f)
         {
-            materialSet = false;
-            for (int i = 1; i < gameObject.transform.childCount - 3; i++)
+            controlDamage();
+
+            controlAttack();
+
+            if (damageTimer == 0f & materialSet)
             {
-                gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/HumanEnemy") as Material;
-            }
-        }
-
-
-
-        float prevAngle = angle;
-
-        // Adjust the angle based on the current speed
-        if (movementTimer > 0f && waitTimer == 0f)
-        {
-            angle += currentSpeed / 2f * Time.deltaTime;
-            angle %= (2 * Mathf.PI);
-        }
-
-        // Calculate the new position based on the angle and radius
-        x = center.position.x + Mathf.Cos(angle) * radius;
-        z = center.position.z + Mathf.Sin(angle) * radius;
-        y = transform.position.y + speedY;
-
-        if ((speedY < 0) && characterController.isGrounded)
-            speedY = 0.0f;
-
-        speedY -= gravity * Time.deltaTime;
-
-        Friction();
-
-        Vector3 newPosition = new Vector3(x, y, z);
-        Vector3 displace = newPosition - transform.position;
-        Vector3 position = transform.position;
-
-        if (movementTimer > 0f && waitTimer == 0f)
-        {
-            animator.SetBool("isMoving", true);
-            CollisionFlags collition = characterController.Move(displace);
-
-            if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
-            {
-                transform.position = new Vector3(position.x, transform.position.y, position.z);
-                //Physics.SyncTransforms();
-                angle = prevAngle;
-
-                currentSpeed = -currentSpeed;
-                orientation = -orientation;
+                materialSet = false;
+                for (int i = 1; i < gameObject.transform.childCount - 3; i++)
+                {
+                    gameObject.transform.GetChild(i).GetComponent<SkinnedMeshRenderer>().material = Resources.Load("Materials/HumanEnemy") as Material;
+                }
             }
 
+
+
+            float prevAngle = angle;
+
+            // Adjust the angle based on the current speed
+            if (movementTimer > 0f && waitTimer == 0f)
+            {
+                angle += currentSpeed / 2f * Time.deltaTime;
+                angle %= (2 * Mathf.PI);
+            }
+
+            // Calculate the new position based on the angle and radius
+            x = center.position.x + Mathf.Cos(angle) * radius;
+            z = center.position.z + Mathf.Sin(angle) * radius;
+            y = transform.position.y + speedY;
+
+            if ((speedY < 0) && characterController.isGrounded)
+                speedY = 0.0f;
+
+            speedY -= gravity * Time.deltaTime;
+
+            Friction();
+
+            Vector3 newPosition = new Vector3(x, y, z);
+            Vector3 displace = newPosition - transform.position;
+            Vector3 position = transform.position;
+
+            if (movementTimer > 0f && waitTimer == 0f)
+            {
+                animator.SetBool("isMoving", true);
+                CollisionFlags collition = characterController.Move(displace);
+
+                if (collition != CollisionFlags.None & collition != CollisionFlags.Below & collition != CollisionFlags.Above)
+                {
+                    transform.position = new Vector3(position.x, transform.position.y, position.z);
+                    //Physics.SyncTransforms();
+                    angle = prevAngle;
+
+                    currentSpeed = -currentSpeed;
+                    orientation = -orientation;
+                }
+
+            }
+
+            if (movementTimer == 0f)
+            {
+                animator.SetBool("isMoving", false);
+                waitTimer = 2f;
+                movementTimer = Random.Range(1f, 3f);
+            }
+
+            if (!scriptLifeBar.Equals(null))
+            {
+                scriptLifeBar.posEnemy = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+                scriptLifeBar.orientation = orientation;
+                scriptLifeBar.camera = camera;
+            }
+
+            if (!scriptShieldBar.Equals(null))
+            {
+                scriptShieldBar.posEnemy = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+                scriptShieldBar.orientation = orientation;
+                scriptShieldBar.camera = camera;
+            }
+
+
+            if (waitTimer == 0f)
+            {
+                movementTimer -= Time.deltaTime;
+                if (movementTimer < 0f)
+                    movementTimer = 0f;
+            }
+
+            waitTimer -= Time.deltaTime;
+            if (waitTimer < 0f)
+                waitTimer = 0f;
+
+            damageTimer -= Time.deltaTime;
+            if (damageTimer < 0f)
+                damageTimer = 0f;
+
+            rifleInstanciated.GetComponent<RifleEnemy>().orientation = orientation;
+            rifleInstanciated.GetComponent<RifleEnemy>().angle = angle;
+            //Debug.Log("The orientation is " + orientation.ToString());
         }
-
-        if (movementTimer == 0f)
-        {
-            animator.SetBool("isMoving", false);
-            waitTimer = 2f;
-            movementTimer = Random.Range(1f, 3f);
-        }
-
-        if (!scriptLifeBar.Equals(null))
-        {
-            scriptLifeBar.posEnemy = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
-            scriptLifeBar.orientation = orientation;
-            scriptLifeBar.camera = camera;
-        }
-
-        if (!scriptShieldBar.Equals(null))
-        {
-            scriptShieldBar.posEnemy = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
-            scriptShieldBar.orientation = orientation;
-            scriptShieldBar.camera = camera;
-        }
-
-
-        if (waitTimer == 0f)
-        {
-            movementTimer -= Time.deltaTime;
-            if (movementTimer < 0f)
-                movementTimer = 0f;
-        }
-
-        waitTimer -= Time.deltaTime;
-        if (waitTimer < 0f)
-            waitTimer = 0f;
-
-        damageTimer -= Time.deltaTime;
-        if (damageTimer < 0f)
-            damageTimer = 0f;
-
-        rifleInstanciated.GetComponent<RifleEnemy>().orientation = orientation;
-        rifleInstanciated.GetComponent<RifleEnemy>().angle = angle;
-        //Debug.Log("The orientation is " + orientation.ToString());
     }
 
     void Update()
