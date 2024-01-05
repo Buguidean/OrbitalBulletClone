@@ -76,6 +76,8 @@ public class Bullet : MonoBehaviour
                 break;
             case "HumanEnemyBullet":
                 break;
+            case "ammo":
+                break;
             case "Bullet":
                 break;
             case "WeaponChest":
@@ -149,6 +151,8 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
                 break;
             case "BossBullet":
+                break;
+            case "ammo":
                 break;
             default:
                 Destroy(aux);
