@@ -121,7 +121,7 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
                 break;
             case "HumanEnemyBullet":
-                aux.GetComponent<BulletSound>().impactSound = true;
+                //aux.GetComponent<BulletSound>().impactSound = true;
                 Debug.Log("The bullet impacted with the HumanEnemyBullet");
                 //Destroy(gameObject);
                 break;

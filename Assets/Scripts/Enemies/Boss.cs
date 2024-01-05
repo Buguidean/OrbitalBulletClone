@@ -6,7 +6,8 @@ using UnityEngine;
 public class Boss : MonoBehaviour
 {
     public Transform center;
-    public float radius = 29f;
+    public float startAngle;
+    public float radius = 30f;
     public CharacterController player;
     public Transform playerTransform;
 
@@ -72,7 +73,7 @@ public class Boss : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        angle = -2.3f;
+        angle = startAngle;
         x = center.position.x + Mathf.Cos(angle) * radius;
         z = center.position.z + Mathf.Sin(angle) * radius;
         y = transform.position.y;
@@ -368,8 +369,8 @@ public class Boss : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log(leftParticle.position.y);
-        Debug.Log(rightParticle.position.y);
+        //Debug.Log(leftParticle.position.y);
+        //Debug.Log(rightParticle.position.y);
 
         //Debug.Log(gameObject.transform.position.y);
         //Debug.Log(player.transform.position.y);
@@ -394,7 +395,7 @@ public class Boss : MonoBehaviour
         if (canMove)
             correction = Vector3.Angle((transform.position - center.position), -transform.right);
         else
-            correction = Vector3.Angle((transform.position - center.position), transform.right);
+            correction = Vector3.Angle((transform.position - center.position), -transform.right);
 
         if (orientation == 1)
             transform.Rotate(0.0f, correction - 90.0f, 0.0f);
@@ -454,7 +455,7 @@ public class Boss : MonoBehaviour
         if (!startTeleport && characterController.isGrounded && attackDuration == 0f)
         {
             dist_player = transform.position - playerTransform.position;
-            randomNumber = Random.Range(0, 80);
+            randomNumber = Random.Range(0, 100);
             if (randomNumber == 1 && (dist_player.magnitude < 15 || dist_player.magnitude > 47))
             {
                 startTeleport = true;

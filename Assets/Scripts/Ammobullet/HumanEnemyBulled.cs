@@ -49,7 +49,7 @@ public class HumanEnemyBulled : MonoBehaviour
                 Destroy(gameObject);
                 break;
             default:
-                aux.GetComponent<BulletSound>().impactSound = true;
+                //aux.GetComponent<BulletSound>().impactSound = true;
                 Destroy(gameObject);
                 break;
         }
