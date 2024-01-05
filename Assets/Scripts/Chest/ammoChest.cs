@@ -18,11 +18,14 @@ public class ammoChest : MonoBehaviour
 
     void createAmmo()
     {
+        Vector3 position_ammo = new Vector3(transform.position.x, transform.position.y - 1.5f, transform.position.z);
         GameObject ammoPrefab = Resources.Load("prefabs/AmmoBox") as GameObject;
-        GameObject obj = Instantiate(ammoPrefab, transform.position, Quaternion.identity);
+        GameObject obj = Instantiate(ammoPrefab, position_ammo, Quaternion.identity);
         obj.transform.rotation *= Quaternion.Euler(0, -20, 0);
+        obj.GetComponent<CollectAmmo>().initialY = transform.position.y - 1.5f;
         obj.GetComponent<CollectAmmo>().camera = camera;
         obj.GetComponent<AmmoChestSound>().destroySound = true;
+
     }
 
     // Update is called once per frame

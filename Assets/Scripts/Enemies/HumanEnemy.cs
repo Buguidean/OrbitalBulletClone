@@ -180,9 +180,11 @@ public class HumanEnemy : MonoBehaviour
 
         if (health <= 0f)
         {
+            Vector3 pos_die_ammo = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 0.61f, gameObject.transform.position.z);
             Vector3 pos_die = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 2f, gameObject.transform.position.z);
             GameObject aux = Instantiate(dieee, pos_die, Quaternion.identity);
-            GameObject aux2 = Instantiate(ammo, pos_die, Quaternion.identity);
+            GameObject aux2 = Instantiate(ammo, pos_die_ammo, Quaternion.identity);
+            aux2.GetComponent<CollectAmmo>().initialY = pos_die_ammo.y;
             aux2.GetComponent<CollectAmmo>().camera = camera;
             aux.GetComponent<EemyExplodeSound>().explodeSound = true;
             Destroy(aux, 2f);

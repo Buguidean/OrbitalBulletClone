@@ -5,10 +5,9 @@ using UnityEngine;
 public class CollectAmmo : MonoBehaviour
 {
     public new Transform camera;
-    public CharacterController characterController;
+    public float initialY;
 
     private float speedY = 0.2f;
-    private float y;
     void OnTriggerEnter(Collider obj)
     {
         switch (obj.tag)
@@ -23,22 +22,23 @@ public class CollectAmmo : MonoBehaviour
 
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        transform.position = new Vector3(transform.position.x, transform.position.y + speedY, transform.position.z);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if ((speedY < 0) && characterController.isGrounded)
-            speedY = 0.0f;
-
         speedY -= 0.6f * Time.deltaTime;
 
-        y = transform.position.y + speedY;
+        if (transform.position.y > initialY)
+        {
+            transform.position = new Vector3(transform.position.x,transform.position.y + speedY,transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(transform.position.x,initialY,transform.position.z);
+        }
 
-        Vector3 newPosition = new Vector3(transform.position.x, y, transform.position.z);
-        Vector3 displace = newPosition - transform.position;
-        characterController.Move(displace);
         transform.rotation = camera.rotation;
     }
 }
