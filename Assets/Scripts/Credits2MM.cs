@@ -5,14 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class Credits2MM : MonoBehaviour
 {
-    private float timer = 4f;
-    
     void FixedUpdate()
     {
-        if(timer <= 0f)
+        if(Input.GetKeyDown(KeyCode.Escape))
         {
             SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
-        timer -= Time.deltaTime;
     }
 }
